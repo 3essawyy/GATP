@@ -1,0 +1,32 @@
+# Secrets
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+
+# Runtime data
+data/
+artifacts/
+*.sqlite
+*.sqlite3
+test-results/
+playwright-report/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
