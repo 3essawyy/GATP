@@ -9,9 +9,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Literal
 
-Author = Literal["user", "model", "repair", "restore"]
+Author = Literal["user", "model", "generator", "repair", "restore"]
 ArtifactKind = Literal["scope", "test_plan", "test_case", "page_object", "test_file"]
-AUTHORS: tuple[str, ...] = ("user", "model", "repair", "restore")
+AUTHORS: tuple[str, ...] = ("user", "model", "generator", "repair", "restore")
 ARTIFACT_KINDS: tuple[str, ...] = ("scope", "test_plan", "test_case", "page_object", "test_file")
 
 

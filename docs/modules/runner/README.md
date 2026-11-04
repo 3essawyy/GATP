@@ -20,8 +20,8 @@ A restricted, separately started process that executes only typed jobs from the 
 | Job (`type`) | Input | Output (`JobResult.data` / `files`) | Since |
 |---|---|---|---|
 | `inspect` | `url`, `allowlist`, `timeout_s` | `title`, `final_url` / `screenshot` (full extraction in T-007) | T-006 |
-| `recount` | `url`, `allowlist`, `locators: [LocatorSpec]` | `counts: [int]` (same order) | T-006 |
-| `collect` | code version files | pytest collection report | T-013 |
+| `recount` | `url`, `allowlist`, `locators: [LocatorSpec]`, optional `setup` steps | `counts: [int]` (same order) | T-006 (setup: T-013) |
+| `collect` | `files` {path: content} (paths limited to `pages/*.py`, `tests/test_*.py`, `conftest.py`) | `tests` (ids), `exit_code`, `output` | T-013 |
 | `run_tests` | code version files, test IDs, `base_url`, `allowlist` | per-test status, duration, error, screenshots | T-014 |
 
 Every `JobResult` has `job_id`, `type`, `status` (`ok`/`failed`), `duration_ms` (browser/test time, separate from model time), `blocked_requests`, `files` (artifact-relative paths), `data` and `error`.

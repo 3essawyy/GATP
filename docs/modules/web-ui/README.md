@@ -29,7 +29,7 @@ Presents every workflow step and collects human input and approvals. Contains **
 | Usage panel | Per-call tokens/latency, fresh vs reused, averages; test time shown separately | REQ-P2-5, Q8–Q10 |
 
 ## Internal design
-Libraries ([ADR-013](../../decisions/ADR-013-frontend-libraries.md)): Vite + React 19 + TS 5.9, Mantine (components), TanStack Query (server state), openapi-fetch + openapi-typescript (generated client), Monaco later (T-013). Routing is chosen in T-009.
+Libraries ([ADR-013](../../decisions/ADR-013-frontend-libraries.md)): Vite + React 19 + TS 5.9, Mantine (components), TanStack Query (server state), openapi-fetch + openapi-typescript (generated client), React Router. Code is edited in a plain monospace editor (Monaco dropped, [ADR-021](../../decisions/ADR-021-deterministic-codegen.md)).
 
 Layering inside `frontend/src/`. Each layer only calls the one below it:
 
@@ -51,7 +51,8 @@ Implemented (T-002): `HealthBadge` shows *Checking API…* / green *API ok · vX
 | `/projects/:id` | `ProjectLayout`: header (project, origin, tester name, runner + API badges), step nav with **API-computed** status per step, open clarifications banner (answer buttons), SSE subscription | `getProject`, `getWorkflow`, `listClarifications`, `answerClarification`, `projectEvents` |
 | `…/inspect` | `InspectPage`: add pages; per page tab: setup-steps editor, include/exclude regions, Inspect/Re-inspect (live "browser is open" state, browser time, blocked requests), screenshot with element boxes ⇄ findings table (flags, best locator, all candidates with usable/count), source-line modal | `listPages`, `addPage`, `setPageSetup`, `inspectPage`, `listSnapshots`, `getSnapshot`, `getFile` |
 | `…/scope` | `ScopePage`: goal, notes, per-page element checkboxes (default all included), Save scope → version N, Approve G0 as <tester> | `getScope`, `saveScope`, `approve` |
-| `…/plan`, `…/code` | Placeholders until T-012/T-013 | — |
+| `…/plan` | `PlanPage` (T-012): propose/revise plan, cases with steps (element labels) and expectations (basis, confirmed), inline edits, delete, approve G1 | `getPlan`, `proposePlan`, `editPlan`, `approve` |
+| `…/code` | `CodePage` (T-013): generate, validation report (static findings, recount table, collected tests), file tabs with editor (edit = new version), approve G2 | `getCode`, `generateCode`, `validateCode`, `approveCode`, `editArtifact` |
 
 Components: `FindingsTable`, `ScreenshotView` (bbox overlay scaled to the screenshot), `SourceModal`, `SetupStepsEditor` (every field has an accessible label), `StatusBadge`, `RunnerBadge`, `HealthBadge`, `ErrorAlert` (shows the API's `detail`), `useTesterName` (localStorage).
 
@@ -67,5 +68,5 @@ Components: `FindingsTable`, `ScreenshotView` (bbox overlay scaled to the screen
 
 ## Known limitations
 - Setup-step values (e.g. test passwords) are shown in plain text in the editor; use test accounts only (ADR-018).
-- The production bundle is >500 kB (Mantine); acceptable for a local tool, will be split when Monaco arrives (T-013).
+- The production bundle is >500 kB (Mantine); acceptable for a local tool.
 - No routing for individual snapshots/history yet (T-018).

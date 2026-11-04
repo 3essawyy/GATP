@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 from gatp.api.services import Services
 from gatp.store.dto import VersionDTO
+from gatp.store.reports import ReportRepository
 from gatp.test_designer.plan import TestPlan, unconfirmed_assumptions
 
 # Which artifact kinds each version-bound gate covers, and the workflow step it unlocks.
@@ -70,6 +71,8 @@ def check_approvable(services: Services, project_id: int, gate: str, version: Ve
     if gate != "G5" and services.artifacts.latest(artifact.id).id != version.id:
         raise GateBlockedError("only the latest version can be approved; it changed since")
     require_no_open_clarifications(services, project_id, GATE_STEP[gate])
+    if gate == "G2" and not ReportRepository(services.db).passing_for(project_id, version.id):
+        raise GateBlockedError("validate the code first: G2 needs a passing validation report")
     if gate == "G1":
         pending = unconfirmed_assumptions(TestPlan.model_validate_json(version.content))
         if pending:
@@ -86,10 +89,14 @@ def _gate_step(services: Services, project_id: int, step: str, gate: str) -> Ste
         return StepState(step, gate, "blocked", "open clarification(s)", open_count)
     if not artifacts:
         return StepState(step, gate, "todo", "nothing proposed yet", 0)
-    latest = [services.artifacts.latest(a.id) for a in artifacts]
+    latest = [v for v in (services.artifacts.latest(a.id) for a in artifacts) if v.content]
+    if not latest:
+        return StepState(step, gate, "todo", "nothing proposed yet", 0)
     pending = [v for v in latest if not is_approved(services, gate, v)]
     if pending:
         names = ", ".join(f"#{v.artifact_id} v{v.number}" for v in pending)
+        if len(pending) > 2:
+            names = f"{len(pending)} versions"
         return StepState(step, gate, "needs_approval", f"awaiting {gate}: {names}", 0)
     return StepState(step, gate, "approved", f"{len(latest)} version(s) approved", 0)
 

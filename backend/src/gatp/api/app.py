@@ -15,7 +15,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from gatp import __version__
-from gatp.api.routes import artifacts, assist, gates, inspections, plan, projects, scope, system
+from gatp.api.routes import (
+    artifacts,
+    assist,
+    code,
+    gates,
+    inspections,
+    plan,
+    projects,
+    scope,
+    system,
+)
 from gatp.api.routes.inspections import InspectionFailedError
 from gatp.api.services import Services, build_services
 from gatp.api.workflow import GateBlockedError
@@ -63,15 +73,17 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    for module in (system, projects, inspections, scope, artifacts, gates, assist, plan):
+    for module in (system, projects, inspections, scope, artifacts, gates, assist, plan, code):
         app.include_router(module.router)
 
-    for exc_type, (status, code) in ERRORS.items():
+    for exc_type, (status, error_code) in ERRORS.items():
 
         def handler(
-            _request: Request, exc: Exception, status: int = status, code: str = code
+            _request: Request, exc: Exception, status: int = status, error_code: str = error_code
         ) -> JSONResponse:
-            return JSONResponse(status_code=status, content={"error": code, "detail": str(exc)})
+            return JSONResponse(
+                status_code=status, content={"error": error_code, "detail": str(exc)}
+            )
 
         app.add_exception_handler(exc_type, handler)
     return app

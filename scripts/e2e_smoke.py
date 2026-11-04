@@ -238,6 +238,32 @@ class Smoke:
             c = r["call"]
             return f"{c['provider']}/{c['model']} {c['latency_ms']} ms model vs {r['browser_ms']} ms browser, {len(sent)} elements sent"
 
+        def plan_and_code() -> str:
+            pid = s["pid"]
+            plan = self.call("POST", f"/api/projects/{pid}/plan/propose", 201, json={})
+            for c in plan["open_clarifications"]:
+                answer = "Confirm" if c["kind"] == "assumption" else "any letters"
+                self.call(
+                    "POST",
+                    f"/api/clarifications/{c['id']}/answer",
+                    200,
+                    json={"answer": answer, "actor": "smoke"},
+                )
+            plan = self.call("GET", f"/api/projects/{pid}/plan", 200)
+            assert plan["blockers"] == [], plan["blockers"]
+            self.call(
+                "POST",
+                f"/api/projects/{pid}/approvals",
+                201,
+                json={"gate": "G1", "actor": "smoke", "artifact_version_id": plan["version"]["id"]},
+            )
+            code = self.call("POST", f"/api/projects/{pid}/code/generate", 201)
+            report = self.call("POST", f"/api/projects/{pid}/code/validate", 200)["report"]
+            assert report["ok"], report["report"]
+            self.call("POST", f"/api/projects/{pid}/code/approve", 201, json={"actor": "smoke"})
+            tests = report["report"]["collect"]["tests"]
+            return f"plan v{plan['version']['number']} G1; {len(code['files'])} files; collect via runner: {len(tests)} test(s); G2"
+
         def off_origin_refused() -> str:
             r = self.api.post(
                 f"/api/projects/{s['pid']}/pages", json={"url": "http://example.com/"}
@@ -253,6 +279,7 @@ class Smoke:
             ("save scope, approve G0", scope_and_gate),
             ("edit scope invalidates approval", edit_invalidates),
             ("re-approve + grounded model call (T-010)", model_insight),
+            ("plan G1 -> code -> validate (runner) -> G2", plan_and_code),
             ("off-origin page refused", off_origin_refused),
         ):
             self.step(title, fn)

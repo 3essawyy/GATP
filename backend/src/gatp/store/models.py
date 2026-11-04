@@ -205,6 +205,19 @@ class Clarification(Base):
     answered_at: Mapped[datetime | None] = mapped_column(default=None)
 
 
+class ValidationReport(Base):
+    """Result of validating an exact set of code versions (static + live). Required for G2."""
+
+    __tablename__ = "validation_reports"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"), index=True)
+    version_ids: Mapped[list[Any]] = mapped_column(default=list)  # artifact_version ids covered
+    ok: Mapped[bool] = mapped_column(default=False)
+    report: Mapped[dict[str, Any]] = mapped_column(default=dict)
+    created_at: Mapped[datetime] = mapped_column(default=utcnow)
+
+
 class Run(Base):
     """One approved execution of a set of tests."""
 
