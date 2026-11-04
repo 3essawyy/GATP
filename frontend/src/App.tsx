@@ -1,24 +1,22 @@
-import { AppShell, Container, Group, Text, Title } from '@mantine/core';
+import { Navigate, Route, Routes } from 'react-router';
 
-import { HealthBadge } from './components/HealthBadge';
+import { InspectPage } from './pages/InspectPage';
+import { NotYetPage } from './pages/NotYetPage';
+import { ProjectLayout } from './pages/ProjectLayout';
+import { ProjectsPage } from './pages/ProjectsPage';
+import { ScopePage } from './pages/ScopePage';
 
 export function App() {
   return (
-    <AppShell header={{ height: 56 }} padding="md">
-      <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Title order={3}>GATP</Title>
-          <HealthBadge />
-        </Group>
-      </AppShell.Header>
-      <AppShell.Main>
-        <Container size="md">
-          <Title order={2}>Human-in-the-loop web testing assistant</Title>
-          <Text c="dimmed" mt="sm">
-            Skeleton (T-002). Inspection arrives in T-009.
-          </Text>
-        </Container>
-      </AppShell.Main>
-    </AppShell>
+    <Routes>
+      <Route path="/" element={<ProjectsPage />} />
+      <Route path="/projects/:projectId" element={<ProjectLayout />}>
+        <Route index element={<Navigate to="inspect" replace />} />
+        <Route path="inspect" element={<InspectPage />} />
+        <Route path="scope" element={<ScopePage />} />
+        <Route path="plan" element={<NotYetPage what="Collaborative test design" />} />
+        <Route path="code" element={<NotYetPage what="Code generation and review" />} />
+      </Route>
+    </Routes>
   );
 }

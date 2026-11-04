@@ -171,3 +171,9 @@ def test_event_bus_delivers_to_subscribers() -> None:
     assert second.startswith("event: approved\n")
     payload = json.loads(second.split("data: ", 1)[1])
     assert payload == {"type": "approved", "project_id": 7, "data": {"gate": "G0"}}
+
+
+def test_scope_is_null_before_first_save(client: TestClient, inspected: dict[str, Any]) -> None:
+    resp = client.get(f"/api/projects/{inspected['pid']}/scope")
+    assert resp.status_code == 200
+    assert resp.json() is None

@@ -32,6 +32,7 @@ docs/                        all documentation
 | Run one test | `uv run pytest backend/tests/test_health.py -k cors` |
 | Check module boundaries only | `uv run lint-imports` |
 | End-to-end smoke on real processes | `uv run poe smoke` (`--headed` for a visible browser, `--keep` to keep DB + screenshots) |
+| Drive the real UI through the Phase 1 flow | `uv run poe ui-walkthrough --out walkthrough` (`--video` to record, `--headed`) |
 | Add a Python dependency | `uv add <pkg>` (dev: `uv add --dev <pkg>`); commit `pyproject.toml` + `uv.lock` |
 | Add a frontend dependency | `npm --prefix frontend install --save-exact <pkg>`; commit `package.json` + `package-lock.json` |
 
