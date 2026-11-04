@@ -1,4 +1,5 @@
-"""Inspector: element extraction, ranked locators, uniqueness, fingerprints (T-007).
+"""Inspector: element extraction, ranked + verified locators, fingerprints (T-007, ADR-006).
 
-Placeholder package created in T-002; no code yet.
+Runs inside the runner process on a page the runner opened. Public API: ``inspect_page``,
+``LocatorSpec``/``resolve``, and the models in ``gatp.inspector.models``.
 """

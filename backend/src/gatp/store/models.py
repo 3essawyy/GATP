@@ -95,6 +95,8 @@ class Element(Base):
     bbox: Mapped[dict[str, Any]] = mapped_column(default=dict)
     fingerprint: Mapped[dict[str, Any]] = mapped_column(default=dict)
     source_line: Mapped[int | None] = mapped_column(default=None)
+    # label, dom_path, visible, enabled, nearby_text, form, index_in_form, flags, default_locator
+    details: Mapped[dict[str, Any]] = mapped_column(default=dict, server_default="{}")
 
     snapshot: Mapped[InspectionSnapshot] = relationship(back_populates="elements")
     locators: Mapped[list[LocatorCandidate]] = relationship(
@@ -113,6 +115,8 @@ class LocatorCandidate(Base):
     strategy: Mapped[str] = mapped_column(String(40))  # role | label | test_id | placeholder | ...
     expression: Mapped[str] = mapped_column(Text)  # Playwright Python expression
     match_count: Mapped[int]
+    spec: Mapped[dict[str, Any]] = mapped_column(default=dict, server_default="{}")  # LocatorSpec
+    targets_element: Mapped[bool] = mapped_column(default=False, server_default="0")
 
     element: Mapped[Element] = relationship(back_populates="locators")
 

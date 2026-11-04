@@ -10,9 +10,10 @@ from pathlib import Path
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page
 
+from gatp.inspector.inspect import inspect_page
 from gatp.inspector.locators import resolve
 from gatp.runner.browser import Allowlist, BrowserOptions, open_page
-from gatp.runner.jobs import InspectJob, Job, JobResult, RecountJob
+from gatp.runner.jobs import InspectJob, Job, JobResult, RecountJob, SetupStep, origin
 from gatp.runner.sandbox import Sandbox, job_sandbox
 
 
@@ -62,13 +63,41 @@ class JobExecutor:
     def _inspect(
         page: Page, job: InspectJob, box: Sandbox
     ) -> tuple[dict[str, str], dict[str, object]]:
-        """T-006 stub: navigate, capture title + screenshot. Element extraction comes in T-007."""
+        """Run setup steps, open the page, inspect it, keep screenshot + served HTML."""
+        for step in job.setup:
+            _run_step(page, step)
         page.goto(job.url, wait_until="load")
+        page.wait_for_timeout(300)  # let onload scripts (e.g. client-side redirects) run
+        page.wait_for_load_state("load")
+        if origin(page.url) not in job.allowlist:
+            raise PlaywrightError(f"redirected outside the allowlist to {page.url}")
+        # The served source of the page we ended on (for source-line links), same cookies.
+        html = page.request.get(page.url).text()
+        result = inspect_page(page, html, job.scope, url=job.url)
         page.screenshot(path=box.path / "page.png", full_page=True)
-        return {"screenshot": box.keep("page.png")}, {"title": page.title(), "final_url": page.url}
+        (box.path / "page.html").write_text(html, encoding="utf-8")
+        files = {"screenshot": box.keep("page.png"), "html": box.keep("page.html")}
+        return files, result.model_dump(mode="json")
 
     @staticmethod
     def _recount(page: Page, job: RecountJob) -> tuple[dict[str, str], dict[str, object]]:
         page.goto(job.url, wait_until="load")
         counts = [resolve(page, spec).count() for spec in job.locators]
         return {}, {"counts": counts}
+
+
+def _run_step(page: Page, step: SetupStep) -> None:
+    """Execute one setup step. Steps are data; only these four actions exist."""
+    if step.action == "goto":
+        page.goto(step.url, wait_until="load")
+        return
+    if step.locator is None:  # pragma: no cover - prevented by SetupStep validation
+        raise ValueError(f"{step.action} needs a locator")
+    target = resolve(page, step.locator)
+    if step.action == "fill":
+        target.fill(step.value)
+    elif step.action == "click":
+        target.click()
+        page.wait_for_load_state("load")
+    else:
+        target.select_option(step.value)

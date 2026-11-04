@@ -13,6 +13,7 @@ The single home for everything needed to understand, continue, defend and mainta
 | `implementationPlans/` | Step-by-step plan per task (`PLAN-NNN`, same number as task) | [implementationPlans/README.md](implementationPlans/README.md) |
 | `TCs/` | Acceptance test cases for GATP itself (`TC-NNN`), traced to rubric and demo steps | [TCs/README.md](TCs/README.md) |
 | `SystemGuides/` | How-to guides (`SG-NNN`): setup, run, demo script, model config, troubleshooting | [SystemGuides/README.md](SystemGuides/README.md) |
+| `samples/` | Real GATP outputs kept as submission evidence (inspection JSON, screenshots, run reports) | [samples/README.md](samples/README.md) |
 | `RefrenceDocs/` | The project brief, extracted requirements (`REQ-NN`), external references | [RefrenceDocs/README.md](RefrenceDocs/README.md) |
 | `sessions/` | Session logs and handoffs (`YYYY-MM-DD-SNNN-slug.md`) | [sessions/README.md](sessions/README.md) |
 
