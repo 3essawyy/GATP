@@ -2,7 +2,7 @@
 
 - **Owner:** TBD
 - **Status:** Planned
-- **Code:** `backend/gatp/store/`
+- **Code:** `backend/src/gatp/store/`
 - **Tasks:** T-004, T-018
 - **ADRs:** ADR-005
 

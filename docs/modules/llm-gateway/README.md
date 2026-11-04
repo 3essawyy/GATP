@@ -2,7 +2,7 @@
 
 - **Owner:** TBD
 - **Status:** Planned
-- **Code:** `backend/gatp/llm_gateway/`
+- **Code:** `backend/src/gatp/llm_gateway/`
 - **Tasks:** T-005, T-010, T-019
 - **ADRs:** ADR-003
 

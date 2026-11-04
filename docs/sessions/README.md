@@ -5,3 +5,4 @@ One log per working session: what was done, decided, left open, and what to do n
 | ID | Date | Title | Tasks |
 |---|---|---|---|
 | [S001](2026-11-04-S001-kickoff-design-interview.md) | 2026-11-04 | Kickoff: design interview + docs scaffold | T-001 |
+| [S002](2026-11-04-S002-t002-repo-skeleton.md) | 2026-11-04 | T-002: repo skeleton, tooling, CI | T-002 |

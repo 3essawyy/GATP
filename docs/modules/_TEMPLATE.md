@@ -2,7 +2,7 @@
 
 - **Owner:** <team member>
 - **Status:** Planned | In progress | Implemented
-- **Code:** `backend/gatp/<name>/` (or `frontend/`)
+- **Code:** `backend/src/gatp/<name>/` (or `frontend/`)
 - **Tasks:** T-*
 - **ADRs:** ADR-*
 

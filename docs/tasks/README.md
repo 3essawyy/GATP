@@ -9,7 +9,7 @@ Milestones: **M1 = Phase 1 submission (Week 9)** · **M2 = Phase 2 submission (W
 | ID | Title | Modules | Depends on | Target | Status |
 |---|---|---|---|---|---|
 | [T-001](T-001-docs-scaffold.md) | Docs scaffold, ADRs, HLD, task breakdown | docs | — | W+0 | Done |
-| [T-002](T-002-repo-skeleton-ci.md) | Repo skeleton (backend, frontend, CI, tooling) | all | T-001 | W+0 | Todo |
+| [T-002](T-002-repo-skeleton-ci.md) | Repo skeleton (backend, frontend, CI, tooling) | all | T-001 | W+0 | Done |
 | [T-003](T-003-fixture-site.md) | Fixture site v1/v2 | fixtures | T-002 | W+0 | Todo |
 | [T-004](T-004-store-core.md) | Store core: schema, repositories, versioning | store | T-002 | W+1 | Todo |
 | [T-005](T-005-llm-gateway.md) | LLM gateway: Gemini + Ollama, structured output, usage log | llm-gateway | T-004 | W+1 | Todo |

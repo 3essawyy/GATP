@@ -26,7 +26,7 @@ Update **Status** with date + commit whenever a TC is run.
 | ID | Title | Type | Status |
 |---|---|---|---|
 | TC-101 | Design document covers all required elements | Manual | Not run |
-| TC-102 | Clean setup from README on fresh machine | Manual | Not run |
+| TC-102 | Clean setup from README on fresh machine | Manual | Partial: api/runner/frontend pass on Linux 2026-11-04 (T-002); fixture site (T-003) + Windows run pending |
 | TC-103 | Fixture site v1/v2 serve and differ as documented | Automated | Not run |
 | TC-104 | Store versioning immutable; restore creates new version | Automated | Not run |
 | TC-105 | LLM gateway logs usage; fallback; cache marked reused | Automated | Not run |

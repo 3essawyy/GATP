@@ -1,10 +1,10 @@
 # Module: web-ui
 
 - **Owner:** TBD
-- **Status:** Planned
+- **Status:** In progress
 - **Code:** `frontend/`
 - **Tasks:** T-002 (scaffold), T-009, UI parts of T-010, T-012…T-019
-- **ADRs:** ADR-002
+- **ADRs:** ADR-002, ADR-013
 
 ## Responsibility
 Presents every workflow step and collects human input and approvals. Contains **no business logic**: it never decides validity, never computes diffs or scores, never builds prompts. It renders what the API returns and sends user intent back.
@@ -12,7 +12,7 @@ Presents every workflow step and collects human input and approvals. Contains **
 ## Interfaces
 | Direction | Interface | Contract |
 |---|---|---|
-| Consumes | api (JSON) | Generated TS client from OpenAPI |
+| Consumes | api (JSON) | Generated TS client from OpenAPI (`src/api/`) |
 | Consumes | api (SSE) | Live run/inspection progress events |
 
 ## Screens (planned)
@@ -29,7 +29,20 @@ Presents every workflow step and collects human input and approvals. Contains **
 | Usage panel | Per-call tokens/latency, fresh vs reused, averages; test time shown separately | REQ-P2-5, Q8–Q10 |
 
 ## Internal design
-TBD in T-002/T-009 (routing, data fetching, component libraries).
+Libraries ([ADR-013](../../decisions/ADR-013-frontend-libraries.md)): Vite + React 19 + TS 5.9, Mantine (components), TanStack Query (server state), openapi-fetch + openapi-typescript (generated client), Monaco later (T-013). Routing is chosen in T-009.
+
+Layering inside `frontend/src/`. Each layer only calls the one below it:
+
+| Layer | Files | Rule |
+|---|---|---|
+| Components | `App.tsx`, `components/*` | Render data from hooks, send user intent; no `fetch`, no business rules |
+| Query hooks | `api/queries.ts` | One hook per endpoint (`useHealth`, …); sets cache keys, polling, invalidation |
+| Client | `api/client.ts` | `createClient<paths>({ baseUrl: '/' })`; re-exports schema types under friendly names |
+| Generated | `api/schema.d.ts` (from `openapi.json`) | **Never edited by hand**: `uv run poe gen-client` |
+
+Dev networking: the client uses relative `/api/...` URLs and Vite proxies them to `http://127.0.0.1:8000` (`GATP_API_URL` overrides), so the browser sees one origin.
+
+Implemented (T-002): `HealthBadge` shows *Checking API…* / green *API ok · vX* / red *API unreachable* using `useHealth` (polls every 10 s).
 
 ## Known limitations
 TBD.
