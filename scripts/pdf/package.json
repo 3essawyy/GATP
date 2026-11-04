@@ -1,0 +1,8 @@
+{
+  "name": "gatp-pdf-tools",
+  "private": true,
+  "description": "Renders Mermaid diagrams for scripts/build_pdf.py (submission PDFs)",
+  "dependencies": {
+    "mermaid": "12.3.0"
+  }
+}

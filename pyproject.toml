@@ -84,6 +84,14 @@ cmd = "python scripts/e2e_smoke.py"
 help = "Drive the real UI through the Phase 1 flow with screenshots (--out DIR, --video, --headed)"
 cmd = "python scripts/ui_walkthrough.py"
 
+[tool.poe.tasks.pdf]
+help = "Build a PDF from Markdown files (pandoc + Mermaid + Chromium): uv run poe pdf --out X.pdf a.md b.md"
+cmd = "python scripts/build_pdf.py"
+
+[tool.poe.tasks.pdf-phase1]
+help = "Build docs/submission/phase1/GATP-phase1-design.pdf"
+cmd = "python scripts/build_pdf.py --title 'GATP Phase 1 design' --out docs/submission/phase1/GATP-phase1-design.pdf docs/submission/phase1/README.md docs/architecture/HLD.md"
+
 [tool.poe.tasks.gen-client]
 help = "Export the OpenAPI schema and regenerate the TypeScript client types"
 sequence = [

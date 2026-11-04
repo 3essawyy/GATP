@@ -84,7 +84,7 @@ uv run poe fixtures v2
 ```
 
 ## Verify it worked
-- The top-right badge in the UI shows **API ok · v0.1.0** (green). If the API is stopped it turns red: **API unreachable**.
+- The Projects page shows two green badges at the top right: **Runner ready** and **API ok · v0.1.0**. If the API is stopped the badge turns red (**API unreachable**); if the runner is not running it shows **Runner offline**.
 - `curl http://127.0.0.1:8000/api/health` returns `{"status":"ok","app":"GATP","version":"0.1.0"}`.
 - The runner terminal prints `runner ready on unix socket data/runner/runner.sock, headed (visible browser)`. A Chromium window opens whenever GATP inspects a page.
 - http://127.0.0.1:8090/ shows "Sign in to BookShelf", and the footer says "v1" (or "v2").

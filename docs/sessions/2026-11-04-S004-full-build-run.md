@@ -1,6 +1,6 @@
 # Session S004 — 2026-11-04 — Full-build run (T-003 onward)
 
-- **Tasks touched:** T-003 … T-010 (more appended as completed)
+- **Tasks touched:** T-003 … T-011 (Phase 1 complete except the real-model run)
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s`, one squash-merged PR per task
 
 ## Interview outcome (before the run)
@@ -30,7 +30,8 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - **T-008:** API core: services container + DB migration on startup, projects/pages/setup steps/requirements, inspections via the runner, snapshots/files, scope (G0) as versioned artifact, artifacts (versions, edit, diff, G5 restore), approvals bound to exact versions, clarifications, computed workflow, SSE events, error mapping, regenerated TS client. 17 API tests (TC-109 Pass).
 - **Working agreement (Abdo, mid-session):** always verify on the real running system and act on the findings. Added `uv run poe smoke` (real fixture site + runner + API processes; also in CI) and a DoD line in CLAUDE.md. T-008 verified with it, headless and headed. PR #8.
 - **T-009:** UI: projects, workspace with API-computed step status, inspect (setup editor, regions, screenshot ⇄ findings, candidates, source modal), scope + goal + G0, clarification banner, SSE refresh. New `uv run poe ui-walkthrough` drives the real UI; its screenshots found 5 issues (React effect returning a Promise, setup-step locator not saved, unlabeled editor fields, wrong placeholder, console 404s), all fixed. Evidence in `docs/samples/phase1-walkthrough/`. PR #9.
-- **T-010:** Grounded insight call on the **approved** scope only (G0 required), qualified element ids checked against what was sent (repair retry → 502), observed vs assumption + questions, usage card (provider/model/version, tokens with source, model vs browser time, fresh/reused), exact request logged (migration 0005). Smoke + walkthrough extended; 4 UI polish fixes from the screenshot review.
+- **T-010:** Grounded insight call on the **approved** scope only (G0 required), qualified element ids checked against what was sent (repair retry → 502), observed vs assumption + questions, usage card (provider/model/version, tokens with source, model vs browser time, fresh/reused), exact request logged (migration 0005). Smoke + walkthrough extended; 4 UI polish fixes from the screenshot review. PR #10.
+- **T-011:** Phase 1 pack: HLD v0.2, design PDF (`poe pdf-phase1`), SG-004/005/006, DEFENSE.md, screen-recorded walkthrough (`--record`, shows the runner's own window), usage evidence, TC-102 Run 2 Pass (clean container, full SG-001 + real inspection), secret scan clean, `.env.example` completeness test. Testing found 3 issues (missing start-page badge vs SG-001, 4 undocumented settings, PDF diagram split), all fixed.
 
 ## Decisions (with ADR links)
 - T-003: none beyond PLAN-003.
@@ -45,7 +46,8 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - Ollama live check must be done on a team machine (ollama.com is blocked here).
 
 ## Next steps (in order)
-1. T-011 Phase 1 submission pack (design doc PDF, SG-004 demo script, recorded walkthrough video, usage evidence, TC run, `phase1-rc` tag).
+1. Phase 2: T-012 Collaborative test design + G1 (test cases from the approved scope; clarifications from model questions).
+2. Abdo: add `GATP_GEMINI_API_KEY` (new session) → `poe llm-check` → real-model evidence for TC-111.
 
 ## Notes for next session
 - In this cloud container, Python Playwright needs `GATP_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` (the preinstalled revision differs from the one the pinned Playwright expects).

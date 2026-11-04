@@ -14,3 +14,4 @@ One plan per non-trivial task, numbered like its task (`PLAN-012` ↔ `T-012`). 
 | [PLAN-008](PLAN-008-api-core.md) | T-008 API core | Executed |
 | [PLAN-010](PLAN-010-feasibility-llm-call.md) | T-010 Grounded model call | Executed |
 | [PLAN-009](PLAN-009-ui-inspection.md) | T-009 Phase 1 UI | Executed |
+| [PLAN-011](PLAN-011-phase1-submission.md) | T-011 Phase 1 submission pack | Executed |

@@ -25,8 +25,8 @@ Update **Status** with date + commit whenever a TC is run.
 
 | ID | Title | Type | Status |
 |---|---|---|---|
-| TC-101 | Design document covers all required elements | Manual | Not run |
-| TC-102 | Clean setup from README on fresh machine | Manual | Partial: api/runner/frontend **Pass** in clean ubuntu:24.04 on 2026-11-04 @ `bffd77d` ([run log](TC-102-runs.md)); fixture site pending T-003 |
+| TC-101 | Design document covers all required elements | Manual | **Pass** 2026-11-04 (T-011): [phase1 design PDF](../submission/phase1/GATP-phase1-design.pdf) = cover + HLD v0.2 (§2 components, §3 data flow, §4 gates, §5 validation, §6 later phases, §9 resources) |
+| TC-102 | Clean setup from README on fresh machine | Manual | **Pass** 2026-11-04 (T-011): clean ubuntu:24.04, full SG-001 incl. fixture site + a real headed inspection ([run log](TC-102-runs.md)) |
 | TC-103 | Fixture site v1/v2 serve and differ as documented | Automated | **Pass** 2026-11-04 (T-003): `test_fixture_server.py`, `test_fixture_site.py`, `test_fixture_diff.py` |
 | TC-104 | Store versioning immutable; restore creates new version | Automated | **Pass** 2026-11-04 (T-004): `test_store_*.py` |
 | TC-105 | LLM gateway logs usage; fallback; cache marked reused | Automated | **Pass** (automated, fake + mocked HTTP) 2026-11-04 (T-005); live Gemini/Ollama check pending |
