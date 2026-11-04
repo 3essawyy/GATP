@@ -28,10 +28,18 @@ def scrubbed_env(home: Path) -> dict[str, str]:
     for key in ("PLAYWRIGHT_BROWSERS_PATH", "DISPLAY", "GATP_CHROMIUM_EXECUTABLE"):
         if key in os.environ:
             env[key] = os.environ[key]
+    # HOME points at the sandbox, so Playwright would look for its browsers there: name the
+    # runner's real browser folder (readable, not writable, under bubblewrap).
+    default_browsers = Path.home() / ".cache" / "ms-playwright"
+    if "PLAYWRIGHT_BROWSERS_PATH" not in env and default_browsers.is_dir():
+        env["PLAYWRIGHT_BROWSERS_PATH"] = str(default_browsers)
     return env
 
 
 def write_files(files: dict[str, str], root: Path) -> None:
+    # Own pytest.ini: pytest must not walk up and pick GATP's pyproject.toml (its options,
+    # e.g. disabling the Playwright plugin) when the sandbox lives inside the repository.
+    (root / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
     for rel, content in files.items():
         target = (root / rel).resolve()
         if not target.is_relative_to(root.resolve()):
@@ -51,6 +59,7 @@ def collect(job: CollectJob, sandbox: Path) -> tuple[dict[str, Any], bool, str]:
         "-q",
         "-p",
         "no:cacheprovider",
+        f"--rootdir={sandbox}",
         "tests",
     ]
     try:

@@ -22,7 +22,7 @@ A restricted, separately started process that executes only typed jobs from the 
 | `inspect` | `url`, `allowlist`, `timeout_s` | `title`, `final_url` / `screenshot` (full extraction in T-007) | T-006 |
 | `recount` | `url`, `allowlist`, `locators: [LocatorSpec]`, optional `setup` steps | `counts: [int]` (same order) | T-006 (setup: T-013) |
 | `collect` | `files` {path: content} (paths limited to `pages/*.py`, `tests/test_*.py`, `conftest.py`) | `tests` (ids), `exit_code`, `output` | T-013 |
-| `run_tests` | code version files, test IDs, `base_url`, `allowlist` | per-test status, duration, error, screenshots | T-014 |
+| `run_tests` | approved `files`, `base_url`, `allowlist`, `tests` (empty = all), `timeout_s` | `results[]` (test_id, outcome, duration_ms, message, details, screenshots), `isolation`, `exit_code`, `blocked_requests`; files: junit XML, screenshots | T-014 |
 
 Every `JobResult` has `job_id`, `type`, `status` (`ok`/`failed`), `duration_ms` (browser/test time, separate from model time), `blocked_requests`, `files` (artifact-relative paths), `data` and `error`.
 
@@ -36,6 +36,9 @@ Every `JobResult` has `job_id`, `type`, `status` (`ok`/`failed`), `duration_ms` 
 | `server.py` | FastAPI app (`/health`, `/jobs`) |
 | `main.py` | `gatp-runner`: binds the 0600 socket in a 0700 dir, runs uvicorn on it |
 | `client.py` | `RunnerClient`, `RunnerUnavailableError`, `RunnerRejectedError` |
+
+## Approved test runs (T-014, [ADR-022](../../decisions/ADR-022-approved-execution-sandbox.md))
+`execute.py` writes the files, `gatp_run_plugin.py` and its own `pytest.ini` into the job sandbox, then runs `python -m pytest -p gatp_run_plugin --junitxml=… --screenshot=on` inside **bubblewrap**: read-only `/`; GATP data/artifacts/.env and ~/.ssh, ~/.config, … hidden; only the sandbox writable; new PID/IPC/UTS namespaces; cleared environment. The plugin adds origin-allowlist routing to every test browser context and records blocked requests. Results come from junit XML; screenshots are matched per test and copied to `artifacts/jobs/<id>/`. `GATP_RUNNER_ISOLATION=process` is a weaker fallback.
 
 ## Restrictions (enforced)
 - **Jobs:** typed only, no shell or code endpoint. An unknown job type or extra field gets HTTP 422.

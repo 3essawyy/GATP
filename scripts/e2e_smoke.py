@@ -262,7 +262,22 @@ class Smoke:
             assert report["ok"], report["report"]
             self.call("POST", f"/api/projects/{pid}/code/approve", 201, json={"actor": "smoke"})
             tests = report["report"]["collect"]["tests"]
-            return f"plan v{plan['version']['number']} G1; {len(code['files'])} files; collect via runner: {len(tests)} test(s); G2"
+            subject = self.call("GET", f"/api/projects/{pid}/runs/subject", 200)["subject"]
+            g3 = self.call(
+                "POST",
+                f"/api/projects/{pid}/approvals",
+                201,
+                json={"gate": "G3", "actor": "smoke", "subject": subject},
+            )
+            run = self.call(
+                "POST", f"/api/projects/{pid}/runs", 201, json={"approval_id": g3["id"]}
+            )
+            assert run["status"] in ("passed", "failed"), run["scope"]
+            outcomes = [r["outcome"] for r in run["results"]]
+            return (
+                f"plan v{plan['version']['number']} G1; {len(code['files'])} files; collect: {len(tests)} test(s); G2; "
+                f"G3 run #{run['id']} {run['status']} {outcomes} in {run['duration_ms']} ms ({run['scope']['isolation']})"
+            )
 
         def off_origin_refused() -> str:
             r = self.api.post(
@@ -279,7 +294,7 @@ class Smoke:
             ("save scope, approve G0", scope_and_gate),
             ("edit scope invalidates approval", edit_invalidates),
             ("re-approve + grounded model call (T-010)", model_insight),
-            ("plan G1 -> code -> validate (runner) -> G2", plan_and_code),
+            ("plan G1 -> code -> validate -> G2 -> G3 run (runner)", plan_and_code),
             ("off-origin page refused", off_origin_refused),
         ):
             self.step(title, fn)

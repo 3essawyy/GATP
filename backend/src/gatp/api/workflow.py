@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from gatp.api.services import Services
 from gatp.store.dto import VersionDTO
 from gatp.store.reports import ReportRepository
+from gatp.store.runs import RunRepository
 from gatp.test_designer.plan import TestPlan, unconfirmed_assumptions
 
 # Which artifact kinds each version-bound gate covers, and the workflow step it unlocks.
@@ -37,7 +38,7 @@ class GateBlockedError(Exception):
 class StepState:
     step: str
     gate: str | None
-    status: str  # todo | needs_approval | approved | blocked
+    status: str  # todo | needs_approval | approved | blocked | failed (run step)
     detail: str
     open_clarifications: int
 
@@ -117,4 +118,19 @@ def workflow_state(services: Services, project_id: int) -> list[StepState]:
         _gate_step(services, project_id, "scope", "G0"),
         _gate_step(services, project_id, "plan", "G1"),
         _gate_step(services, project_id, "code", "G2"),
+        _run_step(services, project_id),
     ]
+
+
+def _run_step(services: Services, project_id: int) -> StepState:
+    open_count = len(services.gates.clarifications(project_id, step="run", status="open"))
+    if open_count:
+        return StepState("run", "G3", "blocked", "open clarification(s)", open_count)
+    runs = RunRepository(services.db).for_project(project_id)
+    if not runs:
+        return StepState("run", "G3", "todo", "no run yet", 0)
+    last = runs[0]
+    passed = sum(1 for r in last.results if r.outcome == "passed")
+    detail = f"run #{last.id} {last.status}: {passed}/{len(last.results)} passed"
+    status = "approved" if last.status == "passed" else "failed"
+    return StepState("run", "G3", status, detail, 0)

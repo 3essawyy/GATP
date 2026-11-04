@@ -27,6 +27,11 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('uv.lock') }}
       - name: Install Chromium for Playwright
         run: uv run playwright install --with-deps chromium
+      - name: Install bubblewrap (sandbox for approved test runs, ADR-022)
+        run: |
+          sudo apt-get install -y bubblewrap
+          # Ubuntu 24.04 restricts unprivileged user namespaces, which bubblewrap needs.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Lint (ruff)
         run: uv run poe lint
       - name: Types (mypy --strict)

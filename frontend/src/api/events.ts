@@ -15,6 +15,7 @@ export function useProjectEvents(projectId: number) {
       qc.invalidateQueries({ queryKey: ['insight', projectId] });
       qc.invalidateQueries({ queryKey: ['plan', projectId] });
       qc.invalidateQueries({ queryKey: ['code', projectId] });
+      qc.invalidateQueries({ queryKey: ['runs', projectId] });
     };
     for (const kind of [
       'inspection_finished',
@@ -25,6 +26,7 @@ export function useProjectEvents(projectId: number) {
       'page_added',
       'model_call_finished',
       'code_validated',
+      'run_finished',
     ]) {
       source.addEventListener(kind, refresh);
     }

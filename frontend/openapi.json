@@ -1428,6 +1428,195 @@
         "title": "RestoreIn",
         "type": "object"
       },
+      "RunIn": {
+        "properties": {
+          "approval_id": {
+            "title": "Approval Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "approval_id"
+        ],
+        "title": "RunIn",
+        "type": "object"
+      },
+      "RunOut": {
+        "properties": {
+          "approval_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approval Id"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Test execution time in the runner (not model time)",
+            "title": "Duration Ms"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/RunResultOut"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "scope": {
+            "additionalProperties": true,
+            "title": "Scope",
+            "type": "object"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "target_url": {
+            "title": "Target Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "approval_id",
+          "status",
+          "target_url",
+          "scope",
+          "duration_ms",
+          "created_at",
+          "finished_at",
+          "results"
+        ],
+        "title": "RunOut",
+        "type": "object"
+      },
+      "RunResultOut": {
+        "properties": {
+          "details": {
+            "title": "Details",
+            "type": "string"
+          },
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "outcome": {
+            "title": "Outcome",
+            "type": "string"
+          },
+          "screenshot_path": {
+            "title": "Screenshot Path",
+            "type": "string"
+          },
+          "test_id": {
+            "title": "Test Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "test_id",
+          "outcome",
+          "duration_ms",
+          "message",
+          "screenshot_path",
+          "details"
+        ],
+        "title": "RunResultOut",
+        "type": "object"
+      },
+      "RunSubjectOut": {
+        "description": "Exactly what a G3 approval will authorise.",
+        "properties": {
+          "available_tests": {
+            "description": "Collected test ids from the validation",
+            "items": {
+              "type": "string"
+            },
+            "title": "Available Tests",
+            "type": "array"
+          },
+          "files": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Files",
+            "type": "array"
+          },
+          "headless": {
+            "title": "Headless",
+            "type": "boolean"
+          },
+          "isolation": {
+            "title": "Isolation",
+            "type": "string"
+          },
+          "subject": {
+            "additionalProperties": true,
+            "title": "Subject",
+            "type": "object"
+          },
+          "timeout_s": {
+            "title": "Timeout S",
+            "type": "number"
+          }
+        },
+        "required": [
+          "subject",
+          "files",
+          "available_tests",
+          "isolation",
+          "headless",
+          "timeout_s"
+        ],
+        "title": "RunSubjectOut",
+        "type": "object"
+      },
       "RunnerHealth": {
         "properties": {
           "available": {
@@ -1716,7 +1905,8 @@
               "todo",
               "needs_approval",
               "approved",
-              "blocked"
+              "blocked",
+              "failed"
             ],
             "title": "Status",
             "type": "string"
@@ -3594,6 +3784,145 @@
         ]
       }
     },
+    "/api/projects/{project_id}/runs": {
+      "get": {
+        "operationId": "listRuns",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RunOut"
+                  },
+                  "title": "Response Listruns",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Runs",
+        "tags": [
+          "runs"
+        ]
+      },
+      "post": {
+        "description": "Run exactly what the G3 approval names, in the runner (visible browser, sandbox).",
+        "operationId": "startRun",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start Run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/runs/subject": {
+      "get": {
+        "operationId": "getRunSubject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunSubjectOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Run Subject",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
     "/api/projects/{project_id}/scope": {
       "get": {
         "description": "The latest scope, or ``null`` if none was saved yet (not an error).",
@@ -3760,6 +4089,48 @@
         "summary": "Runner Health",
         "tags": [
           "system"
+        ]
+      }
+    },
+    "/api/runs/{run_id}": {
+      "get": {
+        "operationId": "getRun",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Run",
+        "tags": [
+          "runs"
         ]
       }
     },

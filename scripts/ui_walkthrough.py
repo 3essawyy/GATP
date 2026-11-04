@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -250,6 +251,34 @@ class Walkthrough(Smoke):
         expect(page.get_by_test_id("findings-list")).to_contain_text("#made-up")
         expect(page.get_by_test_id("approve-g2")).to_be_disabled()
         self.shot(page, "code-invented-locator-caught")
+        # Revert the bad edit (another new version), re-validate, re-approve G2.
+        editor = page.get_by_label("Code of pages/add_page.py")
+        editor.fill(
+            editor.input_value().replace(
+                'page.locator("#made-up")', 'page.locator("#title-error")', 1
+            )
+        )
+        page.get_by_label("Reason for editing pages/add_page.py").fill(
+            "revert to the verified locator"
+        )
+        page.get_by_role("button", name="Save edit (new version, re-validate)").click()
+        page.get_by_test_id("validate-code").click()
+        expect(page.get_by_test_id("validation-status")).to_have_text(
+            "validation passed", timeout=120_000
+        )
+        page.get_by_test_id("approve-g2").click()
+        expect(page.get_by_test_id("code-approved")).to_be_visible()
+        self.run_steps(page)
+
+    def run_steps(self, page: Page) -> None:
+        """T-014: G3 screen -> approve and run -> results with real failures visible."""
+        page.get_by_test_id("step-run").click()
+        expect(page.get_by_test_id("run-subject")).to_contain_text("You are approving (G3)")
+        self.shot(page, "run-g3-subject")
+        page.get_by_test_id("approve-run").click()
+        status = page.get_by_test_id("run-status").first
+        expect(status).to_have_text(re.compile("passed|failed"), timeout=180_000)
+        self.shot(page, "run-results")
 
     def start_recording(self) -> subprocess.Popen[bytes] | None:
         """Record the whole X display (GATP UI + the runner's visible browser) with ffmpeg."""

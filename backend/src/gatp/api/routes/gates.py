@@ -6,6 +6,7 @@ from fastapi import APIRouter
 
 from gatp.api.plan_service import apply_answer
 from gatp.api.routes.deps import Svc
+from gatp.api.run_service import current_subject
 from gatp.api.schemas import (
     AnswerIn,
     ApprovalIn,
@@ -34,6 +35,13 @@ def approve(project_id: int, body: ApprovalIn, svc: Svc) -> ApprovalOut:
         check_approvable(svc, project_id, body.gate, version)
     elif body.gate in ("G0", "G1", "G2", "G5"):
         raise GateBlockedError(f"{body.gate} approvals must name the exact artifact version")
+    if body.gate == "G3":
+        expected = current_subject(svc, project_id, body.subject.get("tests"))
+        if {k: body.subject.get(k) for k in expected} != expected:
+            raise GateBlockedError(
+                "G3 must name exactly the current approved code versions, target and tests: "
+                f"{expected}"
+            )
     approval = svc.gates.approve(
         project_id,
         body.gate,

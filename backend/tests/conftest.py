@@ -62,7 +62,13 @@ def settings(tmp_path: Path) -> Settings:
 def runner(settings: Settings) -> InProcessRunner:
     options = BrowserOptions(headless=True, executable_path=get_settings().chromium_executable)
     return InProcessRunner(
-        JobExecutor(options, settings.runner_sandbox_dir, settings.artifacts_dir)
+        JobExecutor(
+            options,
+            settings.runner_sandbox_dir,
+            settings.artifacts_dir,
+            isolation=get_settings().runner_isolation,
+            hide=(settings.data_dir / "hidden",),
+        )
     )
 
 

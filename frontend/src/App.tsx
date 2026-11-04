@@ -5,6 +5,7 @@ import { InspectPage } from './pages/InspectPage';
 import { PlanPage } from './pages/PlanPage';
 import { ProjectLayout } from './pages/ProjectLayout';
 import { ProjectsPage } from './pages/ProjectsPage';
+import { RunPage } from './pages/RunPage';
 import { ScopePage } from './pages/ScopePage';
 
 export function App() {
@@ -17,6 +18,7 @@ export function App() {
         <Route path="scope" element={<ScopePage />} />
         <Route path="plan" element={<PlanPage />} />
         <Route path="code" element={<CodePage />} />
+        <Route path="run" element={<RunPage />} />
       </Route>
     </Routes>
   );
