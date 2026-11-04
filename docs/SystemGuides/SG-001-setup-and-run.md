@@ -68,7 +68,7 @@ Run every command from the **repository root** unless the step says otherwise.
 | Process | Command | Address | Stop |
 |---|---|---|---|
 | API (FastAPI, auto-reload) | `uv run poe api` | http://127.0.0.1:8000 (docs at `/docs`) | Ctrl+C |
-| Runner (stub until T-006) | `uv run poe runner` | none (logs only) | Ctrl+C |
+| Runner (browser jobs) | `uv run poe runner` | Unix socket `data/runner/runner.sock` (no port) | Ctrl+C |
 | Frontend (Vite dev server) | `uv run poe web` | http://localhost:5173 | Ctrl+C |
 
 `uv run poe` with no task lists every available task.
@@ -86,7 +86,7 @@ uv run poe fixtures v2
 ## Verify it worked
 - The top-right badge in the UI shows **API ok · v0.1.0** (green). If the API is stopped it turns red: **API unreachable**.
 - `curl http://127.0.0.1:8000/api/health` returns `{"status":"ok","app":"GATP","version":"0.1.0"}`.
-- The runner terminal prints `runner ready (no jobs yet; job protocol arrives in T-006)`.
+- The runner terminal prints `runner ready on unix socket data/runner/runner.sock, headed (visible browser)`. A Chromium window opens whenever GATP inspects a page.
 - http://127.0.0.1:8090/ shows "Sign in to BookShelf", and the footer says "v1" (or "v2").
 
 ## Troubleshooting
@@ -101,4 +101,6 @@ uv run poe fixtures v2
 | `poe browsers` fails on missing libraries | No sudo rights | Ask an admin to run `sudo $(uv run which playwright) install-deps chromium` |
 | `poe browsers` can't download Chromium (blocked network) | Corporate/sandbox proxy | Point `GATP_CHROMIUM_EXECUTABLE` in `.env` at an existing Chromium binary |
 | Fixture: `Address already in use` on 8090 | Other version still running | Stop it first (Ctrl+C), or `python fixtures/serve.py v2 --port 8091` |
-| WSL2: browser window doesn't appear (from T-006) | WSLg missing | Use Windows 11 / recent WSL (`wsl --update`) |
+| WSL2: browser window doesn't appear | WSLg missing | Use Windows 11 / recent WSL (`wsl --update`) |
+| Runner fails with `Missing X server or $DISPLAY` | No desktop session (SSH/server) | Run it under a virtual display: `xvfb-run -a uv run poe runner` (`sudo apt-get install -y xvfb`) |
+| UI says the runner is unavailable | Runner not started, or started with another `GATP_RUNNER_SOCKET` | Start `uv run poe runner` with the same `.env` as the API |

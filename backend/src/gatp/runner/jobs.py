@@ -1,0 +1,81 @@
+"""Typed runner jobs and results (ADR-004, ADR-017).
+
+The runner accepts nothing but these models. ``Job`` is a discriminated union on ``type``, so
+an unknown job type is rejected by validation before any code runs. Every job carries its
+own origin allowlist, and its URL must be inside it.
+"""
+
+from __future__ import annotations
+
+from typing import Annotated, Any, Literal
+from urllib.parse import urlsplit
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from gatp.inspector.locators import LocatorSpec
+
+
+def origin(url: str) -> str:
+    """``scheme://host[:port]`` of an http(s) URL; raises ``ValueError`` otherwise."""
+    parts = urlsplit(url)
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        raise ValueError(f"not an http(s) URL: {url!r}")
+    return f"{parts.scheme}://{parts.netloc}"
+
+
+class _BrowserJob(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    url: str
+    allowlist: list[str] = Field(min_length=1, description="Allowed origins, e.g. http://host:port")
+    timeout_s: float = Field(default=30.0, gt=0, le=600)
+
+    @model_validator(mode="after")
+    def _url_inside_allowlist(self) -> _BrowserJob:
+        allowed = {origin(o) for o in self.allowlist}
+        if origin(self.url) not in allowed:
+            raise ValueError(f"url origin {origin(self.url)} is not in the allowlist")
+        self.allowlist = sorted(allowed)
+        return self
+
+
+class InspectJob(_BrowserJob):
+    """Open the page in a visible browser and inspect it (extraction: T-007)."""
+
+    type: Literal["inspect"] = "inspect"
+
+
+class RecountJob(_BrowserJob):
+    """Count how many elements each locator matches on the live page (uniqueness, ADR-006)."""
+
+    type: Literal["recount"] = "recount"
+    locators: list[LocatorSpec] = Field(min_length=1, max_length=500)
+
+
+Job = Annotated[InspectJob | RecountJob, Field(discriminator="type")]
+
+
+class JobRequest(BaseModel):
+    """Envelope posted to the runner."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    job: Job
+
+
+class BlockedRequest(BaseModel):
+    url: str
+    resource_type: str
+
+
+class JobResult(BaseModel):
+    """Outcome of one job. ``data`` depends on the job type; files are artifact-relative paths."""
+
+    job_id: str
+    type: str
+    status: Literal["ok", "failed"]
+    duration_ms: int
+    blocked_requests: list[BlockedRequest] = []
+    files: dict[str, str] = {}
+    data: dict[str, Any] = {}
+    error: str = ""

@@ -32,6 +32,13 @@ class Settings(BaseSettings):
     artifacts_dir: Path = Path("artifacts")
     database_url: str = ""  # default: sqlite:///<data_dir>/gatp.sqlite
 
+    # Runner (ADR-004, ADR-017): typed jobs over a Unix socket; always headed except in CI.
+    runner_socket: Path = Path("data/runner/runner.sock")
+    runner_headless: bool = False
+    runner_sandbox_dir: Path = Path("data/sandbox")
+    runner_job_timeout_s: float = 60.0
+    runner_slow_mo_ms: int = 0  # slow actions down so humans can follow the visible browser
+
     # LLM gateway (ADR-003, ADR-016). Providers: gemini | ollama | fake. Empty fallback = none.
     llm_primary: str = "gemini"
     llm_fallback: str = "ollama"
