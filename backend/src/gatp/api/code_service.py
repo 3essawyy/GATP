@@ -11,14 +11,22 @@ from dataclasses import dataclass
 from typing import Any
 
 from gatp.api.context import ScopeContext, approved_scope
-from gatp.api.plan_service import current_plan
+from gatp.api.guard_sync import KIND as WEAKENING
+from gatp.api.guard_sync import RESTORE, approved_baseline, sync_weakenings
+from gatp.api.plan_service import (
+    current_plan,
+    sync_clarifications,
+    sync_plan_weakenings,
+)
 from gatp.api.services import Services
 from gatp.api.workflow import GateBlockedError, require_approval
+from gatp.codegen.guard import code_weakenings
 from gatp.codegen.render import ElementRef, render
 from gatp.codegen.validate import normalise, validate
 from gatp.inspector.locators import LocatorSpec
 from gatp.runner.jobs import CollectJob, RecountJob, SetupStep
-from gatp.store.dto import VersionDTO
+from gatp.store.dto import ArtifactDTO, VersionDTO
+from gatp.store.gates import ClarificationDTO
 from gatp.store.reports import ReportDTO, ReportRepository
 
 CODE_KINDS = ("page_object", "test_file")
@@ -141,8 +149,70 @@ def generate(svc: Services, project_id: int) -> list[CodeFile]:
                 "generator",
                 f"retired: not used by plan v{plan_version.number}",
             )
+    sync_code_weakenings(svc, project_id)
     svc.events.publish(project_id, "artifact_changed", {"code": True})
     return code_files(svc, project_id)
+
+
+def sync_code_weakenings(svc: Services, project_id: int) -> None:
+    """Flag assertions a tester edit removed/changed vs the last G2-approved test file.
+
+    Generated files are not checked here: they follow the G1-approved plan, whose own
+    revisions are guarded (plan_service.sync_plan_weakenings).
+    """
+    findings: dict[str, tuple[str, dict[str, Any]]] = {}
+    for f in code_files(svc, project_id):
+        if not f.path.startswith("tests/") or f.version.author == "generator":
+            continue
+        baseline = approved_baseline(svc, f.artifact_id, "G2")
+        if baseline is None or baseline.id == f.version.id:
+            continue
+        for w in code_weakenings(f.path, baseline.content, f.version.content):
+            findings[w.key] = (
+                f"{f.path} v{f.version.number}: {w.message}. This weakens what the approved "
+                f"code (v{baseline.number}) checks: accept the change, or restore the approved "
+                "file?",
+                {
+                    "change": w.change,
+                    "artifact_id": f.artifact_id,
+                    "path": f.path,
+                    "test": w.test,
+                    "baseline_version_id": baseline.id,
+                    "baseline_number": baseline.number,
+                },
+            )
+    sync_weakenings(svc, project_id, "code", findings)
+
+
+def on_artifact_changed(svc: Services, artifact: ArtifactDTO) -> None:
+    """After a generic tester edit or restore: keep plan/code clarifications in sync."""
+    if artifact.kind == "test_plan":
+        found = current_plan(svc, artifact.project_id)
+        if found is not None:
+            sync_clarifications(svc, artifact.project_id, found[2])
+            sync_plan_weakenings(svc, artifact.project_id, artifact.id, found[2])
+    elif artifact.kind in CODE_KINDS:
+        sync_code_weakenings(svc, artifact.project_id)
+
+
+def apply_code_answer(svc: Services, clarification: ClarificationDTO) -> None:
+    """Restore the approved test file when the tester chose to (Accept changes nothing)."""
+    if clarification.step != "code" or clarification.kind != WEAKENING:
+        return
+    if clarification.answer == RESTORE:
+        ev = clarification.evidence
+        artifact_id = int(ev["artifact_id"])
+        baseline = svc.artifacts.get_version_by_id(int(ev["baseline_version_id"]))
+        if svc.artifacts.latest(artifact_id).content != baseline.content:
+            svc.artifacts.new_version(
+                artifact_id,
+                baseline.content,
+                "user",
+                f"restored approved v{baseline.number} (clarification #{clarification.id}, "
+                f"{clarification.answered_by})",
+            )
+    sync_code_weakenings(svc, clarification.project_id)
+    svc.events.publish(clarification.project_id, "artifact_changed", {"code": True})
 
 
 def run_validation(svc: Services, project_id: int) -> ReportDTO:

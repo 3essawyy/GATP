@@ -7,6 +7,7 @@ authorises one run (every rerun needs a new approval).
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from gatp.api.code_service import code_files
@@ -15,6 +16,17 @@ from gatp.api.workflow import GateBlockedError, is_approved, require_no_open_cla
 from gatp.runner.jobs import RunTestsJob
 from gatp.store.gates import ApprovalDTO
 from gatp.store.runs import RunDTO, RunRepository
+
+FAILING_LINE = re.compile(r"^>.*#\s*(TC-[\w-]+\.x\d+)", re.M)
+
+
+def failed_expectations(details: str) -> list[str]:
+    """Expectation ids on the failing line(s) of a stack excerpt.
+
+    Generated code ends every assertion line with ``# <expectation id> [basis]``, and pytest
+    marks the failing line with ``>``, so a failure maps back to the plan's expected result.
+    """
+    return list(dict.fromkeys(FAILING_LINE.findall(details)))
 
 
 def current_subject(

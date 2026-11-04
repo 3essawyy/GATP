@@ -279,6 +279,45 @@ class Walkthrough(Smoke):
         status = page.get_by_test_id("run-status").first
         expect(status).to_have_text(re.compile("passed|failed"), timeout=180_000)
         self.shot(page, "run-results")
+        self.feedback_steps(page)
+
+    def feedback_steps(self, page: Page) -> None:
+        """T-015: feedback on the failures -> revision -> weakening flagged -> G1/G2/G3 rerun."""
+        expect(page.get_by_test_id("run-status").first).to_have_text("failed")
+        page.get_by_test_id("run-feedback").fill(
+            "The error regions stay empty for example input; the page shows other errors."
+        )
+        self.shot(page, "run-feedback")
+        page.get_by_test_id("revise-from-run").click()
+        expect(page.get_by_role("heading", name="Test plan")).to_be_visible()
+        expect(page.get_by_test_id("plan-version")).to_contain_text("model", timeout=120_000)
+        flagged = page.get_by_test_id("clarification-weakening")
+        expect(flagged.first).to_contain_text("was removed")
+        expect(page.get_by_test_id("approve-g1")).to_be_disabled()
+        expect(page.get_by_test_id("plan-notes")).to_contain_text("removed failing check")
+        self.shot(page, "plan-weakening-flagged")
+        for _ in range(10):
+            if not flagged.count():
+                break
+            flagged.first.get_by_role("button", name="Accept this change").click()
+            page.wait_for_timeout(500)
+        expect(page.get_by_test_id("approve-g1")).to_be_enabled(timeout=10_000)
+        page.get_by_test_id("approve-g1").click()
+        expect(page.get_by_test_id("plan-approved")).to_be_visible()
+        page.get_by_test_id("step-code").click()
+        page.get_by_test_id("generate-code").click()
+        expect(page.get_by_test_id("approve-g2")).to_be_visible(timeout=30_000)
+        page.get_by_test_id("validate-code").click()
+        expect(page.get_by_test_id("validation-status")).to_have_text(
+            "validation passed", timeout=120_000
+        )
+        page.get_by_test_id("approve-g2").click()
+        expect(page.get_by_test_id("code-approved")).to_be_visible()
+        page.get_by_test_id("step-run").click()
+        page.get_by_test_id("approve-run").click()
+        expect(page.get_by_test_id("run-status").first).to_have_text("passed", timeout=180_000)
+        expect(page.get_by_test_id("step-run")).to_contain_text("done")
+        self.shot(page, "rerun-passed")
 
     def start_recording(self) -> subprocess.Popen[bytes] | None:
         """Record the whole X display (GATP UI + the runner's visible browser) with ffmpeg."""

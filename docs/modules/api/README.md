@@ -41,6 +41,15 @@ The orchestrator. Exposes the JSON/SSE API, owns the workflow state machine, enf
 - **Gated actions check:** they call `require_approval(services, gate, version)`, so actions downstream of a gate check the exact version they are about to use.
 - **Clarifications** (raised by feature modules) block their step (`inspect`, `scope`, `plan`, `code`, `run`, `maintain`). An answer records the tester's name and time.
 
+## Weakening clarifications (T-015, [ADR-023](../../decisions/ADR-023-feedback-and-weakening-guard.md))
+- **Where they come from:** `guard_sync.py` keeps one open `weakening` clarification per guard finding. The baseline is the last approved version (plan: G1; `tests/` files: G2).
+- **When they are synced:**
+  - after a plan store or answer (`plan_service`);
+  - after a generic artifact edit or restore (`code_service.on_artifact_changed`);
+  - after generation.
+- **Answers:** only **Accept this change** or **Restore the approved version**; free text gets 422. Restore writes a new version (plan check back with its confirmation, or the approved test file).
+- **Run feedback:** `POST /plan/propose` takes `run_id` + `test_ids`. `RunResultOut.failed_expectations` lists the plan expectation ids on the failing line.
+
 ## Workflow state (computed, never stored)
 `GET /projects/{id}/workflow` returns `inspect`, `scope`, `plan`, `code` (later `run`, `maintain`) with `status ∈ todo | needs_approval | approved | blocked`, derived from snapshots, artifacts, approvals and open clarifications (`api/workflow.py`).
 

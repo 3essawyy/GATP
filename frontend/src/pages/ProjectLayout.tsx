@@ -105,7 +105,16 @@ function OpenClarifications({ projectId, tester }: { projectId: number; tester: 
   return (
     <>
       {open.data.map((c) => (
-        <Alert key={c.id} color="yellow" title={`Clarification needed (${c.step})`}>
+        <Alert
+          key={c.id}
+          color={c.kind === 'weakening' ? 'orange' : 'yellow'}
+          title={
+            c.kind === 'weakening'
+              ? `Weakened check: your decision (${c.step})`
+              : `Clarification needed (${c.step})`
+          }
+          data-testid={`clarification-${c.kind}`}
+        >
           <Text size="sm">{c.question}</Text>
           <Group mt="xs">
             {c.options.map((o) => (
@@ -119,19 +128,25 @@ function OpenClarifications({ projectId, tester }: { projectId: number; tester: 
                 {String(o)}
               </Button>
             ))}
-            <TextInput
-              size="xs"
-              placeholder="Your answer"
-              value={text[c.id] ?? ''}
-              onChange={(e) => setText({ ...text, [c.id]: e.currentTarget.value })}
-            />
-            <Button
-              size="xs"
-              disabled={!tester || !text[c.id]}
-              onClick={() => answer.mutate({ id: c.id, answer: text[c.id] ?? '', actor: tester })}
-            >
-              Answer
-            </Button>
+            {c.kind !== 'weakening' && (
+              <>
+                <TextInput
+                  size="xs"
+                  placeholder="Your answer"
+                  value={text[c.id] ?? ''}
+                  onChange={(e) => setText({ ...text, [c.id]: e.currentTarget.value })}
+                />
+                <Button
+                  size="xs"
+                  disabled={!tester || !text[c.id]}
+                  onClick={() =>
+                    answer.mutate({ id: c.id, answer: text[c.id] ?? '', actor: tester })
+                  }
+                >
+                  Answer
+                </Button>
+              </>
+            )}
           </Group>
         </Alert>
       ))}

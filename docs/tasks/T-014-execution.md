@@ -30,6 +30,7 @@ Run exactly the approved code version in the isolated runner with a visible brow
 - **Smoke:** a full G3 run over the socket in bwrap (CI installs bubblewrap and enables user namespaces).
 - **Walkthrough (screens 14–15):** the G3 screen, then the run. The offline example's confirmed assumption "error region becomes visible" **fails for real**. The screenshot shows the page reported Year/Genre errors instead, which is exactly the kind of evidence T-015's feedback loop acts on.
 - **From the review:** the run step now shows "last run failed" instead of "needs approval".
+- **CI found (fixed in PR #14):** inside the sandbox, HOME is the sandbox directory, so Playwright looked for its browsers there and every test errored at launch on GitHub's runner. The runner now passes its real browser folder (`PLAYWRIGHT_BROWSERS_PATH`), and the run tests print the failure detail.
 
 ## Explain it (code-defense prep)
 **What.** The Run step shows exactly what a G3 approval will authorise: the code file versions, the target origin, which tests, the sandbox type and the browser mode. "Approve (G3) and run" records that approval, and the runner then runs pytest on exactly those files in a sandbox. Results show each test's outcome, time, real error message, stack excerpt and screenshot.

@@ -33,6 +33,9 @@ Example (from the fixture site): `self.title_error_alert = page.locator("#title-
 
 The report is stored with the exact code version ids (`validation_reports`, migration `0006`). G2 needs a passing report for the version being approved.
 
+## Weakening guard for test edits (T-015, [ADR-023](../../decisions/ADR-023-feedback-and-weakening-guard.md))
+`guard.py`: `code_weakenings(path, approved, edited)` compares each test function with the last G2-approved version of the file: function removed, `expect(...)`/`assert` gone or changed, newly skipped/xfail. The API turns findings into `weakening` clarifications on step `code` (Accept / Restore the approved file), which block G2.
+
 ## Tests
 `test_codegen.py`: G1 required; generated files and content; validation (static, recount, collect) passes; G2 only after validation; edit → new version, approval and report no longer apply; injected invented locator caught and blocks G2; static unit checks; **generated test really runs and passes against fixture v1**.
 

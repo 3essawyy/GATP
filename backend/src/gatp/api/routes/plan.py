@@ -2,16 +2,20 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
 from gatp.api.context import approved_scope
 from gatp.api.plan_service import current_plan, element_labels, plan_blockers, store_plan
 from gatp.api.routes.deps import Svc
+from gatp.api.run_service import failed_expectations
 from gatp.api.schemas import ClarificationOut, LlmCallOut, VersionOut
 from gatp.api.services import Services
 from gatp.api.workflow import is_approved, require_no_open_clarifications
 from gatp.store.errors import ValidationError
+from gatp.store.runs import RunRepository
 from gatp.test_designer.plan import TestPlan, element_index, propose_plan, validate_plan
 
 router = APIRouter(prefix="/api", tags=["plan"])
@@ -19,6 +23,10 @@ router = APIRouter(prefix="/api", tags=["plan"])
 
 class ProposeIn(BaseModel):
     feedback: str = Field(default="", max_length=5000, description="Revise the current plan")
+    run_id: int | None = Field(default=None, description="Revise from this run's results (T-015)")
+    test_ids: list[str] = Field(
+        default_factory=list, description="Results to include (empty = every non-passed test)"
+    )
 
 
 class PlanEditIn(BaseModel):
@@ -79,6 +87,8 @@ def propose(project_id: int, body: ProposeIn, svc: Svc) -> PlanOut:
         f"Q: {c.question} A: {c.answer}"
         for c in svc.gates.clarifications(project_id, status="answered")
     ]
+    run_results = _run_results(svc, project_id, body.run_id, body.test_ids)
+    revising = bool(body.feedback or run_results)
     svc.events.publish(project_id, "model_call_started", {"purpose": "test_plan"})
     result = propose_plan(
         svc.llm,
@@ -89,15 +99,40 @@ def propose(project_id: int, body: ProposeIn, svc: Svc) -> PlanOut:
         answers=answers,
         elements=ctx.elements,
         pages=ctx.pages,
-        current=existing[2] if existing and body.feedback else None,
+        current=existing[2] if existing and revising else None,
         feedback=body.feedback,
+        run_results=run_results,
     )
-    reason = f"revised by model: {body.feedback}" if body.feedback else "proposed by model"
+    source = f" from run #{body.run_id}" if run_results else ""
+    reason = f"revised by model{source}: {body.feedback}" if revising else "proposed by model"
     store_plan(svc, project_id, result.value, "model", f"{reason} (call #{result.call.id})")
     svc.events.publish(project_id, "model_call_finished", {"call_id": result.call.id})
     out = _out(svc, project_id, LlmCallOut.model_validate(result.call))
     assert out is not None  # noqa: S101 - just stored
     return out
+
+
+def _run_results(
+    svc: Services, project_id: int, run_id: int | None, test_ids: list[str]
+) -> list[dict[str, Any]]:
+    """Failures of an earlier run, as page data for a revision (messages are page text)."""
+    if run_id is None:
+        return []
+    run = RunRepository(svc.db).get(run_id)
+    if run.project_id != project_id:
+        raise ValidationError(f"run {run_id} belongs to another project")
+    chosen = [
+        r for r in run.results if (r.test_id in test_ids if test_ids else r.outcome != "passed")
+    ]
+    return [
+        {
+            "test_id": r.test_id,
+            "outcome": r.outcome,
+            "message": r.message[:800],
+            "failed_expectations": failed_expectations(r.trace_path),
+        }
+        for r in chosen
+    ]
 
 
 @router.get("/projects/{project_id}/plan", operation_id="getPlan")

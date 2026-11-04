@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 
 from gatp.api.code_service import code_files, latest_report_for_current
 from gatp.api.routes.deps import Svc
-from gatp.api.run_service import current_subject, execute
+from gatp.api.run_service import current_subject, execute, failed_expectations
 from gatp.store.runs import RunDTO, RunRepository
 
 router = APIRouter(prefix="/api", tags=["runs"])
@@ -39,6 +39,9 @@ class RunResultOut(BaseModel):
     message: str
     screenshot_path: str
     details: str
+    failed_expectations: list[str] = Field(
+        default_factory=list, description="Plan expectation ids on the failing line (T-015)"
+    )
 
 
 class RunOut(BaseModel):
@@ -76,6 +79,7 @@ def run_out(r: RunDTO) -> RunOut:
                 message=x.message,
                 screenshot_path=x.screenshot_path,
                 details=x.trace_path,
+                failed_expectations=failed_expectations(x.trace_path),
             )
             for x in r.results
         ],
