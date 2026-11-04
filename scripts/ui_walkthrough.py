@@ -214,6 +214,42 @@ class Walkthrough(Smoke):
         expect(page.get_by_test_id("approve-g1")).to_be_visible()  # edit -> re-approval needed
         expect(page.get_by_test_id("step-plan")).to_contain_text("needs approval")
         self.shot(page, "plan-edited-needs-reapproval")
+        page.get_by_test_id("approve-g1").click()
+        expect(page.get_by_test_id("plan-approved")).to_be_visible()
+        self.code_steps(page)
+
+    def code_steps(self, page: Page) -> None:
+        """T-013: generate -> validate -> G2 -> injected locator caught."""
+        page.get_by_test_id("step-code").click()
+        expect(page.get_by_role("heading", name="Code review")).to_be_visible()
+        page.get_by_test_id("generate-code").click()
+        expect(page.get_by_role("tab", name="tests/test_plan.py")).to_be_visible(timeout=30_000)
+        page.get_by_test_id("validate-code").click()
+        expect(page.get_by_test_id("validation-status")).to_have_text(
+            "validation passed", timeout=120_000
+        )
+        self.shot(page, "code-validated")
+        page.get_by_test_id("approve-g2").click()
+        expect(page.get_by_test_id("code-approved")).to_be_visible()
+        expect(page.get_by_test_id("step-code")).to_contain_text("done")
+        # Reviewer edit that invents a locator: must be caught and must reopen G2.
+        page.get_by_role("tab", name="pages/add_page.py").click()
+        editor = page.get_by_label("Code of pages/add_page.py")
+        editor.fill(
+            editor.input_value().replace(
+                'page.locator("#title-error")', 'page.locator("#made-up")', 1
+            )
+        )
+        page.get_by_label("Reason for editing pages/add_page.py").fill("try another selector")
+        page.get_by_role("button", name="Save edit (new version, re-validate)").click()
+        expect(page.get_by_test_id("approve-g2")).to_be_visible()
+        page.get_by_test_id("validate-code").click()
+        expect(page.get_by_test_id("validation-status")).to_have_text(
+            "validation failed", timeout=120_000
+        )
+        expect(page.get_by_test_id("findings-list")).to_contain_text("#made-up")
+        expect(page.get_by_test_id("approve-g2")).to_be_disabled()
+        self.shot(page, "code-invented-locator-caught")
 
     def start_recording(self) -> subprocess.Popen[bytes] | None:
         """Record the whole X display (GATP UI + the runner's visible browser) with ffmpeg."""

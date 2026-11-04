@@ -265,3 +265,57 @@ export function useEditPlan(projectId: number) {
     onSuccess: refresh,
   });
 }
+
+export function useCode(projectId: number) {
+  return useQuery({
+    queryKey: ['code', projectId],
+    queryFn: async () => unwrap(await api.GET('/api/projects/{project_id}/code', pid(projectId))),
+  });
+}
+
+function useCodeMutation<T>(projectId: number, fn: (v: T) => Promise<unknown>) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: fn,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['code', projectId] });
+      qc.invalidateQueries({ queryKey: ['workflow', projectId] });
+    },
+  });
+}
+
+export function useGenerateCode(projectId: number) {
+  return useCodeMutation(projectId, async () =>
+    unwrap(await api.POST('/api/projects/{project_id}/code/generate', pid(projectId))),
+  );
+}
+
+export function useValidateCode(projectId: number) {
+  return useCodeMutation(projectId, async () =>
+    unwrap(await api.POST('/api/projects/{project_id}/code/validate', pid(projectId))),
+  );
+}
+
+export function useApproveCode(projectId: number) {
+  return useCodeMutation(projectId, async (actor: string) =>
+    unwrap(
+      await api.POST('/api/projects/{project_id}/code/approve', {
+        ...pid(projectId),
+        body: { actor },
+      }),
+    ),
+  );
+}
+
+export function useEditFile(projectId: number) {
+  return useCodeMutation(
+    projectId,
+    async (v: { artifactId: number; content: string; reason: string; actor: string }) =>
+      unwrap(
+        await api.POST('/api/artifacts/{artifact_id}/versions', {
+          params: { path: { artifact_id: v.artifactId } },
+          body: { content: v.content, reason: v.reason, actor: v.actor },
+        }),
+      ),
+  );
+}

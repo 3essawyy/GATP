@@ -54,3 +54,5 @@ export type LlmCall = S['LlmCallOut'];
 export type PlanResult = S['PlanOut'];
 export type TestPlan = S['TestPlan'];
 export type TestCase = S['TestCase'];
+export type CodeResult = S['CodeOut'];
+export type CodeFile = S['CodeFileOut'];

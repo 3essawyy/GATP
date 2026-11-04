@@ -38,8 +38,8 @@ Update **Status** with date + commit whenever a TC is run.
 | TC-111 | Grounded model call with model/version/tokens/latency recorded | Manual | Partial: automated + UI with the fake provider Pass (T-010); **real Gemini run pending key** |
 | TC-201 | Proposed cases cite observed elements; assumptions flagged | Automated + Manual | **Pass** 2026-11-04 (T-012): `test_api_plan.py` + walkthrough (offline provider); real-model run pending key |
 | TC-202 | Plan edit, clarification, approval (G1) | Manual | **Pass** 2026-11-04 (T-012): walkthrough screenshots 09–11 + `test_api_plan.py` |
-| TC-203 | Generated POM code passes syntax + locator validation | Automated | Not run |
-| TC-204 | Invented locator rejected; code reviewable | Automated + Manual | Not run |
+| TC-203 | Generated POM code passes syntax + locator validation | Automated | **Pass** 2026-11-04 (T-013): `test_codegen.py` (incl. a real run of the generated test on v1), smoke, walkthrough |
+| TC-204 | Invented locator rejected; code reviewable | Automated + Manual | **Pass** 2026-11-04 (T-013): `test_codegen.py` + walkthrough screenshot 13 |
 | TC-205 | Execution requires G3; visible browser; results + screenshots | Manual | Not run |
 | TC-206 | Real failure stays visible with details | Automated | Not run |
 | TC-207 | Feedback → revise → approved rerun; no silent assertion weakening | Manual | Not run |

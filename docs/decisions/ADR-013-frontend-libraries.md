@@ -1,6 +1,6 @@
 # ADR-013: Frontend libraries and API client generation
 
-- **Status:** Accepted
+- **Status:** Accepted; the Monaco editor choice is superseded by [ADR-021](ADR-021-deterministic-codegen.md)
 - **Date:** 2026-11-04
 - **Session:** S002
 - **Related:** REQ-P2-6, T-002, T-013, T-018; refines [ADR-002](ADR-002-tech-stack.md); module web-ui

@@ -300,6 +300,83 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/projects/{project_id}/code': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Code */
+    get: operations['getCode'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/code/approve': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Approve Code
+     * @description G2 for every current file version (each must be latest and covered by a passing report).
+     */
+    post: operations['approveCode'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/code/generate': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Generate Code
+     * @description Render Page Objects + tests from the G1-approved plan (deterministic, no model call).
+     */
+    post: operations['generateCode'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/code/validate': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Validate Code
+     * @description Static checks + live recount + pytest --collect-only in the runner; stores the report.
+     */
+    post: operations['validateCode'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/projects/{project_id}/events': {
     parameters: {
       query?: never;
@@ -589,6 +666,16 @@ export interface components {
         [key: string]: unknown;
       };
     };
+    /** ApproveCodeIn */
+    ApproveCodeIn: {
+      /** Actor */
+      actor: string;
+      /**
+       * Comment
+       * @default
+       */
+      comment?: string;
+    };
     /** ArtifactOut */
     ArtifactOut: {
       /**
@@ -636,6 +723,30 @@ export interface components {
       status: string;
       /** Step */
       step: string;
+    };
+    /** CodeFileOut */
+    CodeFileOut: {
+      /** Approved */
+      approved: boolean;
+      /** Artifact Id */
+      artifact_id: number;
+      /** Kind */
+      kind: string;
+      /** Path */
+      path: string;
+      version: components['schemas']['VersionOut'];
+    };
+    /** CodeOut */
+    CodeOut: {
+      /**
+       * Approved
+       * @description Every current file version carries G2
+       */
+      approved: boolean;
+      /** Files */
+      files: components['schemas']['CodeFileOut'][];
+      /** @description Latest report, only if it covers these exact versions */
+      report: components['schemas']['ReportOut'] | null;
     };
     /** DiffOut */
     DiffOut: {
@@ -1101,6 +1212,24 @@ export interface components {
        * @default
        */
       feedback?: string;
+    };
+    /** ReportOut */
+    ReportOut: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Id */
+      id: number;
+      /** Ok */
+      ok: boolean;
+      /** Report */
+      report: {
+        [key: string]: unknown;
+      };
+      /** Version Ids */
+      version_ids: number[];
     };
     /** RequirementIn */
     RequirementIn: {
@@ -1938,6 +2067,134 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ClarificationOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getCode: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodeOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  approveCode: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ApproveCodeIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApprovalOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  generateCode: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodeOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  validateCode: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodeOut'];
         };
       };
       /** @description Validation Error */

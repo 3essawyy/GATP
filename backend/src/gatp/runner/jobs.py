@@ -59,29 +59,47 @@ class SetupStep(BaseModel):
         return self
 
 
-class InspectJob(_BrowserJob):
-    """Open the page in a visible browser and inspect it (T-007)."""
+class _PageJob(_BrowserJob):
+    """A browser job that may first run tester-approved setup steps (ADR-018)."""
 
-    type: Literal["inspect"] = "inspect"
-    scope: InspectionScope = InspectionScope()
     setup: list[SetupStep] = Field(default_factory=list, max_length=50)
 
     @model_validator(mode="after")
-    def _setup_urls_inside_allowlist(self) -> InspectJob:
+    def _setup_urls_inside_allowlist(self) -> _PageJob:
         for step in self.setup:
             if step.action == "goto" and origin(step.url) not in self.allowlist:
                 raise ValueError(f"setup url {step.url} is not in the allowlist")
         return self
 
 
-class RecountJob(_BrowserJob):
+class InspectJob(_PageJob):
+    """Open the page in a visible browser and inspect it (T-007)."""
+
+    type: Literal["inspect"] = "inspect"
+    scope: InspectionScope = InspectionScope()
+
+
+class RecountJob(_PageJob):
     """Count how many elements each locator matches on the live page (uniqueness, ADR-006)."""
 
     type: Literal["recount"] = "recount"
     locators: list[LocatorSpec] = Field(min_length=1, max_length=500)
 
 
-Job = Annotated[InspectJob | RecountJob, Field(discriminator="type")]
+SAFE_PATH = r"^(pages/[a-z0-9_]+\.py|tests/test_[a-z0-9_]+\.py|conftest\.py)$"
+
+
+class CollectJob(BaseModel):
+    """``pytest --collect-only`` on approved code files in a fresh sandbox (T-013)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: Literal["collect"] = "collect"
+    files: dict[Annotated[str, Field(pattern=SAFE_PATH)], str] = Field(min_length=1, max_length=50)
+    timeout_s: float = Field(default=60.0, gt=0, le=300)
+
+
+Job = Annotated[InspectJob | RecountJob | CollectJob, Field(discriminator="type")]
 
 
 class JobRequest(BaseModel):

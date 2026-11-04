@@ -13,7 +13,16 @@ from playwright.sync_api import Page
 from gatp.inspector.inspect import inspect_page
 from gatp.inspector.locators import resolve
 from gatp.runner.browser import Allowlist, BrowserOptions, open_page
-from gatp.runner.jobs import InspectJob, Job, JobResult, RecountJob, SetupStep, origin
+from gatp.runner.collect import collect
+from gatp.runner.jobs import (
+    CollectJob,
+    InspectJob,
+    Job,
+    JobResult,
+    RecountJob,
+    SetupStep,
+    origin,
+)
 from gatp.runner.sandbox import Sandbox, job_sandbox
 
 
@@ -37,6 +46,17 @@ class JobExecutor:
     def _run(self, job: Job) -> JobResult:
         job_id = uuid.uuid4().hex[:12]
         started = time.perf_counter()
+        if isinstance(job, CollectJob):
+            with job_sandbox(self.sandbox_root, self.artifacts_root, job_id) as box:
+                data, failed, error = collect(job, box.path)
+            return JobResult(
+                job_id=job_id,
+                type=job.type,
+                status="failed" if failed else "ok",
+                duration_ms=round((time.perf_counter() - started) * 1000),
+                data=data,
+                error=error,
+            )
         allowlist = Allowlist(set(job.allowlist))
         with job_sandbox(self.sandbox_root, self.artifacts_root, job_id) as box:
             try:
@@ -81,6 +101,8 @@ class JobExecutor:
 
     @staticmethod
     def _recount(page: Page, job: RecountJob) -> tuple[dict[str, str], dict[str, object]]:
+        for step in job.setup:
+            _run_step(page, step)
         page.goto(job.url, wait_until="load")
         counts = [resolve(page, spec).count() for spec in job.locators]
         return {}, {"counts": counts}

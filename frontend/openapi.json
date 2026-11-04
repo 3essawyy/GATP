@@ -130,6 +130,27 @@
         "title": "ApprovalOut",
         "type": "object"
       },
+      "ApproveCodeIn": {
+        "properties": {
+          "actor": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Actor",
+            "type": "string"
+          },
+          "comment": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Comment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor"
+        ],
+        "title": "ApproveCodeIn",
+        "type": "object"
+      },
       "ArtifactOut": {
         "properties": {
           "created_at": {
@@ -241,6 +262,72 @@
           "answered_at"
         ],
         "title": "ClarificationOut",
+        "type": "object"
+      },
+      "CodeFileOut": {
+        "properties": {
+          "approved": {
+            "title": "Approved",
+            "type": "boolean"
+          },
+          "artifact_id": {
+            "title": "Artifact Id",
+            "type": "integer"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "version": {
+            "$ref": "#/components/schemas/VersionOut"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "path",
+          "kind",
+          "version",
+          "approved"
+        ],
+        "title": "CodeFileOut",
+        "type": "object"
+      },
+      "CodeOut": {
+        "properties": {
+          "approved": {
+            "description": "Every current file version carries G2",
+            "title": "Approved",
+            "type": "boolean"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/CodeFileOut"
+            },
+            "title": "Files",
+            "type": "array"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReportOut"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Latest report, only if it covers these exact versions"
+          }
+        },
+        "required": [
+          "files",
+          "report",
+          "approved"
+        ],
+        "title": "CodeOut",
         "type": "object"
       },
       "DiffOut": {
@@ -1237,6 +1324,44 @@
           }
         },
         "title": "ProposeIn",
+        "type": "object"
+      },
+      "ReportOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "report": {
+            "additionalProperties": true,
+            "title": "Report",
+            "type": "object"
+          },
+          "version_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Version Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "ok",
+          "version_ids",
+          "report",
+          "created_at"
+        ],
+        "title": "ReportOut",
         "type": "object"
       },
       "RequirementIn": {
@@ -2705,6 +2830,191 @@
         "summary": "List Clarifications",
         "tags": [
           "gates"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/code": {
+      "get": {
+        "operationId": "getCode",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Code",
+        "tags": [
+          "code"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/code/approve": {
+      "post": {
+        "description": "G2 for every current file version (each must be latest and covered by a passing report).",
+        "operationId": "approveCode",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveCodeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ApprovalOut"
+                  },
+                  "title": "Response Approvecode",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Approve Code",
+        "tags": [
+          "code"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/code/generate": {
+      "post": {
+        "description": "Render Page Objects + tests from the G1-approved plan (deterministic, no model call).",
+        "operationId": "generateCode",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Generate Code",
+        "tags": [
+          "code"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/code/validate": {
+      "post": {
+        "description": "Static checks + live recount + pytest --collect-only in the runner; stores the report.",
+        "operationId": "validateCode",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Validate Code",
+        "tags": [
+          "code"
         ]
       }
     },
