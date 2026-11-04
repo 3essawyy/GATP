@@ -2,7 +2,7 @@
 
 - **Owner:** TBD
 - **Status:** Planned
-- **Code:** `backend/gatp/maintainer/`
+- **Code:** `backend/src/gatp/maintainer/`
 - **Tasks:** T-016, T-017
 - **ADRs:** ADR-007
 

@@ -15,12 +15,12 @@ Never delete or rewrite an accepted ADR. To change a decision, add a new ADR and
 | [ADR-009](ADR-009-testing-strategy-and-fixture-site.md) | Own fixture site v1/v2 + pytest + CI | Accepted | 2026-11-04 |
 | [ADR-010](ADR-010-phase1-scope-frontload.md) | Phase 1 front-loads Phase 2 | Accepted | 2026-11-04 |
 | [ADR-011](ADR-011-bonus-deferred.md) | Bonus decided after Phase 1 feedback | Accepted (deferred) | 2026-11-04 |
+| [ADR-012](ADR-012-backend-and-dev-tooling.md) | Backend and dev tooling: uv, ruff, mypy strict, poethepoet, single package | Accepted | 2026-11-04 |
+| [ADR-013](ADR-013-frontend-libraries.md) | Frontend libraries: npm, ESLint+Prettier, Mantine, TanStack Query, openapi-typescript/fetch, Monaco | Accepted | 2026-11-04 |
 
 ## Open decisions (to become ADRs)
 | Topic | Decide in |
 |---|---|
-| Python env tool (uv vs pip+venv), lint/type tools | T-002 |
-| Frontend libs (code editor, diff viewer, data fetching) | T-002 |
 | Exact Gemini model ID + verified free-tier limits | T-005 |
 | DB access layer + migrations tool | T-004 |
 | Core ↔ runner job protocol (HTTP vs queue vs stdin/stdout) | T-006 |

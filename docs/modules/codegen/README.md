@@ -2,7 +2,7 @@
 
 - **Owner:** TBD
 - **Status:** Planned
-- **Code:** `backend/gatp/codegen/`
+- **Code:** `backend/src/gatp/codegen/`
 - **Tasks:** T-013
 - **ADRs:** ADR-006, ADR-008
 

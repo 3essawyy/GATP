@@ -2,7 +2,7 @@
 
 - **Owner:** TBD
 - **Status:** Planned
-- **Code:** `backend/gatp/inspector/` (runs **inside the runner process**)
+- **Code:** `backend/src/gatp/inspector/` (runs **inside the runner process**)
 - **Tasks:** T-007
 - **ADRs:** ADR-004, ADR-006, ADR-007
 

@@ -2,7 +2,7 @@
 
 - **Owner:** TBD
 - **Status:** Planned
-- **Code:** `backend/gatp/test_designer/`
+- **Code:** `backend/src/gatp/test_designer/`
 - **Tasks:** T-012
 - **ADRs:** ADR-003, ADR-006
 
