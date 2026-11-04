@@ -1,9 +1,8 @@
-# SG-001: Setup and run (api, runner, frontend)
+# SG-001: Setup and run (api, runner, frontend, fixture site)
 
 - **Audience:** tester | developer | examiner
 - **Platform:** **Linux** (Ubuntu 24.04 reference; Windows users run it inside **WSL2 Ubuntu**). See [ADR-014](../decisions/ADR-014-linux-only-platform.md).
 - **Last verified:** 2026-11-04, clean `ubuntu:24.04` container, non-root user with sudo, at the T-002 follow-up commit. See the [TC-102 run log](../TCs/TC-102-runs.md).
-- **Fixture site:** added in T-003 (this guide gains a section then).
 
 Run every command from the **repository root** unless the step says otherwise.
 
@@ -74,10 +73,21 @@ Run every command from the **repository root** unless the step says otherwise.
 
 `uv run poe` with no task lists every available task.
 
+### Fixture site (BookShelf)
+Our own test website, documented in [fixtures/README.md](../../fixtures/README.md). In a fourth terminal:
+```bash
+uv run poe fixtures v1
+```
+It serves on http://127.0.0.1:8090/ (sign in with `tester` / `secret123`). For the maintenance demo, stop it with Ctrl+C and start the modified version on the same URL:
+```bash
+uv run poe fixtures v2
+```
+
 ## Verify it worked
 - The top-right badge in the UI shows **API ok · v0.1.0** (green). If the API is stopped it turns red: **API unreachable**.
 - `curl http://127.0.0.1:8000/api/health` returns `{"status":"ok","app":"GATP","version":"0.1.0"}`.
 - The runner terminal prints `runner ready (no jobs yet; job protocol arrives in T-006)`.
+- http://127.0.0.1:8090/ shows "Sign in to BookShelf", and the footer says "v1" (or "v2").
 
 ## Troubleshooting
 | Symptom | Cause | Fix |
@@ -89,4 +99,6 @@ Run every command from the **repository root** unless the step says otherwise.
 | Badge says **API unreachable** | API not running, or on another port | Start `uv run poe api`; if you changed the port, also set `GATP_API_URL` for the frontend |
 | `address already in use` on 8000 | Old API process still running | `fuser -k 8000/tcp`, or set `GATP_API_PORT` in `.env` and `GATP_API_URL` for Vite |
 | `poe browsers` fails on missing libraries | No sudo rights | Ask an admin to run `sudo $(uv run which playwright) install-deps chromium` |
+| `poe browsers` can't download Chromium (blocked network) | Corporate/sandbox proxy | Point `GATP_CHROMIUM_EXECUTABLE` in `.env` at an existing Chromium binary |
+| Fixture: `Address already in use` on 8090 | Other version still running | Stop it first (Ctrl+C), or `python fixtures/serve.py v2 --port 8091` |
 | WSL2: browser window doesn't appear (from T-006) | WSLg missing | Use Windows 11 / recent WSL (`wsl --update`) |

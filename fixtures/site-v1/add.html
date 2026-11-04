@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BookShelf · Add book</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body onload="initAdd()">
+    <header><strong>BookShelf</strong><a href="books.html">Back to books</a></header>
+    <main>
+      <h1>Add a book</h1>
+      <form id="book-form" class="card" novalidate>
+        <div class="field">
+          <label for="title">Title</label>
+          <input id="title" name="title" />
+          <span id="title-error" class="error" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="author">Author</label>
+          <input id="author" name="author" />
+          <span id="author-error" class="error" role="alert"></span>
+        </div>
+        <div class="field">
+          <input id="year" name="year" inputmode="numeric" placeholder="Year published" />
+          <span id="year-error" class="error" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="genre">Genre</label>
+          <select id="genre" name="genre">
+            <option value="">Choose…</option>
+            <option>Fiction</option>
+            <option>Science</option>
+            <option>History</option>
+            <option>Children</option>
+          </select>
+          <span id="genre-error" class="error" role="alert"></span>
+        </div>
+        <button type="submit" data-testid="save-book">Save</button>
+        <a href="books.html" class="secondary">Cancel</a>
+      </form>
+    </main>
+    <footer>BookShelf fixture site · v1</footer>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BookShelf · Books</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body onload="initList()">
+    <header>
+      <strong>BookShelf</strong>
+      <span>Signed in as <span id="current-user"></span>
+        <button class="icon-btn" title="Leave" onclick="logout()">⎋</button>
+      </span>
+    </header>
+    <main>
+      <h1>Books</h1>
+      <div id="notice" class="notice" role="status" hidden></div>
+      <div class="toolbar">
+        <label for="search" class="visually-hidden">Search books</label>
+        <input id="search" type="search" placeholder="Search by title or author" data-testid="book-search" />
+        <select id="genre-filter">
+          <option value="">All genres</option>
+          <option>Fiction</option>
+          <option>Science</option>
+          <option>History</option>
+          <option>Children</option>
+        </select>
+        <a href="add.html" role="button" data-testid="add-book-link">Add book</a>
+      </div>
+      <p id="result-count" aria-live="polite"></p>
+      <table aria-label="Books">
+        <thead>
+          <tr><th>Title</th><th>Author</th><th>Year</th><th>Genre</th></tr>
+        </thead>
+        <tbody id="book-rows"></tbody>
+      </table>
+      <p id="empty-state" hidden>No books match your search.</p>
+    </main>
+    <footer>BookShelf fixture site · v2</footer>
+  </body>
+</html>
