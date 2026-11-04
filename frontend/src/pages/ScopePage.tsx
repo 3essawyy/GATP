@@ -24,6 +24,7 @@ import {
   useSnapshots,
 } from '../api/queries';
 import { ErrorAlert } from '../components/ErrorAlert';
+import { InsightPanel } from '../components/InsightPanel';
 import { useTesterName } from '../components/tester';
 
 type Excluded = Record<number, string[]>; // snapshot id -> excluded element keys
@@ -153,6 +154,7 @@ function ScopeForm({ projectId, initialGoal, initialNotes, initialExcluded }: Sc
       )}
       {inspected.length === 0 && <Text c="dimmed">Inspect at least one page first.</Text>}
       <ErrorAlert error={save.error ?? approve.error} />
+      <InsightPanel projectId={projectId} enabled={!!scope.data?.approved} />
     </Stack>
   );
 }

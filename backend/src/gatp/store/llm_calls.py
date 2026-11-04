@@ -29,6 +29,7 @@ class LlmCallIn:
     status: str = "ok"  # ok | invalid_output | rate_limited | error | unavailable
     error: str = ""
     response: str = ""
+    request: str = ""
     project_id: int | None = None
 
 
@@ -49,6 +50,7 @@ class LlmCallDTO:
     cache: str
     status: str
     error: str
+    request: str
     response: str
     created_at: datetime
 
@@ -70,6 +72,7 @@ def _dto(c: LlmCall) -> LlmCallDTO:
         cache=c.cache,
         status=c.status,
         error=c.error,
+        request=c.request,
         response=c.response,
         created_at=c.created_at,
     )
@@ -98,6 +101,7 @@ class LlmCallRepository:
                 cache=call.cache,
                 status=call.status,
                 error=call.error,
+                request=call.request,
                 response=call.response,
             )
             s.add(row)

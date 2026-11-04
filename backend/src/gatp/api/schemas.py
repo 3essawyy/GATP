@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from gatp.inspector.models import InspectionScope
 from gatp.runner.jobs import SetupStep
+from gatp.test_designer.insight import Insight
 
 
 class Health(BaseModel):
@@ -250,6 +251,37 @@ class StepOut(_Out):
     status: Literal["todo", "needs_approval", "approved", "blocked"]
     detail: str
     open_clarifications: int
+
+
+class LlmCallOut(_Out):
+    id: int
+    project_id: int | None
+    purpose: str
+    template_version: int
+    provider: str
+    model: str
+    model_version: str
+    input_tokens: int
+    output_tokens: int
+    tokens_estimated: bool
+    latency_ms: int
+    cache: str
+    status: str
+    error: str
+    request: str
+    response: str
+    created_at: datetime
+
+
+class InsightOut(BaseModel):
+    """A grounded model answer with the usage evidence of the call that produced it."""
+
+    insight: Insight
+    call: LlmCallOut
+    attempts: list[LlmCallOut]
+    scope_version: int
+    element_ids_sent: list[str]
+    browser_ms: int = Field(description="Inspection (browser) time of the scoped pages")
 
 
 class GateInfo(BaseModel):

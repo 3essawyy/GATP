@@ -224,3 +224,13 @@ def test_fake_primary_answers_any_schema(db: Database, templates: TemplateRegist
     gw.templates = templates
     result = call(gw)
     assert result.value == Summary(summary="example", element_ids=[])
+
+
+def test_each_attempt_logs_the_exact_request(db: Database, templates: TemplateRegistry) -> None:
+    fake = FakeProvider(script=['{"summary": 5}', GOOD])
+    gw, _ = make_gateway(db, templates, fake)
+    result = call(gw)
+    first, second = result.attempts
+    assert "<untrusted_page_data>" in first.request
+    assert "previous answer was rejected" not in first.request
+    assert "previous answer was rejected" in second.request

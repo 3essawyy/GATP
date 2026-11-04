@@ -181,10 +181,16 @@ class LLMGateway:
                 value, errors = _validate(response.text, schema, check)
                 usage = _usage(provider.name, response, request, latency_ms)
                 if value is not None and not errors:
-                    row = log(**usage, status="ok", response=response.text)
+                    row = log(**usage, status="ok", response=response.text, request=_sent(request))
                     return LLMResult(value, row, tuple(logged))
                 problem = "; ".join(errors)[:2000]
-                log(**usage, status="invalid_output", error=problem, response=response.text)
+                log(
+                    **usage,
+                    status="invalid_output",
+                    error=problem,
+                    response=response.text,
+                    request=_sent(request),
+                )
                 output_errors.append(f"{provider.name}: {problem}")
                 if repair:
                     break
@@ -221,6 +227,7 @@ class LLMGateway:
                     latency_ms=_ms(started),
                     status=exc.status,
                     error=str(exc)[:2000],
+                    request=_sent(request),
                 )
                 if isinstance(exc, ProviderUnavailableError) or not exc.retryable:
                     return None, 0, str(exc)
@@ -260,6 +267,11 @@ def _validate[T: BaseModel](
     except ValidationError as exc:
         return None, [f"{'.'.join(map(str, e['loc'])) or 'root'}: {e['msg']}" for e in exc.errors()]
     return value, (check(value) if check else [])
+
+
+def _sent(request: ProviderRequest) -> str:
+    """The exact text sent to the provider, as stored in the usage log."""
+    return f"[system]\n{request.system}\n\n[user]\n{request.user}"
 
 
 def _ms(started: float) -> int:

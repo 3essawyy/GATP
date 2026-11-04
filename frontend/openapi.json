@@ -326,6 +326,26 @@
         "title": "DiffRowOut",
         "type": "object"
       },
+      "ElementNote": {
+        "properties": {
+          "element_id": {
+            "description": "Qualified id from the page data, e.g. s2.e4",
+            "title": "Element Id",
+            "type": "string"
+          },
+          "observation": {
+            "description": "What the element is/does, from the page data only",
+            "title": "Observation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "element_id",
+          "observation"
+        ],
+        "title": "ElementNote",
+        "type": "object"
+      },
       "ElementOut": {
         "properties": {
           "attributes": {
@@ -478,6 +498,100 @@
         "title": "Health",
         "type": "object"
       },
+      "Insight": {
+        "description": "The model's answer (validated; ids checked against what was sent).",
+        "properties": {
+          "assumptions": {
+            "description": "Business-rule assumptions not shown on the page",
+            "items": {
+              "type": "string"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "elements": {
+            "items": {
+              "$ref": "#/components/schemas/ElementNote"
+            },
+            "maxItems": 60,
+            "title": "Elements",
+            "type": "array"
+          },
+          "next_actions": {
+            "items": {
+              "$ref": "#/components/schemas/NextAction"
+            },
+            "maxItems": 8,
+            "title": "Next Actions",
+            "type": "array"
+          },
+          "questions": {
+            "description": "Questions the tester should answer (REQ-Q2)",
+            "items": {
+              "type": "string"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "elements",
+          "next_actions",
+          "assumptions",
+          "questions"
+        ],
+        "title": "Insight",
+        "type": "object"
+      },
+      "InsightOut": {
+        "description": "A grounded model answer with the usage evidence of the call that produced it.",
+        "properties": {
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/LlmCallOut"
+            },
+            "title": "Attempts",
+            "type": "array"
+          },
+          "browser_ms": {
+            "description": "Inspection (browser) time of the scoped pages",
+            "title": "Browser Ms",
+            "type": "integer"
+          },
+          "call": {
+            "$ref": "#/components/schemas/LlmCallOut"
+          },
+          "element_ids_sent": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Element Ids Sent",
+            "type": "array"
+          },
+          "insight": {
+            "$ref": "#/components/schemas/Insight"
+          },
+          "scope_version": {
+            "title": "Scope Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "insight",
+          "call",
+          "attempts",
+          "scope_version",
+          "element_ids_sent",
+          "browser_ms"
+        ],
+        "title": "InsightOut",
+        "type": "object"
+      },
       "InspectIn": {
         "properties": {
           "scope": {
@@ -541,6 +655,107 @@
           }
         },
         "title": "InspectionScope",
+        "type": "object"
+      },
+      "LlmCallOut": {
+        "properties": {
+          "cache": {
+            "title": "Cache",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "error": {
+            "title": "Error",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "input_tokens": {
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "latency_ms": {
+            "title": "Latency Ms",
+            "type": "integer"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "output_tokens": {
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "purpose": {
+            "title": "Purpose",
+            "type": "string"
+          },
+          "request": {
+            "title": "Request",
+            "type": "string"
+          },
+          "response": {
+            "title": "Response",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "template_version": {
+            "title": "Template Version",
+            "type": "integer"
+          },
+          "tokens_estimated": {
+            "title": "Tokens Estimated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "purpose",
+          "template_version",
+          "provider",
+          "model",
+          "model_version",
+          "input_tokens",
+          "output_tokens",
+          "tokens_estimated",
+          "latency_ms",
+          "cache",
+          "status",
+          "error",
+          "request",
+          "response",
+          "created_at"
+        ],
+        "title": "LlmCallOut",
         "type": "object"
       },
       "LocatorOut": {
@@ -633,6 +848,44 @@
           "value"
         ],
         "title": "LocatorSpec",
+        "type": "object"
+      },
+      "NextAction": {
+        "properties": {
+          "action": {
+            "description": "A concrete testing action",
+            "title": "Action",
+            "type": "string"
+          },
+          "basis": {
+            "description": "observed = follows from page data; assumption = relies on a business rule",
+            "enum": [
+              "observed",
+              "assumption"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "element_ids": {
+            "description": "Elements the action uses (ids from the data)",
+            "items": {
+              "type": "string"
+            },
+            "title": "Element Ids",
+            "type": "array"
+          },
+          "rationale": {
+            "title": "Rationale",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "element_ids",
+          "basis",
+          "rationale"
+        ],
+        "title": "NextAction",
         "type": "object"
       },
       "PageIn": {
@@ -2239,6 +2492,145 @@
         "summary": "Set Goal",
         "tags": [
           "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/insight": {
+      "get": {
+        "description": "The most recent successful insight call, or ``null``.",
+        "operationId": "latestInsight",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/InsightOut"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Latestinsight"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Latest Insight",
+        "tags": [
+          "assist"
+        ]
+      },
+      "post": {
+        "description": "Summarise the approved scope and suggest next actions, grounded in the snapshots.",
+        "operationId": "requestInsight",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsightOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Insight",
+        "tags": [
+          "assist"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/llm-calls": {
+      "get": {
+        "description": "Every model call attempt for the project, newest first (usage evidence).",
+        "operationId": "listLlmCalls",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LlmCallOut"
+                  },
+                  "title": "Response Listllmcalls",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Llm Calls",
+        "tags": [
+          "assist"
         ]
       }
     },

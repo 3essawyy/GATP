@@ -49,3 +49,5 @@ export function unwrap<T>(result: { data?: T; error?: unknown; response: Respons
 
 /** URL of a stored artifact file (screenshot, page HTML). */
 export const fileUrl = (path: string) => `/api/files/${path}`;
+export type InsightResult = S['InsightOut'];
+export type LlmCall = S['LlmCallOut'];

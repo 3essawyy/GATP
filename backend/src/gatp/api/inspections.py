@@ -6,7 +6,9 @@ from gatp.inspector.models import InspectionResult
 from gatp.store.dto import ElementIn, LocatorIn, SnapshotIn
 
 
-def to_snapshot_in(page_id: int, result: InspectionResult, files: dict[str, str]) -> SnapshotIn:
+def to_snapshot_in(
+    page_id: int, result: InspectionResult, files: dict[str, str], duration_ms: int = 0
+) -> SnapshotIn:
     """Map an ``InspectionResult`` (+ artifact paths from the job) to a ``SnapshotIn``."""
     return SnapshotIn(
         page_id=page_id,
@@ -15,7 +17,11 @@ def to_snapshot_in(page_id: int, result: InspectionResult, files: dict[str, str]
         screenshot_path=files.get("screenshot", ""),
         html_path=files.get("html", ""),
         html_sha256=result.html_sha256,
-        meta={"requested_url": result.url, "scope": result.scope.model_dump()},
+        meta={
+            "requested_url": result.url,
+            "scope": result.scope.model_dump(),
+            "browser_ms": duration_ms,  # runner time, shown apart from model time (REQ-Q8)
+        },
         elements=tuple(
             ElementIn(
                 key=e.key,
