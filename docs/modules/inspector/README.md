@@ -9,6 +9,9 @@
 ## Responsibility
 Given an open page (supplied by the runner), extract every interactive element with its observed labels and attributes, generate ranked candidate locators, count each on the live page, compute an element fingerprint, and return an `InspectionSnapshot` (plus a full-page screenshot). It never interprets page text as instructions.
 
+## Locator specs (implemented in T-006)
+`inspector/locators.py`: `LocatorSpec(strategy, value, name, exact)` with strategies `role` > `label` > `test_id` > `placeholder` > `text` > `css` (`STRATEGY_RANK`, ADR-006). `resolve(page, spec)` builds the Playwright locator; `spec.to_python("self.page")` renders the expression shown to users and used in generated page objects. Locators travel as this data, never as code strings.
+
 ## Output: InspectionSnapshot (draft)
 ```json
 {

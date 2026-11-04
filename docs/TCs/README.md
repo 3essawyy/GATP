@@ -30,7 +30,7 @@ Update **Status** with date + commit whenever a TC is run.
 | TC-103 | Fixture site v1/v2 serve and differ as documented | Automated | **Pass** 2026-11-04 (T-003): `test_fixture_server.py`, `test_fixture_site.py`, `test_fixture_diff.py` |
 | TC-104 | Store versioning immutable; restore creates new version | Automated | **Pass** 2026-11-04 (T-004): `test_store_*.py` |
 | TC-105 | LLM gateway logs usage; fallback; cache marked reused | Automated | **Pass** (automated, fake + mocked HTTP) 2026-11-04 (T-005); live Gemini/Ollama check pending |
-| TC-106 | Runner blocks non-allowlisted origins and unknown jobs | Automated | Not run |
+| TC-106 | Runner blocks non-allowlisted origins and unknown jobs | Automated | **Pass** 2026-11-04 (T-006): `test_runner_*.py` |
 | TC-107 | Inspection of URL opens visible browser and lists elements linked to source | Manual | Not run |
 | TC-108 | Locator candidates ranked; non-unique flagged | Automated | Not run |
 | TC-109 | Gates block without approval; edits invalidate approval | Automated | Not run |

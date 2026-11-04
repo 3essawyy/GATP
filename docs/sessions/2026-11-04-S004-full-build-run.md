@@ -1,6 +1,6 @@
 # Session S004 — 2026-11-04 — Full-build run (T-003 onward)
 
-- **Tasks touched:** T-003, T-004, T-005 (more appended as completed)
+- **Tasks touched:** T-003, T-004, T-005, T-006 (more appended as completed)
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s`, one squash-merged PR per task
 
 ## Interview outcome (before the run)
@@ -24,19 +24,21 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - **T-003:** BookShelf fixture site v1/v2, `poe fixtures`, `GATP_CHROMIUM_EXECUTABLE` setting, 14 new tests (TC-103 Pass), fixtures README, SG-001 section. PR #3.
 - **T-004:** Store core: 15-table SQLAlchemy schema, Alembic (auto-migrate on start), repositories returning DTOs, immutable versions with diff/restore, double immutability (ORM guards + SQLite triggers), artifact files confined to `artifacts/`, `poe db-upgrade`/`db-revision`. 22 new tests (TC-104 Pass).
 - Fixed: the ADR index was missing the ADR-014 row (a silent replace failure in S003). PR #4.
-- **T-005:** LLM gateway: httpx Gemini/Ollama/fake providers, versioned templates with untrusted-data framing, cache (`reused` rows), backoff + fallback, Pydantic validation + one repair retry + semantic `check` hook, every attempt logged (`llm_calls`, migration 0002 adds `template_version`), `poe llm-check`, SG-003. 20 new tests (TC-105 automated Pass).
+- **T-005:** LLM gateway: httpx Gemini/Ollama/fake providers, versioned templates with untrusted-data framing, cache (`reused` rows), backoff + fallback, Pydantic validation + one repair retry + semantic `check` hook, every attempt logged (`llm_calls`, migration 0002 adds `template_version`), `poe llm-check`, SG-003. 20 new tests (TC-105 automated Pass). PR #5.
+- **T-006:** Runner: typed jobs (`inspect` stub, `recount`) over HTTP on a private Unix socket (0600 in 0700 dir, no TCP port), single worker thread, per-job 0700 sandbox, Playwright allowlist routing with blocked-request log, headed Chromium (verified under `xvfb-run`), `RunnerClient`, `LocatorSpec`. 17 runner tests (TC-106 Pass).
 
 ## Decisions (with ADR links)
 - T-003: none beyond PLAN-003.
 - T-004: [ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md) SQLAlchemy 2 + Alembic; immutability enforced twice.
 - T-005: [ADR-016](../decisions/ADR-016-llm-gateway-design.md) gateway design; default `gemini-2.5-flash` (limits unverified: Google docs host blocked in the sandbox).
+- T-006: [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md) runner transport on a private Unix socket.
 
 ## Open items / blockers
 - Waiting on Abdo to add `GATP_GEMINI_API_KEY` to the cloud environment; it is only visible to a **new** session. Then run `uv run poe llm-check` and fill SG-003 §6 (TC-105 live part, TC-111).
 - Ollama live check must be done on a team machine (ollama.com is blocked here).
 
 ## Next steps (in order)
-1. T-006 Runner (Unix-socket job API, sandbox dirs, allowlist, headed Chromium on Xvfb).
+1. T-007 Inspector (extraction, ranked locators + live counts, fingerprints) inside the runner's `inspect` job.
 
 ## Notes for next session
 - In this cloud container, Python Playwright needs `GATP_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` (the preinstalled revision differs from the one the pinned Playwright expects).
