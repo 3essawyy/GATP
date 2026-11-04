@@ -46,7 +46,6 @@ pyproject.toml      Python project, tool config and `poe` tasks
 backend/src/gatp/   FastAPI app + one sub-package per module
 backend/tests/      pytest suite
 frontend/           React/Vite/TS thin UI (generated API client in src/api/)
-fixtures/site-v1/   Our own test website (baseline)                        — T-003
-fixtures/site-v2/   Modified version (locator change + ambiguous change)  — T-003
+fixtures/           BookShelf test website: site-v1 (baseline), site-v2 (modified), serve.py
 docs/               All documentation
 ```

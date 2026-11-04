@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BookShelf · Sign in</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body onload="initLogin()">
+    <header><strong>BookShelf</strong></header>
+    <main>
+      <h1>Sign in to BookShelf</h1>
+      <form id="login-form" class="card" novalidate>
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" name="username" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" />
+        </div>
+        <p id="login-error" class="error" role="alert"></p>
+        <button type="submit" data-testid="login-button">Log in</button>
+      </form>
+    </main>
+    <footer>BookShelf fixture site · v2</footer>
+  </body>
+</html>

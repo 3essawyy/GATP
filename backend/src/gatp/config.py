@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     api_port: int = 8000
     cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
     log_level: str = "INFO"
+    # Optional path to a Chromium binary. Only needed where Playwright's own browser download
+    # is unavailable (e.g. a sandbox with a preinstalled Chromium). Empty = Playwright default.
+    chromium_executable: str = ""
 
 
 @lru_cache
