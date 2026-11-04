@@ -1,6 +1,6 @@
 # Acceptance Test Cases (for GATP itself)
 
-These prove GATP meets the brief. They are **not** the test cases GATP generates for websites. Definitions: [phase1.md](phase1.md), [phase2.md](phase2.md). Template for long TCs: [_TEMPLATE.md](_TEMPLATE.md).
+These prove GATP meets the brief. They are **not** the test cases GATP generates for websites. Definitions: [phase1.md](phase1.md), [phase2.md](phase2.md). Template for long TCs: [_TEMPLATE.md](_TEMPLATE.md). Run logs: [TC-102-runs.md](TC-102-runs.md).
 
 Update **Status** with date + commit whenever a TC is run.
 
@@ -26,7 +26,7 @@ Update **Status** with date + commit whenever a TC is run.
 | ID | Title | Type | Status |
 |---|---|---|---|
 | TC-101 | Design document covers all required elements | Manual | Not run |
-| TC-102 | Clean setup from README on fresh machine | Manual | Partial: api/runner/frontend pass on Linux 2026-11-04 (T-002); fixture site (T-003) + Windows run pending |
+| TC-102 | Clean setup from README on fresh machine | Manual | Partial: api/runner/frontend **Pass** in clean ubuntu:24.04 on 2026-11-04 @ `bffd77d` ([run log](TC-102-runs.md)); fixture site pending T-003 |
 | TC-103 | Fixture site v1/v2 serve and differ as documented | Automated | Not run |
 | TC-104 | Store versioning immutable; restore creates new version | Automated | Not run |
 | TC-105 | LLM gateway logs usage; fallback; cache marked reused | Automated | Not run |

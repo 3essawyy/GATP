@@ -29,7 +29,7 @@ All project knowledge lives in [`docs/`](docs/README.md). Start there.
 
 ## Quick start
 
-Needs **uv** and **Node.js 22+**. Full guide (incl. Windows): [SG-001](docs/SystemGuides/SG-001-setup-and-run.md).
+Runs on **Linux** (Windows users: WSL2, [ADR-014](docs/decisions/ADR-014-linux-only-platform.md)). Needs **uv** and **Node.js 22+**. Full guide: [SG-001](docs/SystemGuides/SG-001-setup-and-run.md).
 
 ```bash
 uv sync
