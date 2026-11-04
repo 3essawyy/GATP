@@ -272,6 +272,7 @@ class LlmCall(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     project_id: Mapped[int | None] = mapped_column(ForeignKey("projects.id"), default=None)
     purpose: Mapped[str] = mapped_column(String(60))  # prompt template id
+    template_version: Mapped[int] = mapped_column(default=1, server_default="1")
     provider: Mapped[str] = mapped_column(String(40))
     model: Mapped[str] = mapped_column(String(100))
     model_version: Mapped[str] = mapped_column(String(100), default="")

@@ -12,6 +12,7 @@ dependencies = [
     "playwright>=1.48",
     "sqlalchemy>=2.0.36",
     "alembic>=1.14",
+    "httpx>=0.27",
 ]
 
 [project.scripts]
@@ -21,7 +22,6 @@ gatp-runner = "gatp.runner.main:main"
 [dependency-groups]
 dev = [
     "pytest>=8.3",
-    "httpx>=0.27",
     "ruff>=0.8",
     "mypy>=1.13",
     "import-linter>=2.1",
@@ -71,6 +71,10 @@ cmd = "python -m gatp.store.migrate upgrade"
 help = "Autogenerate a new Alembic migration from models.py: uv run poe db-revision \"message\""
 cmd = "python -m gatp.store.migrate revision ${message}"
 args = [{ name = "message", positional = true, help = "short description" }]
+
+[tool.poe.tasks.llm-check]
+help = "Check model config: list Gemini models for your key and make one tiny logged call"
+cmd = "python -m gatp.llm_gateway.check"
 
 [tool.poe.tasks.gen-client]
 help = "Export the OpenAPI schema and regenerate the TypeScript client types"
