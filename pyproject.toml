@@ -10,6 +10,8 @@ dependencies = [
     "pydantic>=2.9",
     "pydantic-settings>=2.6",
     "playwright>=1.48",
+    "sqlalchemy>=2.0.36",
+    "alembic>=1.14",
 ]
 
 [project.scripts]
@@ -60,6 +62,15 @@ cmd = "playwright install --with-deps chromium"
 help = "Serve the BookShelf fixture site: uv run poe fixtures v1|v2 (http://127.0.0.1:8090)"
 cmd = "python fixtures/serve.py ${version}"
 args = [{ name = "version", positional = true, default = "v1", help = "v1 or v2" }]
+
+[tool.poe.tasks.db-upgrade]
+help = "Create or upgrade the SQLite schema (data/gatp.sqlite) to the latest migration"
+cmd = "python -m gatp.store.migrate upgrade"
+
+[tool.poe.tasks.db-revision]
+help = "Autogenerate a new Alembic migration from models.py: uv run poe db-revision \"message\""
+cmd = "python -m gatp.store.migrate revision ${message}"
+args = [{ name = "message", positional = true, help = "short description" }]
 
 [tool.poe.tasks.gen-client]
 help = "Export the OpenAPI schema and regenerate the TypeScript client types"

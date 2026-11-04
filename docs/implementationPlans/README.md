@@ -7,3 +7,4 @@ One plan per non-trivial task, numbered like its task (`PLAN-012` ↔ `T-012`). 
 | [PLAN-001](PLAN-001-docs-scaffold.md) | T-001 Docs scaffold | Executed |
 | [PLAN-002](PLAN-002-repo-skeleton-ci.md) | T-002 Repo skeleton, tooling, CI | Executed |
 | [PLAN-003](PLAN-003-fixture-site.md) | T-003 Fixture site v1/v2 | Executed |
+| [PLAN-004](PLAN-004-store-core.md) | T-004 Store core | Executed |

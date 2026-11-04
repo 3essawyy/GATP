@@ -4,6 +4,7 @@ Every key is documented in `.env.example` at the repo root. Never commit real se
 """
 
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -25,6 +26,15 @@ class Settings(BaseSettings):
     # Optional path to a Chromium binary. Only needed where Playwright's own browser download
     # is unavailable (e.g. a sandbox with a preinstalled Chromium). Empty = Playwright default.
     chromium_executable: str = ""
+
+    # Storage (ADR-005): SQLite file + artifacts folder, both gitignored. Delete data/ to reset.
+    data_dir: Path = Path("data")
+    artifacts_dir: Path = Path("artifacts")
+    database_url: str = ""  # default: sqlite:///<data_dir>/gatp.sqlite
+
+    def resolved_database_url(self) -> str:
+        """The SQLAlchemy URL, defaulting to a SQLite file inside ``data_dir``."""
+        return self.database_url or f"sqlite:///{self.data_dir / 'gatp.sqlite'}"
 
 
 @lru_cache

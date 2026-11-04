@@ -45,6 +45,20 @@ docs/                        all documentation
 
 Give each route an explicit `operation_id` (e.g. `getHealth`) and a Pydantic response model so the generated types have stable names.
 
+## Database and migrations
+- The schema lives in `backend/src/gatp/store/models.py`. Migrations live in `backend/src/gatp/store/migrations/versions/`.
+- The database (`data/gatp.sqlite`) is created or upgraded automatically on API start, or manually with `uv run poe db-upgrade`.
+- To change the schema:
+  1. Edit `models.py`.
+  2. Run:
+     ```bash
+     uv run poe db-revision "describe the change"
+     ```
+  3. Review the generated file and commit it with the model change.
+
+  `test_models_match_migrations` fails if you forget step 2.
+- Reset everything: delete `data/` and `artifacts/`.
+
 ## Module boundaries
 `pyproject.toml` → `[tool.importlinter]` encodes the dependency direction from [modules/README](../modules/README.md#dependency-direction):
 - Layers: `api` → {`test_designer`, `codegen`, `maintainer`, `runner`} → {`inspector`, `llm_gateway`, `store`}. Lower layers never import upper ones.

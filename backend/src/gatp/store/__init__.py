@@ -1,4 +1,5 @@
-"""Store: SQLite schema, immutable versioning, artifacts (T-004).
+"""Store: SQLite schema, immutable versioning, artifacts (T-004, ADR-005, ADR-015).
 
-Placeholder package created in T-002; no code yet.
+Public API: ``Database``, the repositories (``ProjectRepository``, ``SnapshotRepository``,
+``ArtifactStore``), ``ArtifactFiles`` and the DTOs in ``gatp.store.dto``.
 """

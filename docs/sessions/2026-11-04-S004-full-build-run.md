@@ -1,6 +1,6 @@
 # Session S004 — 2026-11-04 — Full-build run (T-003 onward)
 
-- **Tasks touched:** T-003 (more appended as completed)
+- **Tasks touched:** T-003, T-004 (more appended as completed)
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s`, one squash-merged PR per task
 
 ## Interview outcome (before the run)
@@ -21,16 +21,19 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 | Bonus | Stays deferred (ADR-011) | — |
 
 ## Done
-- **T-003:** BookShelf fixture site v1/v2, `poe fixtures`, `GATP_CHROMIUM_EXECUTABLE` setting, 14 new tests (TC-103 Pass), fixtures README, SG-001 section.
+- **T-003:** BookShelf fixture site v1/v2, `poe fixtures`, `GATP_CHROMIUM_EXECUTABLE` setting, 14 new tests (TC-103 Pass), fixtures README, SG-001 section. PR #3.
+- **T-004:** Store core: 15-table SQLAlchemy schema, Alembic (auto-migrate on start), repositories returning DTOs, immutable versions with diff/restore, double immutability (ORM guards + SQLite triggers), artifact files confined to `artifacts/`, `poe db-upgrade`/`db-revision`. 22 new tests (TC-104 Pass).
+- Fixed: the ADR index was missing the ADR-014 row (a silent replace failure in S003).
 
 ## Decisions (with ADR links)
-- None new in T-003 beyond PLAN-003 (no ADR needed).
+- T-003: none beyond PLAN-003.
+- T-004: [ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md) SQLAlchemy 2 + Alembic; immutability enforced twice.
 
 ## Open items / blockers
 - Waiting on Abdo to add `GATP_GEMINI_API_KEY` to the cloud environment; it is only visible to a **new** session.
 
 ## Next steps (in order)
-1. T-004 Store core.
+1. T-005 LLM gateway (fake provider in CI; Gemini once the key exists).
 
 ## Notes for next session
 - In this cloud container, Python Playwright needs `GATP_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` (the preinstalled revision differs from the one the pinned Playwright expects).
