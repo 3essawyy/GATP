@@ -337,6 +337,50 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/projects/{project_id}/insight': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Latest Insight
+     * @description The most recent successful insight call, or ``null``.
+     */
+    get: operations['latestInsight'];
+    put?: never;
+    /**
+     * Create Insight
+     * @description Summarise the approved scope and suggest next actions, grounded in the snapshots.
+     */
+    post: operations['requestInsight'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/llm-calls': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List Llm Calls
+     * @description Every model call attempt for the project, newest first (usage evidence).
+     */
+    get: operations['listLlmCalls'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/projects/{project_id}/pages': {
     parameters: {
       query?: never;
@@ -578,6 +622,19 @@ export interface components {
       /** Tag */
       tag: string;
     };
+    /** ElementNote */
+    ElementNote: {
+      /**
+       * Element Id
+       * @description Qualified id from the page data, e.g. s2.e4
+       */
+      element_id: string;
+      /**
+       * Observation
+       * @description What the element is/does, from the page data only
+       */
+      observation: string;
+    };
     /** ElementOut */
     ElementOut: {
       /** Attributes */
@@ -645,6 +702,47 @@ export interface components {
       /** Version */
       version: string;
     };
+    /**
+     * Insight
+     * @description The model's answer (validated; ids checked against what was sent).
+     */
+    Insight: {
+      /**
+       * Assumptions
+       * @description Business-rule assumptions not shown on the page
+       */
+      assumptions: string[];
+      /** Elements */
+      elements: components['schemas']['ElementNote'][];
+      /** Next Actions */
+      next_actions: components['schemas']['NextAction'][];
+      /**
+       * Questions
+       * @description Questions the tester should answer (REQ-Q2)
+       */
+      questions: string[];
+      /** Summary */
+      summary: string;
+    };
+    /**
+     * InsightOut
+     * @description A grounded model answer with the usage evidence of the call that produced it.
+     */
+    InsightOut: {
+      /** Attempts */
+      attempts: components['schemas']['LlmCallOut'][];
+      /**
+       * Browser Ms
+       * @description Inspection (browser) time of the scoped pages
+       */
+      browser_ms: number;
+      call: components['schemas']['LlmCallOut'];
+      /** Element Ids Sent */
+      element_ids_sent: string[];
+      insight: components['schemas']['Insight'];
+      /** Scope Version */
+      scope_version: number;
+    };
     /** InspectIn */
     InspectIn: {
       /**
@@ -683,6 +781,46 @@ export interface components {
        * @default []
        */
       include?: string[];
+    };
+    /** LlmCallOut */
+    LlmCallOut: {
+      /** Cache */
+      cache: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Error */
+      error: string;
+      /** Id */
+      id: number;
+      /** Input Tokens */
+      input_tokens: number;
+      /** Latency Ms */
+      latency_ms: number;
+      /** Model */
+      model: string;
+      /** Model Version */
+      model_version: string;
+      /** Output Tokens */
+      output_tokens: number;
+      /** Project Id */
+      project_id: number | null;
+      /** Provider */
+      provider: string;
+      /** Purpose */
+      purpose: string;
+      /** Request */
+      request: string;
+      /** Response */
+      response: string;
+      /** Status */
+      status: string;
+      /** Template Version */
+      template_version: number;
+      /** Tokens Estimated */
+      tokens_estimated: boolean;
     };
     /** LocatorOut */
     LocatorOut: {
@@ -724,6 +862,27 @@ export interface components {
       strategy: 'role' | 'label' | 'test_id' | 'placeholder' | 'text' | 'css';
       /** Value */
       value: string;
+    };
+    /** NextAction */
+    NextAction: {
+      /**
+       * Action
+       * @description A concrete testing action
+       */
+      action: string;
+      /**
+       * Basis
+       * @description observed = follows from page data; assumption = relies on a business rule
+       * @enum {string}
+       */
+      basis: 'observed' | 'assumption';
+      /**
+       * Element Ids
+       * @description Elements the action uses (ids from the data)
+       */
+      element_ids: string[];
+      /** Rationale */
+      rationale: string;
     };
     /** PageIn */
     PageIn: {
@@ -1654,6 +1813,99 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ProjectOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  latestInsight: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InsightOut'] | null;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  requestInsight: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InsightOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listLlmCalls: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['LlmCallOut'][];
         };
       };
       /** @description Validation Error */

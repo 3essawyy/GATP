@@ -289,6 +289,7 @@ class LlmCall(Base):
     cache: Mapped[str] = mapped_column(String(10), default="fresh")  # fresh | reused
     status: Mapped[str] = mapped_column(String(20), default="ok")
     error: Mapped[str] = mapped_column(Text, default="")
+    request: Mapped[str] = mapped_column(Text, default="", server_default="")  # what was sent
     response: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(default=utcnow)
 

@@ -34,8 +34,8 @@ Update **Status** with date + commit whenever a TC is run.
 | TC-107 | Inspection of URL opens visible browser and lists elements linked to source | Manual | **Pass** 2026-11-04 (T-009): `poe ui-walkthrough` (findings, screenshot highlight, source line) + headed runner under Xvfb (`poe smoke --headed`); repeat on the demo machine |
 | TC-108 | Locator candidates ranked; non-unique flagged | Automated | **Pass** 2026-11-04 (T-007): `test_inspector.py` |
 | TC-109 | Gates block without approval; edits invalidate approval | Automated | **Pass** 2026-11-04 (T-008): `test_api_gates.py` |
-| TC-110 | User sets goal, selects elements, refines scope | Manual | Partial: UI + storage Pass (T-009 walkthrough); "reflected in what is sent to the model" pending T-010 |
-| TC-111 | Grounded model call with model/version/tokens/latency recorded | Manual | Not run |
+| TC-110 | User sets goal, selects elements, refines scope | Manual | **Pass** 2026-11-04 (T-009/T-010): walkthrough + `test_api_insight.py` (excluded elements absent from the request) |
+| TC-111 | Grounded model call with model/version/tokens/latency recorded | Manual | Partial: automated + UI with the fake provider Pass (T-010); **real Gemini run pending key** |
 | TC-201 | Proposed cases cite observed elements; assumptions flagged | Automated + Manual | Not run |
 | TC-202 | Plan edit, clarification, approval (G1) | Manual | Not run |
 | TC-203 | Generated POM code passes syntax + locator validation | Automated | Not run |

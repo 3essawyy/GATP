@@ -39,7 +39,9 @@ def inspect_page(page_id: int, body: InspectIn, svc: Svc) -> InspectionOut:
         svc.events.publish(project.id, "inspection_failed", {"page_id": page_id})
         raise InspectionFailedError(result.error or "inspection failed")
     inspection = InspectionResult.model_validate(result.data)
-    snapshot = svc.snapshots.save(to_snapshot_in(page_id, inspection, result.files))
+    snapshot = svc.snapshots.save(
+        to_snapshot_in(page_id, inspection, result.files, result.duration_ms)
+    )
     svc.events.publish(
         project.id, "inspection_finished", {"page_id": page_id, "snapshot_id": snapshot.id}
     )

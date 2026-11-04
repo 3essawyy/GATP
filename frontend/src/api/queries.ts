@@ -206,3 +206,23 @@ export function useFileText(path: string | undefined) {
     },
   });
 }
+
+export function useLatestInsight(projectId: number) {
+  return useQuery({
+    queryKey: ['insight', projectId],
+    queryFn: async () =>
+      unwrap(await api.GET('/api/projects/{project_id}/insight', pid(projectId))),
+  });
+}
+
+export function useRequestInsight(projectId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () =>
+      unwrap(await api.POST('/api/projects/{project_id}/insight', pid(projectId))),
+    onSuccess: (data) => {
+      qc.setQueryData(['insight', projectId], data);
+      qc.invalidateQueries({ queryKey: ['llm-calls', projectId] });
+    },
+  });
+}

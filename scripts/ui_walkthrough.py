@@ -20,7 +20,7 @@ from pathlib import Path
 
 import httpx
 from e2e_smoke import ROOT, Smoke, free_port
-from playwright.sync_api import Page, expect, sync_playwright
+from playwright.sync_api import Locator, Page, expect, sync_playwright
 
 
 class Walkthrough(Smoke):
@@ -58,9 +58,12 @@ class Walkthrough(Smoke):
         )
         self.wait_for("vite", lambda: httpx.get(self.web).status_code == 200, timeout=60)
 
-    def shot(self, page: Page, name: str) -> None:
+    def shot(self, page: Page, name: str, element: Locator | None = None) -> None:
         path = self.out / f"{len(self.shots) + 1:02d}-{name}.png"
-        page.screenshot(path=path, full_page=True)
+        if element is not None:
+            element.screenshot(path=path)
+        else:
+            page.screenshot(path=path, full_page=True)
         self.shots.append(path.name)
 
     def walk(self, page: Page) -> None:
@@ -141,8 +144,18 @@ class Walkthrough(Smoke):
         expect(page.get_by_test_id("step-scope")).to_contain_text("done")
         self.shot(page, "scope-approved")
 
+        page.get_by_test_id("ask-model").click()
+        expect(page.get_by_test_id("insight-summary")).to_be_visible(timeout=120_000)
+        expect(page.get_by_test_id("usage")).to_contain_text("Model time")
+        expect(page.get_by_test_id("browser-time")).not_to_have_text("0 ms")
+        page.get_by_text("Exactly what was sent").click()
+        expect(page.get_by_test_id("insight-panel")).to_contain_text("untrusted_page_data")
+        self.shot(page, "model-insight", page.get_by_test_id("insight-panel"))
+
     def run_ui(self) -> int:
         self.out.mkdir(parents=True, exist_ok=True)
+        for old in self.out.glob("*.png"):
+            old.unlink()
         executable = os.environ.get("GATP_CHROMIUM_EXECUTABLE") or None
         with sync_playwright() as pw:
             browser = pw.chromium.launch(executable_path=executable)

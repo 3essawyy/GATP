@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from gatp import __version__
-from gatp.api.routes import artifacts, gates, inspections, projects, scope, system
+from gatp.api.routes import artifacts, assist, gates, inspections, projects, scope, system
 from gatp.api.routes.inspections import InspectionFailedError
 from gatp.api.services import Services, build_services
 from gatp.api.workflow import GateBlockedError
@@ -63,7 +63,7 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    for module in (system, projects, inspections, scope, artifacts, gates):
+    for module in (system, projects, inspections, scope, artifacts, gates, assist):
         app.include_router(module.router)
 
     for exc_type, (status, code) in ERRORS.items():

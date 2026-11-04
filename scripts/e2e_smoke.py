@@ -220,6 +220,24 @@ class Smoke:
             assert stale.status_code == 409, stale.text
             return "edit -> v2 unapproved; re-approving v1 refused (409)"
 
+        def model_insight() -> str:
+            scope = self.call("GET", f"/api/projects/{s['pid']}/scope", 200)
+            self.call(
+                "POST",
+                f"/api/projects/{s['pid']}/approvals",
+                201,
+                json={
+                    "gate": "G0",
+                    "actor": "smoke",
+                    "artifact_version_id": scope["version"]["id"],
+                },
+            )
+            r = self.call("POST", f"/api/projects/{s['pid']}/insight", 201)
+            sent = set(r["element_ids_sent"])
+            assert f"s{s['add_snap']['id']}.e1" not in sent, sent  # excluded in the scope
+            c = r["call"]
+            return f"{c['provider']}/{c['model']} {c['latency_ms']} ms model vs {r['browser_ms']} ms browser, {len(sent)} elements sent"
+
         def off_origin_refused() -> str:
             r = self.api.post(
                 f"/api/projects/{s['pid']}/pages", json={"url": "http://example.com/"}
@@ -234,6 +252,7 @@ class Smoke:
             ("inspect add-book page (signed in)", inspect_add),
             ("save scope, approve G0", scope_and_gate),
             ("edit scope invalidates approval", edit_invalidates),
+            ("re-approve + grounded model call (T-010)", model_insight),
             ("off-origin page refused", off_origin_refused),
         ):
             self.step(title, fn)
