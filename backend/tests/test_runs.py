@@ -45,8 +45,8 @@ def test_run_requires_matching_single_use_g3(client: TestClient, scoped: dict[st
     run = client.post(f"/api/projects/{pid}/runs", json={"approval_id": approval})
     assert run.status_code == 201, run.text
     body = run.json()
-    assert body["status"] == "passed", body
     [result] = body["results"]
+    assert body["status"] == "passed", (result["message"], result["details"][-1500:])
     assert result["outcome"] == "passed"
     assert result["test_id"].endswith("test_tc_01_title_is_required[chromium]")
     assert result["screenshot_path"].endswith(".png")
@@ -98,7 +98,7 @@ def test_real_failure_stays_visible(
     ).json()
     assert run["status"] == "failed"
     [result] = run["results"]
-    assert result["outcome"] == "failed"
+    assert result["outcome"] == "failed", (result["message"], result["details"][-1500:])
     assert "Please enter a title" in result["message"]
     assert "Title is required." in result["message"] + result["details"]  # actual value shown
     assert result["screenshot_path"].endswith("test-failed-1.png")
@@ -108,3 +108,20 @@ def test_real_failure_stays_visible(
     steps = {s["step"]: s for s in client.get(f"/api/projects/{pid}/workflow").json()}
     assert steps["run"]["status"] == "failed"
     assert "0/1 passed" in steps["run"]["detail"]
+
+
+def test_sandbox_env_names_the_real_browser_folder(
+    tmp_path: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """HOME is the sandbox; Playwright must still find the runner's installed browsers (CI)."""
+    from gatp.runner.collect import scrubbed_env
+
+    browsers = tmp_path / "home" / ".cache" / "ms-playwright"
+    browsers.mkdir(parents=True)
+    monkeypatch.setenv("HOME", str(tmp_path / "home"))
+    monkeypatch.delenv("PLAYWRIGHT_BROWSERS_PATH", raising=False)
+    monkeypatch.setenv("GATP_GEMINI_API_KEY", "secret")
+    env = scrubbed_env(tmp_path / "sandbox")
+    assert env["HOME"] == str(tmp_path / "sandbox")
+    assert env["PLAYWRIGHT_BROWSERS_PATH"] == str(browsers)
+    assert "GATP_GEMINI_API_KEY" not in env

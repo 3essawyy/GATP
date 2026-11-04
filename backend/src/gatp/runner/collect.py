@@ -28,6 +28,11 @@ def scrubbed_env(home: Path) -> dict[str, str]:
     for key in ("PLAYWRIGHT_BROWSERS_PATH", "DISPLAY", "GATP_CHROMIUM_EXECUTABLE"):
         if key in os.environ:
             env[key] = os.environ[key]
+    # HOME points at the sandbox, so Playwright would look for its browsers there: name the
+    # runner's real browser folder (readable, not writable, under bubblewrap).
+    default_browsers = Path.home() / ".cache" / "ms-playwright"
+    if "PLAYWRIGHT_BROWSERS_PATH" not in env and default_browsers.is_dir():
+        env["PLAYWRIGHT_BROWSERS_PATH"] = str(default_browsers)
     return env
 
 
