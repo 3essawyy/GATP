@@ -9,22 +9,74 @@ from collections.abc import Iterator
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from types import ModuleType
+from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
 from playwright.sync_api import Browser, Page, sync_playwright
 
 from gatp.api.app import create_app
-from gatp.config import get_settings
+from gatp.api.services import Services, build_services
+from gatp.config import Settings, get_settings
+from gatp.runner.browser import BrowserOptions
+from gatp.runner.client import RunnerUnavailableError
+from gatp.runner.executor import JobExecutor
+from gatp.runner.jobs import JobResult
 from gatp.store.db import Database
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
+class InProcessRunner:
+    """Runner stand-in for API tests: same job models, real headless executor, no socket."""
+
+    def __init__(self, executor: JobExecutor | None) -> None:
+        self.executor = executor
+        self.jobs: list[Any] = []
+
+    def health(self) -> dict[str, Any]:
+        if self.executor is None:
+            raise RunnerUnavailableError("runner not reachable (test)")
+        return {"status": "ok", "headless": "true"}
+
+    def submit(self, job: Any) -> JobResult:
+        self.jobs.append(job)
+        if self.executor is None:
+            raise RunnerUnavailableError("runner not reachable; start it with `uv run poe runner`")
+        return self.executor.run(job)
+
+
 @pytest.fixture
-def client() -> Iterator[TestClient]:
-    """A TestClient for a fresh app instance."""
-    with TestClient(create_app()) as c:
+def settings(tmp_path: Path) -> Settings:
+    return Settings(
+        data_dir=tmp_path / "data",
+        artifacts_dir=tmp_path / "artifacts",
+        runner_sandbox_dir=tmp_path / "sandbox",
+        runner_headless=True,
+        llm_primary="fake",
+        llm_fallback="",
+    )
+
+
+@pytest.fixture
+def runner(settings: Settings) -> InProcessRunner:
+    options = BrowserOptions(headless=True, executable_path=get_settings().chromium_executable)
+    return InProcessRunner(
+        JobExecutor(options, settings.runner_sandbox_dir, settings.artifacts_dir)
+    )
+
+
+@pytest.fixture
+def services(settings: Settings, runner: InProcessRunner) -> Services:
+    svc = build_services(settings)
+    svc.runner = runner  # type: ignore[assignment]
+    return svc
+
+
+@pytest.fixture
+def client(services: Services) -> Iterator[TestClient]:
+    """A TestClient for a fresh app with an isolated database and an in-process runner."""
+    with TestClient(create_app(services=services)) as c:
         yield c
 
 

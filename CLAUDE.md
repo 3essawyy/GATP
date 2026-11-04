@@ -25,6 +25,7 @@ Read this first in every session. It is the operating manual for whoever (Claude
 
 ## Definition of Done (every task)
 - [ ] Code implemented; tests written and passing (CI green)
+- [ ] **Verified on the real running system**, not only unit tests: `uv run poe smoke` (and `--headed` under `xvfb-run`) plus, once a UI exists, the feature driven in the browser with screenshots reviewed. Problems found are fixed (or logged) before the PR; results go in the task's **Verification** section
 - [ ] Module design doc (`docs/modules/<name>/README.md`) updated
 - [ ] Task doc complete, including the **Explain it** section (what, why, how it works, likely examiner questions)
 - [ ] Acceptance TCs in `docs/TCs/` updated (IDs + status)

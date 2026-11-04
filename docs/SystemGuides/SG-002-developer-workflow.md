@@ -31,6 +31,7 @@ docs/                        all documentation
 | Format frontend | `npm --prefix frontend run format` |
 | Run one test | `uv run pytest backend/tests/test_health.py -k cors` |
 | Check module boundaries only | `uv run lint-imports` |
+| End-to-end smoke on real processes | `uv run poe smoke` (`--headed` for a visible browser, `--keep` to keep DB + screenshots) |
 | Add a Python dependency | `uv add <pkg>` (dev: `uv add --dev <pkg>`); commit `pyproject.toml` + `uv.lock` |
 | Add a frontend dependency | `npm --prefix frontend install --save-exact <pkg>`; commit `package.json` + `package-lock.json` |
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Any
 from urllib.parse import urlsplit
 
 from sqlalchemy import select
@@ -25,7 +26,7 @@ def _project(p: Project) -> ProjectDTO:
 
 
 def _page(p: Page) -> PageDTO:
-    return PageDTO(p.id, p.project_id, p.url, p.name, p.created_at)
+    return PageDTO(p.id, p.project_id, p.url, p.name, p.created_at, tuple(p.setup or ()))
 
 
 class ProjectRepository:
@@ -75,6 +76,16 @@ class ProjectRepository:
                 return _page(existing)
             page = Page(project_id=project_id, url=url, name=name)
             s.add(page)
+            s.flush()
+            return _page(page)
+
+    def set_page_setup(self, page_id: int, steps: list[dict[str, Any]]) -> PageDTO:
+        """Replace the setup steps run before inspecting this page (ADR-018)."""
+        with self.db.session() as s:
+            page = s.get(Page, page_id)
+            if page is None:
+                raise NotFoundError(f"page {page_id}")
+            page.setup = list(steps)
             s.flush()
             return _page(page)
 

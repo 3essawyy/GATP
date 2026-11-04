@@ -11,3 +11,4 @@ One plan per non-trivial task, numbered like its task (`PLAN-012` ↔ `T-012`). 
 | [PLAN-005](PLAN-005-llm-gateway.md) | T-005 LLM gateway | Executed |
 | [PLAN-006](PLAN-006-runner.md) | T-006 Runner process | Executed |
 | [PLAN-007](PLAN-007-inspector.md) | T-007 Inspector | Executed |
+| [PLAN-008](PLAN-008-api-core.md) | T-008 API core | Executed |
