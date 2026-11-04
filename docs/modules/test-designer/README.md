@@ -31,6 +31,11 @@ Proposes test cases grounded in the selected snapshot elements and the tester's 
 5. Revise with feedback: `POST /plan/propose {feedback}`.
 6. G1 approval requires no open clarifications and no unconfirmed assumptions.
 
+## Revisions from run feedback and the weakening guard (T-015, [ADR-023](../../decisions/ADR-023-feedback-and-weakening-guard.md))
+- `propose_plan(..., run_results=…)`: a run's failures (test id, message, failing expectation ids) go to the model as **untrusted page data**. The template tells it to correct checks, not drop them.
+- `guard.py`: `plan_weakenings(approved, revised)` → removed / loosened / changed expectations and removed cases, compared with the last **G1-approved** version. `restore()` puts the approved check or case back.
+- Offline (fake provider) revision drops the failing checks and says so in `notes`. It exists to demonstrate the guard.
+
 ## Implemented so far: Phase 1 insight (T-010)
 `insight.py`: template `insight` v1; `Insight` schema (summary, element notes, next actions with `basis: observed | assumption`, assumptions, questions); `scoped_elements(scope, snapshots)` applies the approved scope's include/exclude and builds untrusted element records with qualified ids `s<snapshot>.e<n>`; `check_ids()` rejects ids that were not sent; `request_insight()` calls the gateway. Exposed by `POST /api/projects/{id}/insight` (requires G0). Tests: `test_api_insight.py`.
 

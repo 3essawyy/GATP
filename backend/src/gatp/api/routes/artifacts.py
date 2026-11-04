@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
+from gatp.api.code_service import on_artifact_changed
 from gatp.api.routes.deps import Svc
 from gatp.api.schemas import ArtifactOut, DiffOut, RestoreIn, VersionIn, VersionOut
 from gatp.api.workflow import GateBlockedError
@@ -34,6 +35,7 @@ def edit_artifact(artifact_id: int, body: VersionIn, svc: Svc) -> VersionOut:
     version = svc.artifacts.new_version(
         artifact_id, body.content, "user", f"{body.reason} ({body.actor})"
     )
+    on_artifact_changed(svc, artifact)  # e.g. flag weakened assertions (T-015)
     svc.events.publish(artifact.project_id, "artifact_changed", {"artifact_id": artifact_id})
     return VersionOut.model_validate(version)
 
@@ -52,5 +54,6 @@ def restore_version(artifact_id: int, body: RestoreIn, svc: Svc) -> VersionOut:
     if approval.gate != "G5" or approval.artifact_version_id != target.id:
         raise GateBlockedError(f"G5 approval of artifact {artifact_id} v{body.number} required")
     version = svc.artifacts.restore(artifact_id, body.number, approval.actor)
+    on_artifact_changed(svc, artifact)
     svc.events.publish(artifact.project_id, "artifact_changed", {"artifact_id": artifact_id})
     return VersionOut.model_validate(version)

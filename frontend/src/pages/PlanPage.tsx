@@ -113,6 +113,11 @@ function PlanEditor({ projectId, result }: { projectId: number; result: PlanResu
           {result.version.reason}
         </Text>
       </Group>
+      {result.plan.notes && (
+        <Alert color="blue" variant="light" title="Model notes" data-testid="plan-notes">
+          <Text size="sm">{result.plan.notes}</Text>
+        </Alert>
+      )}
       {result.blockers.length > 0 && (
         <Alert color="yellow" title="Before approval (G1)" data-testid="plan-blockers">
           <List size="sm">

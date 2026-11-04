@@ -26,6 +26,7 @@ Never delete or rewrite an accepted ADR. To change a decision, add a new ADR and
 | [ADR-020](ADR-020-test-plan-contract.md) | Test plan as structured grounded data; observable regions; offline examples | Accepted | 2026-11-04 |
 | [ADR-021](ADR-021-deterministic-codegen.md) | Deterministic codegen; validation report bound to versions; setup steps in page objects; no Monaco | Accepted | 2026-11-04 |
 | [ADR-022](ADR-022-approved-execution-sandbox.md) | Approved execution: G3 subject, one run per approval, bubblewrap sandbox, allowlist plugin | Accepted | 2026-11-04 |
+| [ADR-023](ADR-023-feedback-and-weakening-guard.md) | Run feedback drives plan revisions; weakened checks need an explicit Accept/Restore | Accepted | 2026-11-04 |
 
 ## Open decisions (to become ADRs)
 | Topic | Decide in |

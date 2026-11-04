@@ -1321,6 +1321,26 @@
             "maxLength": 5000,
             "title": "Feedback",
             "type": "string"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Revise from this run's results (T-015)",
+            "title": "Run Id"
+          },
+          "test_ids": {
+            "description": "Results to include (empty = every non-passed test)",
+            "items": {
+              "type": "string"
+            },
+            "title": "Test Ids",
+            "type": "array"
           }
         },
         "title": "ProposeIn",
@@ -1536,6 +1556,14 @@
           "duration_ms": {
             "title": "Duration Ms",
             "type": "integer"
+          },
+          "failed_expectations": {
+            "description": "Plan expectation ids on the failing line (T-015)",
+            "items": {
+              "type": "string"
+            },
+            "title": "Failed Expectations",
+            "type": "array"
           },
           "id": {
             "title": "Id",

@@ -1267,6 +1267,16 @@ export interface components {
        * @default
        */
       feedback?: string;
+      /**
+       * Run Id
+       * @description Revise from this run's results (T-015)
+       */
+      run_id?: number | null;
+      /**
+       * Test Ids
+       * @description Results to include (empty = every non-passed test)
+       */
+      test_ids?: string[];
     };
     /** ReportOut */
     ReportOut: {
@@ -1357,6 +1367,11 @@ export interface components {
       details: string;
       /** Duration Ms */
       duration_ms: number;
+      /**
+       * Failed Expectations
+       * @description Plan expectation ids on the failing line (T-015)
+       */
+      failed_expectations?: string[];
       /** Id */
       id: number;
       /** Message */

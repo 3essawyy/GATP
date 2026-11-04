@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
+from gatp.api.code_service import apply_code_answer
+from gatp.api.guard_sync import KIND as WEAKENING
 from gatp.api.plan_service import apply_answer
 from gatp.api.routes.deps import Svc
 from gatp.api.run_service import current_subject
@@ -16,6 +18,7 @@ from gatp.api.schemas import (
     StepOut,
 )
 from gatp.api.workflow import GateBlockedError, check_approvable, workflow_state
+from gatp.store.errors import ValidationError
 from gatp.store.gates import GATES
 
 router = APIRouter(prefix="/api", tags=["gates"])
@@ -69,8 +72,13 @@ def list_clarifications(
 
 @router.post("/clarifications/{clarification_id}/answer", operation_id="answerClarification")
 def answer_clarification(clarification_id: int, body: AnswerIn, svc: Svc) -> ClarificationOut:
+    pending = svc.gates.get_clarification(clarification_id)
+    if pending.kind == WEAKENING and body.answer.strip() not in pending.options:
+        # A weakened check needs an explicit decision, never a free-text "ok" (T-015).
+        raise ValidationError(f"answer with one of: {', '.join(pending.options)}")
     answered = svc.gates.answer(clarification_id, body.answer, body.actor)
     apply_answer(svc, answered)  # e.g. confirm/remove/correct a plan assumption (new version)
+    apply_code_answer(svc, answered)  # restore an approved test file (T-015)
     svc.events.publish(answered.project_id, "clarification_answered", {"id": clarification_id})
     return ClarificationOut.model_validate(answered)
 

@@ -8,9 +8,12 @@ from __future__ import annotations
 
 from typing import Any
 
+from gatp.api.guard_sync import KIND as WEAKENING
+from gatp.api.guard_sync import RESTORE, approved_baseline, sync_weakenings
 from gatp.api.services import Services
 from gatp.store.dto import VersionDTO
 from gatp.store.gates import ClarificationDTO
+from gatp.test_designer.guard import Weakening, plan_weakenings, restore
 from gatp.test_designer.plan import (
     TestPlan,
     describe,
@@ -50,6 +53,7 @@ def store_plan(
         if version.content != content:
             version = svc.artifacts.new_version(artifact_id, content, author, reason)
     sync_clarifications(svc, project_id, plan)
+    sync_plan_weakenings(svc, project_id, artifact_id, plan)
     svc.events.publish(project_id, "artifact_changed", {"artifact_id": artifact_id})
     return artifact_id, version, plan
 
@@ -114,8 +118,35 @@ def unconfirmed_assumptions_of(case: Any) -> list[Any]:
     return [e for e in case.expected if e.basis == "assumption" and not e.confirmed]
 
 
+def sync_plan_weakenings(svc: Services, project_id: int, artifact_id: int, plan: TestPlan) -> None:
+    """Flag what this plan drops or changes compared with the last G1-approved version."""
+    baseline = approved_baseline(svc, artifact_id, "G1")
+    findings: dict[str, tuple[str, dict[str, Any]]] = {}
+    if baseline is not None:
+        approved = TestPlan.model_validate_json(baseline.content)
+        for w in plan_weakenings(approved, plan, element_labels(svc, project_id)):
+            question = (
+                f"{w.message}. This weakens what the approved plan (v{baseline.number}) checks: "
+                "accept the change, or restore the approved check?"
+            )
+            findings[w.key] = (
+                question,
+                {
+                    "change": w.change,
+                    "case_id": w.case_id,
+                    "expectation_id": w.expectation_id,
+                    "original": w.original,
+                    "baseline_version_id": baseline.id,
+                },
+            )
+    sync_weakenings(svc, project_id, "plan", findings)
+
+
 def apply_answer(svc: Services, clarification: ClarificationDTO) -> None:
     """Turn the tester's answer to an assumption into a new plan version."""
+    if clarification.step == "plan" and clarification.kind == WEAKENING:
+        _apply_weakening_answer(svc, clarification)
+        return
     if clarification.step != "plan" or clarification.kind != "assumption":
         return
     found = current_plan(svc, clarification.project_id)
@@ -168,7 +199,27 @@ def store_confirmed(svc: Services, clarification: ClarificationDTO, plan: TestPl
         f"{clarification.answer}",
     )
     sync_clarifications(svc, clarification.project_id, plan)
+    sync_plan_weakenings(svc, clarification.project_id, artifact_id, plan)
     svc.events.publish(clarification.project_id, "artifact_changed", {"artifact_id": artifact_id})
+
+
+def _apply_weakening_answer(svc: Services, clarification: ClarificationDTO) -> None:
+    """Accept: nothing to change (the answer is the record). Restore: put the check back."""
+    if clarification.answer != RESTORE:
+        return
+    found = current_plan(svc, clarification.project_id)
+    if found is None:
+        return
+    ev = clarification.evidence
+    weakening = Weakening(
+        key=str(ev.get("key")),
+        case_id=str(ev.get("case_id")),
+        expectation_id=ev.get("expectation_id"),
+        change=str(ev.get("change")),
+        message="",
+        original=dict(ev.get("original") or {}),
+    )
+    store_confirmed(svc, clarification, restore(found[2], weakening))
 
 
 def plan_blockers(plan: TestPlan) -> list[str]:

@@ -12,13 +12,20 @@ import {
   Stack,
   Table,
   Text,
+  Textarea,
   Title,
 } from '@mantine/core';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { fileUrl, type RunResult } from '../api/client';
-import { useApproveAndRun, useCode, useRunSubject, useRuns } from '../api/queries';
+import {
+  useApproveAndRun,
+  useCode,
+  useReviseFromRun,
+  useRunSubject,
+  useRuns,
+} from '../api/queries';
 import { ErrorAlert } from '../components/ErrorAlert';
 import { useTesterName } from '../components/tester';
 
@@ -108,13 +115,13 @@ export function RunPage() {
       )}
       <ErrorAlert error={subject.error ?? run.error} />
       {(runs.data ?? []).map((r, i) => (
-        <RunCard key={r.id} run={r} open={i === 0} />
+        <RunCard key={r.id} projectId={projectId} run={r} open={i === 0} />
       ))}
     </Stack>
   );
 }
 
-function RunCard({ run, open }: { run: RunResult; open: boolean }) {
+function RunCard({ projectId, run, open }: { projectId: number; run: RunResult; open: boolean }) {
   const passed = run.results.filter((r) => r.outcome === 'passed').length;
   const blocked = (run.scope.blocked_requests as unknown[] | undefined) ?? [];
   return (
@@ -156,6 +163,11 @@ function RunCard({ run, open }: { run: RunResult; open: boolean }) {
                   <Text size="xs" c="dimmed">
                     {r.duration_ms} ms
                   </Text>
+                  {(r.failed_expectations ?? []).map((x) => (
+                    <Badge key={x} size="sm" variant="outline" color="red">
+                      failed at {x}
+                    </Badge>
+                  ))}
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>
@@ -189,6 +201,58 @@ function RunCard({ run, open }: { run: RunResult; open: boolean }) {
           ))}
         </Accordion>
       )}
+      {open && run.status === 'failed' && <FeedbackBox projectId={projectId} run={run} />}
+    </Card>
+  );
+}
+
+/** T-015: tell GATP what is wrong; the model revises the plan, every weakened check is flagged. */
+function FeedbackBox({ projectId, run }: { projectId: number; run: RunResult }) {
+  const [feedback, setFeedback] = useState('');
+  const revise = useReviseFromRun(projectId);
+  const navigate = useNavigate();
+  const failures = run.results.filter((r) => r.outcome !== 'passed');
+  return (
+    <Card withBorder mt="sm" bg="var(--mantine-color-default-hover)" data-testid="run-feedback-box">
+      <Text size="sm" fw={500}>
+        Feedback on the {failures.length} failure(s): a real bug in the site, or a wrong test?
+      </Text>
+      <Text size="xs" c="dimmed">
+        A real bug: keep the test and report it. A wrong test: describe what should be checked. The
+        model revises the plan with these failures as evidence (
+        {failures.flatMap((r) => r.failed_expectations ?? []).join(', ') ||
+          'no expectation ids found'}
+        ). Any check it removes or loosens needs your explicit decision, then G1, G2 and a new G3
+        before the rerun.
+      </Text>
+      <Textarea
+        mt="xs"
+        placeholder="e.g. the page shows the year error instead; check that message"
+        value={feedback}
+        onChange={(e) => setFeedback(e.currentTarget.value)}
+        aria-label={`Feedback on run #${run.id}`}
+        data-testid="run-feedback"
+      />
+      <Group mt="xs">
+        <Button
+          size="xs"
+          disabled={!feedback.trim()}
+          loading={revise.isPending}
+          onClick={() =>
+            revise.mutate(
+              { feedback, run_id: run.id, test_ids: [] },
+              { onSuccess: () => navigate(`/projects/${projectId}/plan`) },
+            )
+          }
+          data-testid="revise-from-run"
+        >
+          Revise the test plan with this feedback
+        </Button>
+        <Button size="xs" variant="subtle" component={Link} to={`/projects/${projectId}/code`}>
+          or edit the code instead
+        </Button>
+      </Group>
+      <ErrorAlert error={revise.error} />
     </Card>
   );
 }

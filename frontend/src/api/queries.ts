@@ -257,6 +257,18 @@ export function useProposePlan(projectId: number) {
   });
 }
 
+/** Feedback on a run's failures -> the model revises the plan (T-015). */
+export function useReviseFromRun(projectId: number) {
+  const refresh = usePlanRefresh(projectId);
+  return useMutation({
+    mutationFn: async (body: { feedback: string; run_id: number; test_ids: string[] }) =>
+      unwrap(
+        await api.POST('/api/projects/{project_id}/plan/propose', { ...pid(projectId), body }),
+      ),
+    onSuccess: refresh,
+  });
+}
+
 export function useEditPlan(projectId: number) {
   const refresh = usePlanRefresh(projectId);
   return useMutation({
