@@ -13,6 +13,7 @@ from urllib.parse import urlsplit
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from gatp.inspector.locators import LocatorSpec
+from gatp.inspector.models import InspectionScope
 
 
 def origin(url: str) -> str:
@@ -39,10 +40,38 @@ class _BrowserJob(BaseModel):
         return self
 
 
+class SetupStep(BaseModel):
+    """One tester-approved step run before inspecting (e.g. signing in). Data, not code."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal["goto", "fill", "click", "select"]
+    url: str = ""  # goto only
+    locator: LocatorSpec | None = None  # fill / click / select
+    value: str = ""  # fill / select
+
+    @model_validator(mode="after")
+    def _fields_match_action(self) -> SetupStep:
+        if self.action == "goto" and not self.url:
+            raise ValueError("goto needs a url")
+        if self.action != "goto" and self.locator is None:
+            raise ValueError(f"{self.action} needs a locator")
+        return self
+
+
 class InspectJob(_BrowserJob):
-    """Open the page in a visible browser and inspect it (extraction: T-007)."""
+    """Open the page in a visible browser and inspect it (T-007)."""
 
     type: Literal["inspect"] = "inspect"
+    scope: InspectionScope = InspectionScope()
+    setup: list[SetupStep] = Field(default_factory=list, max_length=50)
+
+    @model_validator(mode="after")
+    def _setup_urls_inside_allowlist(self) -> InspectJob:
+        for step in self.setup:
+            if step.action == "goto" and origin(step.url) not in self.allowlist:
+                raise ValueError(f"setup url {step.url} is not in the allowlist")
+        return self
 
 
 class RecountJob(_BrowserJob):

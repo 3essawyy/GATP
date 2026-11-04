@@ -41,6 +41,8 @@ class LocatorIn:
     strategy: str
     expression: str
     match_count: int
+    spec: dict[str, Any] = field(default_factory=dict)
+    targets_element: bool = False
 
 
 @dataclass(frozen=True)
@@ -56,6 +58,7 @@ class ElementIn:
     bbox: dict[str, Any] = field(default_factory=dict)
     fingerprint: dict[str, Any] = field(default_factory=dict)
     source_line: int | None = None
+    details: dict[str, Any] = field(default_factory=dict)
     locators: tuple[LocatorIn, ...] = ()
 
 
@@ -80,11 +83,13 @@ class LocatorDTO:
     strategy: str
     expression: str
     match_count: int
+    spec: dict[str, Any]
+    targets_element: bool
 
     @property
     def unique(self) -> bool:
-        """Usable for single-element actions only if it matches exactly one element (ADR-006)."""
-        return self.match_count == 1
+        """Usable only if it matches exactly one element, and that element (ADR-006)."""
+        return self.match_count == 1 and self.targets_element
 
 
 @dataclass(frozen=True)
@@ -99,6 +104,7 @@ class ElementDTO:
     bbox: dict[str, Any]
     fingerprint: dict[str, Any]
     source_line: int | None
+    details: dict[str, Any]
     locators: tuple[LocatorDTO, ...]
 
 

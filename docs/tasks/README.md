@@ -14,7 +14,7 @@ Milestones: **M1 = Phase 1 submission (Week 9)** · **M2 = Phase 2 submission (W
 | [T-004](T-004-store-core.md) | Store core: schema, repositories, versioning | store | T-002 | W+1 | Done |
 | [T-005](T-005-llm-gateway.md) | LLM gateway: Gemini + Ollama, structured output, usage log | llm-gateway | T-004 | W+1 | Done (live-model check pending key) |
 | [T-006](T-006-runner-skeleton.md) | Runner process: job protocol, sandbox, allowlist, headed browser | runner, api | T-002 | W+1 | Done |
-| [T-007](T-007-inspector.md) | Inspector: elements, attributes, ranked locators, uniqueness, fingerprints | inspector | T-006 | W+1 | Todo |
+| [T-007](T-007-inspector.md) | Inspector: elements, attributes, ranked locators, uniqueness, fingerprints | inspector | T-006 | W+1 | Done |
 | [T-008](T-008-api-core.md) | API core: projects/inspections, workflow state, gates, clarifications, TS client | api | T-004, T-007 | W+2 | Todo |
 | [T-009](T-009-ui-inspection.md) | UI: URL, findings linked to source, selection, scope, goal | web-ui | T-008 | W+2 | Todo |
 | [T-010](T-010-feasibility-llm-call.md) | Grounded LLM summary / next action + usage display | llm-gateway, api, web-ui | T-005, T-009 | W+2 | Todo |

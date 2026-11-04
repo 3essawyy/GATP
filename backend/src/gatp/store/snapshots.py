@@ -34,8 +34,17 @@ def _to_dto(snap: InspectionSnapshot) -> SnapshotDTO:
                 bbox=dict(e.bbox),
                 fingerprint=dict(e.fingerprint),
                 source_line=e.source_line,
+                details=dict(e.details),
                 locators=tuple(
-                    LocatorDTO(c.id, c.rank, c.strategy, c.expression, c.match_count)
+                    LocatorDTO(
+                        c.id,
+                        c.rank,
+                        c.strategy,
+                        c.expression,
+                        c.match_count,
+                        dict(c.spec),
+                        c.targets_element,
+                    )
                     for c in e.locators
                 ),
             )
@@ -78,6 +87,7 @@ class SnapshotRepository:
                     bbox=dict(e.bbox),
                     fingerprint=dict(e.fingerprint),
                     source_line=e.source_line,
+                    details=dict(e.details),
                 )
                 element.locators = [
                     LocatorCandidate(
@@ -85,6 +95,8 @@ class SnapshotRepository:
                         strategy=c.strategy,
                         expression=c.expression,
                         match_count=c.match_count,
+                        spec=dict(c.spec),
+                        targets_element=c.targets_element,
                     )
                     for c in e.locators
                 ]

@@ -21,6 +21,7 @@ Never delete or rewrite an accepted ADR. To change a decision, add a new ADR and
 | [ADR-015](ADR-015-db-access-sqlalchemy-alembic.md) | DB access: SQLAlchemy 2 + Alembic; immutability enforced twice | Accepted | 2026-11-04 |
 | [ADR-016](ADR-016-llm-gateway-design.md) | LLM gateway: httpx providers, validated JSON, repair retry, per-attempt log, fake provider | Accepted | 2026-11-04 |
 | [ADR-017](ADR-017-runner-unix-socket-jobs.md) | Runner transport: typed HTTP jobs on a private Unix socket | Accepted | 2026-11-04 |
+| [ADR-018](ADR-018-inspection-setup-and-usability.md) | Inspection setup steps; usable = unique **and** targets the element; positional CSS never default | Accepted | 2026-11-04 |
 
 ## Open decisions (to become ADRs)
 | Topic | Decide in |

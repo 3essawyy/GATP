@@ -33,8 +33,21 @@ def _snapshot_in(page_id: int) -> SnapshotIn:
                 fingerprint={"form": "login-form", "index": 0},
                 source_line=23,
                 locators=(
-                    LocatorIn(1, "role", 'page.get_by_role("button", name="Sign in")', 1),
-                    LocatorIn(2, "test_id", 'page.get_by_test_id("login-submit")', 1),
+                    LocatorIn(
+                        1,
+                        "role",
+                        'page.get_by_role("button", name="Sign in")',
+                        1,
+                        targets_element=True,
+                    ),
+                    LocatorIn(
+                        2,
+                        "test_id",
+                        'page.get_by_test_id("login-submit")',
+                        1,
+                        targets_element=True,
+                    ),
+                    LocatorIn(6, "css", 'page.locator("button")', 1),
                 ),
             ),
             ElementIn(key="e2", tag="input", role="textbox", name="Username"),
@@ -62,6 +75,7 @@ def test_snapshot_round_trip(db: Database) -> None:
     assert [(c.rank, c.strategy, c.unique) for c in e1.locators] == [
         (1, "role", True),
         (2, "test_id", True),
+        (6, "css", False),  # count 1 but not proven to target this element
     ]
     assert again.meta == {"viewport": [1280, 800]}
     second = repo.save(data)
