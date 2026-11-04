@@ -34,7 +34,7 @@ build-backend = "hatchling.build"
 packages = ["backend/src/gatp"]
 
 # ---------------------------------------------------------------- tasks (ADR-012)
-# Run any task with:  uv run poe <task>     (works on Windows, macOS, Linux)
+# Run any task with:  uv run poe <task>     (Linux / WSL2, ADR-014)
 
 [tool.poe.tasks.api]
 help = "Start the FastAPI app on http://127.0.0.1:8000 (auto-reload)"
@@ -53,8 +53,8 @@ help = "Start the Vite dev server on http://localhost:5173 (proxies /api to :800
 cmd = "npm --prefix frontend run dev"
 
 [tool.poe.tasks.browsers]
-help = "Download the Chromium build Playwright uses"
-cmd = "playwright install chromium"
+help = "Download Chromium for Playwright plus its system libraries (asks for sudo)"
+cmd = "playwright install --with-deps chromium"
 
 [tool.poe.tasks.gen-client]
 help = "Export the OpenAPI schema and regenerate the TypeScript client types"

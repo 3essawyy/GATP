@@ -1,42 +1,60 @@
 # SG-001: Setup and run (api, runner, frontend)
 
 - **Audience:** tester | developer | examiner
-- **Last verified:** 2026-11-04 on Linux (cloud container, Python 3.12 via uv, Node 22) at the T-002 merge commit. **Not yet verified on Windows/macOS**; that happens during [TC-102](../TCs/phase1.md#tc-102--clean-setup-from-docs).
+- **Platform:** **Linux** (Ubuntu 24.04 reference; Windows users run it inside **WSL2 Ubuntu**). See [ADR-014](../decisions/ADR-014-linux-only-platform.md).
+- **Last verified:** 2026-11-04, clean `ubuntu:24.04` container, non-root user with sudo, at the T-002 follow-up commit. See the [TC-102 run log](../TCs/TC-102-runs.md).
 - **Fixture site:** added in T-003 (this guide gains a section then).
 
-Every command below runs from the **repository root**, works the same in PowerShell, cmd, bash and zsh, and needs no Make.
+Run every command from the **repository root** unless the step says otherwise.
 
 ## Prerequisites
-| Tool | Version | Install |
+| Tool | Version | Why |
 |---|---|---|
-| Git | any | https://git-scm.com |
-| **uv** | ≥ 0.5 | Windows: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 \| iex"` · macOS/Linux: `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| **Node.js** | ≥ 22.12 (includes npm) | https://nodejs.org (LTS) |
-
-You don't need to install Python yourself: uv downloads Python 3.12 automatically (pinned in `.python-version`).
+| git, curl, ca-certificates | any | clone, installers |
+| **uv** | ≥ 0.5 | Python + dependencies (ADR-012) |
+| **Python** | 3.12 | uv uses the system `python3.12` if present (Ubuntu 24.04 ships it), otherwise downloads it |
+| **Node.js** | ≥ 22.12 (includes npm) | frontend |
 
 ## Steps
-1. Clone and enter the repo:
+1. Install base packages:
    ```bash
-   git clone https://github.com/3essawyy/GATP.git
+   sudo apt-get update && sudo apt-get install -y git curl ca-certificates
+   ```
+2. Install **uv**, using one of these:
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+   or, from PyPI through Ubuntu's pipx:
+   ```bash
+   sudo apt-get install -y pipx && pipx install uv && pipx ensurepath
+   ```
+   Then open a new terminal (or `source ~/.bashrc`) so `uv` is on `PATH`, and check it with `uv --version`.
+3. Install **Node.js 22** with nvm (no sudo needed):
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
    ```
    ```bash
-   cd GATP
+   source ~/.nvm/nvm.sh && nvm install 22
    ```
-2. Install the Python environment (creates `.venv`, installs exact versions from `uv.lock`):
+   Check it with `node --version` (it must print v22.12 or newer).
+4. Clone and enter the repo:
+   ```bash
+   git clone https://github.com/3essawyy/GATP.git && cd GATP
+   ```
+5. Install the Python environment (creates `.venv`, installs exact versions from `uv.lock`):
    ```bash
    uv sync
    ```
-3. Install frontend dependencies:
+6. Install frontend dependencies:
    ```bash
    uv run poe web-install
    ```
-4. Download the Chromium build Playwright uses (needed from T-006 on; on Linux add `--with-deps` if system libraries are missing):
+7. Install Chromium and its system libraries for Playwright. It's needed from T-006 on and asks for your sudo password for the libraries:
    ```bash
    uv run poe browsers
    ```
-5. Optional: copy `.env.example` to `.env` and adjust. All keys have defaults; no secrets are needed yet.
-6. Start the three processes, **each in its own terminal**:
+8. Optional: `cp .env.example .env` and adjust. All keys have defaults; no secrets are needed yet.
+9. Start the three processes, **each in its own terminal**:
    ```bash
    uv run poe api
    ```
@@ -46,7 +64,7 @@ You don't need to install Python yourself: uv downloads Python 3.12 automaticall
    ```bash
    uv run poe web
    ```
-7. Open http://localhost:5173.
+10. Open http://localhost:5173.
 
 | Process | Command | Address | Stop |
 |---|---|---|---|
@@ -58,15 +76,17 @@ You don't need to install Python yourself: uv downloads Python 3.12 automaticall
 
 ## Verify it worked
 - The top-right badge in the UI shows **API ok · v0.1.0** (green). If the API is stopped it turns red: **API unreachable**.
-- http://127.0.0.1:8000/api/health returns `{"status":"ok","app":"GATP","version":"0.1.0"}`.
+- `curl http://127.0.0.1:8000/api/health` returns `{"status":"ok","app":"GATP","version":"0.1.0"}`.
 - The runner terminal prints `runner ready (no jobs yet; job protocol arrives in T-006)`.
 
 ## Troubleshooting
 | Symptom | Cause | Fix |
 |---|---|---|
-| `uv: command not found` | uv not on PATH after install | Open a new terminal (Windows: sign out/in), or follow the installer's PATH hint |
-| `npm: command not found` / `npm ERR! engine` | Node missing or < 22.12 | Install Node 22 LTS |
+| `uv: command not found` | `~/.local/bin` not on PATH yet | `source ~/.bashrc` or open a new terminal |
+| `node: command not found` in a new terminal | nvm not loaded | `source ~/.nvm/nvm.sh` (the nvm installer adds this to `~/.bashrc`) |
+| `npm ERR! engine` / Vite refuses to start | Node < 22.12 | `nvm install 22` |
 | Vite: `Port 5173 is already in use` | Another dev server running | Stop it; the port is fixed (`strictPort`) so the documented URL stays valid |
-| Badge says **API unreachable** | API not running, or on another port | Start `uv run poe api`; if you changed the port, set `GATP_API_URL` for the frontend too |
-| `[Errno 98/10048] address already in use` on 8000 | Old API process still running | Stop it, or set `GATP_API_PORT` in `.env` and `GATP_API_URL` for Vite |
-| PowerShell blocks the uv installer | Execution policy | Use the exact command above (`-ExecutionPolicy ByPass`) |
+| Badge says **API unreachable** | API not running, or on another port | Start `uv run poe api`; if you changed the port, also set `GATP_API_URL` for the frontend |
+| `address already in use` on 8000 | Old API process still running | `fuser -k 8000/tcp`, or set `GATP_API_PORT` in `.env` and `GATP_API_URL` for Vite |
+| `poe browsers` fails on missing libraries | No sudo rights | Ask an admin to run `sudo $(uv run which playwright) install-deps chromium` |
+| WSL2: browser window doesn't appear (from T-006) | WSLg missing | Use Windows 11 / recent WSL (`wsl --update`) |
