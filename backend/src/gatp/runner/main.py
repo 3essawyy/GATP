@@ -47,6 +47,7 @@ def bind_private_socket(path: Path) -> sockets.socket:
     sock = sockets.socket(sockets.AF_UNIX, sockets.SOCK_STREAM)
     sock.bind(str(path))
     os.chmod(path, 0o600)
+    sock.listen(128)  # connections made before uvicorn is ready wait in the backlog
     return sock
 
 

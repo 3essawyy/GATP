@@ -29,8 +29,12 @@ def runner(tmp_path_factory: pytest.TempPathFactory) -> object:
         [sys.executable, "-m", "gatp.runner.main"], env=env, stderr=subprocess.PIPE, text=True
     )
     deadline = time.time() + 20
-    while not sock.exists() and time.time() < deadline:
-        time.sleep(0.1)
+    while time.time() < deadline:
+        try:
+            RunnerClient(sock, timeout_s=2).health()
+            break
+        except (RunnerUnavailableError, OSError):
+            time.sleep(0.1)
     yield sock, base
     proc.send_signal(signal.SIGTERM)
     try:
