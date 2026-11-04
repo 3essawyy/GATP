@@ -2,40 +2,24 @@
 
 from __future__ import annotations
 
-import json
-
 from fastapi import APIRouter
 
+from gatp.api.context import ScopeContext, approved_scope
 from gatp.api.routes.deps import Svc
 from gatp.api.schemas import InsightOut, LlmCallOut
-from gatp.api.services import Services
-from gatp.api.workflow import GateBlockedError, require_approval
-from gatp.store.dto import SnapshotDTO
+from gatp.api.workflow import GateBlockedError
 from gatp.store.errors import NotFoundError
-from gatp.test_designer.insight import INSIGHT, Insight, request_insight, scoped_elements
+from gatp.test_designer.insight import INSIGHT, Insight, request_insight
 
 router = APIRouter(prefix="/api", tags=["assist"])
-
-
-def _approved_scope(
-    svc: Services, project_id: int
-) -> tuple[int, dict[str, object], dict[int, SnapshotDTO]]:
-    artifact = svc.artifacts.find(project_id, "scope", "scope")
-    if artifact is None:
-        raise GateBlockedError("save and approve a scope (G0) first")
-    version = svc.artifacts.latest(artifact.id)
-    require_approval(svc, "G0", version)  # only approved scopes reach the model
-    scope = json.loads(version.content)
-    snapshots = {p["snapshot_id"]: svc.snapshots.get(p["snapshot_id"]) for p in scope["pages"]}
-    return version.number, scope, snapshots
 
 
 @router.post("/projects/{project_id}/insight", operation_id="requestInsight", status_code=201)
 def create_insight(project_id: int, svc: Svc) -> InsightOut:
     """Summarise the approved scope and suggest next actions, grounded in the snapshots."""
     project = svc.projects.get(project_id)
-    number, scope, snapshots = _approved_scope(svc, project_id)
-    elements = scoped_elements(scope, snapshots)
+    ctx = approved_scope(svc, project_id)
+    scope, elements = ctx.scope, ctx.elements
     if not elements:
         raise GateBlockedError("the approved scope contains no elements")
     svc.events.publish(project_id, "model_call_started", {"purpose": INSIGHT.id})
@@ -52,9 +36,9 @@ def create_insight(project_id: int, svc: Svc) -> InsightOut:
         insight=result.value,
         call=LlmCallOut.model_validate(result.call),
         attempts=[LlmCallOut.model_validate(a) for a in result.attempts],
-        scope_version=number,
+        scope_version=ctx.version_number,
         element_ids_sent=[e.id for e in elements],
-        browser_ms=sum(int(s.meta.get("browser_ms", 0)) for s in snapshots.values()),
+        browser_ms=ctx.browser_ms,
     )
 
 
@@ -73,16 +57,16 @@ def latest_insight(project_id: int, svc: Svc) -> InsightOut | None:
     if call is None:
         return None
     try:
-        number, scope, snapshots = _approved_scope(svc, project_id)
+        ctx: ScopeContext | None = approved_scope(svc, project_id)
     except (GateBlockedError, NotFoundError):
-        number, scope, snapshots = 0, {"pages": []}, {}
+        ctx = None
     return InsightOut(
         insight=Insight.model_validate_json(call.response),
         call=LlmCallOut.model_validate(call),
         attempts=[LlmCallOut.model_validate(call)],
-        scope_version=number,
-        element_ids_sent=[e.id for e in scoped_elements(scope, snapshots)],
-        browser_ms=sum(int(s.meta.get("browser_ms", 0)) for s in snapshots.values()),
+        scope_version=ctx.version_number if ctx else 0,
+        element_ids_sent=[e.id for e in ctx.elements] if ctx else [],
+        browser_ms=ctx.browser_ms if ctx else 0,
     )
 
 

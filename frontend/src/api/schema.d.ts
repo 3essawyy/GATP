@@ -399,6 +399,47 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/projects/{project_id}/plan': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Plan */
+    get: operations['getPlan'];
+    /**
+     * Edit Plan
+     * @description A tester edit: validated against the approved scope, stored as a new version.
+     */
+    put: operations['editPlan'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/plan/propose': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Propose
+     * @description Ask the model for a plan grounded in the approved scope (or revise it with feedback).
+     */
+    post: operations['proposePlan'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/projects/{project_id}/requirements': {
     parameters: {
       query?: never;
@@ -670,6 +711,57 @@ export interface components {
       /** Text */
       text: string;
     };
+    /** Expectation */
+    Expectation: {
+      /**
+       * Basis
+       * @enum {string}
+       */
+      basis: 'requirement' | 'observation' | 'assumption';
+      /**
+       * Confirmed
+       * @description Set by the tester, never by the model
+       * @default false
+       */
+      confirmed?: boolean;
+      /**
+       * Element Id
+       * @description Element or region id (not for url_*)
+       */
+      element_id?: string | null;
+      /**
+       * Evidence
+       * @description Which requirement, what was observed, or why it is assumed
+       */
+      evidence: string;
+      /**
+       * Id
+       * @description Assigned by GATP; leave empty
+       * @default
+       */
+      id?: string;
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind:
+        | 'visible'
+        | 'hidden'
+        | 'text_equals'
+        | 'text_contains'
+        | 'value_equals'
+        | 'url_contains'
+        | 'count_equals'
+        | 'enabled'
+        | 'disabled'
+        | 'checked';
+      /**
+       * Value
+       * @description Expected text/value/URL part/count
+       * @default
+       */
+      value?: string;
+    };
     /** GateInfo */
     GateInfo: {
       /** Description */
@@ -919,6 +1011,62 @@ export interface components {
       /** Steps */
       steps: components['schemas']['SetupStep'][];
     };
+    /** PlanEditIn */
+    PlanEditIn: {
+      /**
+       * Actor
+       * @default tester
+       */
+      actor?: string;
+      plan: components['schemas']['TestPlan'];
+      /** Reason */
+      reason: string;
+    };
+    /** PlanOut */
+    PlanOut: {
+      /** Approved */
+      approved: boolean;
+      /** Artifact Id */
+      artifact_id: number;
+      /**
+       * Blockers
+       * @description Why G1 is not possible yet (empty = approvable)
+       */
+      blockers: string[];
+      call?: components['schemas']['LlmCallOut'] | null;
+      /**
+       * Element Labels
+       * @description Display label per element id, e.g. button "Save"
+       */
+      element_labels?: {
+        [key: string]: string;
+      };
+      /** Open Clarifications */
+      open_clarifications: components['schemas']['ClarificationOut'][];
+      plan: components['schemas']['TestPlan'];
+      /** Validation Errors */
+      validation_errors: string[];
+      version: components['schemas']['VersionOut'];
+    };
+    /** PlanStep */
+    PlanStep: {
+      /**
+       * Action
+       * @enum {string}
+       */
+      action: 'goto' | 'fill' | 'click' | 'select' | 'check' | 'uncheck' | 'press';
+      /**
+       * Element Id
+       * @description Interactive element id; not for goto
+       */
+      element_id?: string | null;
+      /**
+       * Value
+       * @description Text to fill, option to select, key, or goto URL
+       * @default
+       */
+      value?: string;
+    };
     /** ProjectIn */
     ProjectIn: {
       /** Name */
@@ -944,6 +1092,15 @@ export interface components {
       name: string;
       /** Origin */
       origin: string;
+    };
+    /** ProposeIn */
+    ProposeIn: {
+      /**
+       * Feedback
+       * @description Revise the current plan
+       * @default
+       */
+      feedback?: string;
     };
     /** RequirementIn */
     RequirementIn: {
@@ -1113,6 +1270,40 @@ export interface components {
       status: 'todo' | 'needs_approval' | 'approved' | 'blocked';
       /** Step */
       step: string;
+    };
+    /** TestCase */
+    TestCase: {
+      /** Expected */
+      expected: components['schemas']['Expectation'][];
+      /**
+       * Id
+       * @description TC-01, TC-02, …
+       */
+      id: string;
+      /** Open Questions */
+      open_questions?: string[];
+      /** Preconditions */
+      preconditions?: string[];
+      /**
+       * Priority
+       * @default medium
+       * @enum {string}
+       */
+      priority?: 'high' | 'medium' | 'low';
+      /** Steps */
+      steps: components['schemas']['PlanStep'][];
+      /** Title */
+      title: string;
+    };
+    /** TestPlan */
+    TestPlan: {
+      /** Cases */
+      cases: components['schemas']['TestCase'][];
+      /**
+       * Notes
+       * @default
+       */
+      notes?: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -1972,6 +2163,107 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['PageOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getPlan: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PlanOut'] | null;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  editPlan: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PlanEditIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PlanOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  proposePlan: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProposeIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PlanOut'];
         };
       };
       /** @description Validation Error */

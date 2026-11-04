@@ -3,7 +3,7 @@ import { Badge, Group, Table, Text } from '@mantine/core';
 import type { LlmCall } from '../api/client';
 
 /** Usage evidence for one model call; model time shown apart from browser time (REQ-Q8–Q10). */
-export function UsageCard({ call, browserMs }: { call: LlmCall; browserMs: number }) {
+export function UsageCard({ call, browserMs }: { call: LlmCall; browserMs?: number }) {
   const tokenSource = call.tokens_estimated ? 'estimated (~4 chars/token)' : 'reported by provider';
   return (
     <Table withRowBorders={false} fz="sm" data-testid="usage">
@@ -37,10 +37,12 @@ export function UsageCard({ call, browserMs }: { call: LlmCall; browserMs: numbe
           <Table.Td c="dimmed">Model time</Table.Td>
           <Table.Td data-testid="model-time">{call.latency_ms} ms</Table.Td>
         </Table.Tr>
-        <Table.Tr>
-          <Table.Td c="dimmed">Browser time (inspecting the scoped pages)</Table.Td>
-          <Table.Td data-testid="browser-time">{browserMs} ms</Table.Td>
-        </Table.Tr>
+        {browserMs !== undefined && (
+          <Table.Tr>
+            <Table.Td c="dimmed">Browser time (inspecting the scoped pages)</Table.Td>
+            <Table.Td data-testid="browser-time">{browserMs} ms</Table.Td>
+          </Table.Tr>
+        )}
         <Table.Tr>
           <Table.Td c="dimmed">Result</Table.Td>
           <Table.Td>

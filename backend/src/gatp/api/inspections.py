@@ -34,6 +34,7 @@ def to_snapshot_in(
                 fingerprint=dict(e.fingerprint),
                 source_line=e.source_line,
                 details={
+                    "interactive": e.interactive,
                     "label": e.label,
                     "dom_path": e.dom_path,
                     "visible": e.visible,

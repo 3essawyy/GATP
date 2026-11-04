@@ -1,7 +1,7 @@
 // One hook per endpoint. Components never call `fetch`; they use these hooks.
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { api, unwrap, type ScopeIn, type SetupStep } from './client';
+import { api, unwrap, type ScopeIn, type SetupStep, type TestPlan } from './client';
 
 const pid = (projectId: number) => ({ params: { path: { project_id: projectId } } });
 
@@ -224,5 +224,44 @@ export function useRequestInsight(projectId: number) {
       qc.setQueryData(['insight', projectId], data);
       qc.invalidateQueries({ queryKey: ['llm-calls', projectId] });
     },
+  });
+}
+
+export function usePlan(projectId: number) {
+  return useQuery({
+    queryKey: ['plan', projectId],
+    queryFn: async () => unwrap(await api.GET('/api/projects/{project_id}/plan', pid(projectId))),
+  });
+}
+
+function usePlanRefresh(projectId: number) {
+  const qc = useQueryClient();
+  return () => {
+    qc.invalidateQueries({ queryKey: ['plan', projectId] });
+    qc.invalidateQueries({ queryKey: ['workflow', projectId] });
+    qc.invalidateQueries({ queryKey: ['clarifications', projectId] });
+  };
+}
+
+export function useProposePlan(projectId: number) {
+  const refresh = usePlanRefresh(projectId);
+  return useMutation({
+    mutationFn: async (feedback: string) =>
+      unwrap(
+        await api.POST('/api/projects/{project_id}/plan/propose', {
+          ...pid(projectId),
+          body: { feedback },
+        }),
+      ),
+    onSuccess: refresh,
+  });
+}
+
+export function useEditPlan(projectId: number) {
+  const refresh = usePlanRefresh(projectId);
+  return useMutation({
+    mutationFn: async (body: { plan: TestPlan; reason: string; actor: string }) =>
+      unwrap(await api.PUT('/api/projects/{project_id}/plan', { ...pid(projectId), body })),
+    onSuccess: refresh,
   });
 }

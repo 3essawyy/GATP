@@ -55,13 +55,15 @@ def test_inspect_page_stores_snapshot_and_files(
     assert resp.status_code == 201, resp.text
     body = resp.json()
     snap = body["snapshot"]
-    assert [e["name"] for e in snap["elements"]] == ["Username", "Password", "Sign in"]
+    names = [e["name"] for e in snap["elements"] if e["details"]["interactive"]]
+    assert names == ["Username", "Password", "Sign in"]
+    assert [e["key"] for e in snap["elements"] if not e["details"]["interactive"]] == ["o1", "o2"]
     assert snap["elements"][2]["locators"][0]["unique"] is True
     assert body["duration_ms"] > 0
     assert runner.jobs[0].allowlist == [site_v1]  # the project origin is the allowlist
     listed = client.get(f"/api/pages/{page['id']}/snapshots").json()
     assert listed[0]["id"] == snap["id"]
-    assert listed[0]["element_count"] == 3
+    assert listed[0]["element_count"] == 5  # 3 interactive + 2 observable
     shot = client.get(f"/api/files/{snap['screenshot_path']}")
     assert shot.status_code == 200
     assert shot.content.startswith(b"\x89PNG")

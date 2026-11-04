@@ -172,7 +172,9 @@ class LLMGateway:
         output_errors: list[str] = []
         unavailable: list[str] = []
         for provider in self.providers:
-            request = ProviderRequest(system=system, user=user, json_schema=json_schema)
+            request = ProviderRequest(
+                system=system, user=user, json_schema=json_schema, template_id=template.id
+            )
             for repair in (False, True):
                 response, latency_ms, error = self._call_with_retries(provider, request, log)
                 if response is None:
@@ -195,6 +197,7 @@ class LLMGateway:
                 if repair:
                     break
                 request = ProviderRequest(
+                    template_id=template.id,
                     system=system,
                     user=(
                         f"{user}\n\nYour previous answer was rejected: {problem}\n"
@@ -278,6 +281,16 @@ def _ms(started: float) -> int:
     return round((time.perf_counter() - started) * 1000)
 
 
+# template id -> deterministic offline answer built from the request (used by the `fake` provider
+# so the UI can be demonstrated without a model; every such call is logged as provider "fake").
+OFFLINE_EXAMPLES: dict[str, Callable[[ProviderRequest], str]] = {}
+
+
+def offline_answer(request: ProviderRequest) -> str:
+    example = OFFLINE_EXAMPLES.get(request.template_id)
+    return example(request) if example else schema_example(request.json_schema)
+
+
 def make_provider(name: str, settings: Settings) -> Provider:
     """Instantiate a provider by name from settings."""
     if name == "gemini":
@@ -290,5 +303,5 @@ def make_provider(name: str, settings: Settings) -> Provider:
     if name == "ollama":
         return OllamaProvider(settings.ollama_host, settings.ollama_model, settings.llm_timeout_s)
     if name == "fake":
-        return FakeProvider(default=lambda req: schema_example(req.json_schema))
+        return FakeProvider(default=offline_answer)
     raise ValueError(f"unknown LLM provider {name!r}; expected gemini | ollama | fake")

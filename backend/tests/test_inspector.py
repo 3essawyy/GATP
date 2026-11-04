@@ -44,8 +44,12 @@ def inspect(executor: JobExecutor, base: str, page: str, **kw: Any) -> Inspectio
     return InspectionResult.model_validate(result.data)
 
 
+def interactive(result: InspectionResult) -> list[InspectedElement]:
+    return [e for e in result.elements if e.interactive]
+
+
 def by_name(result: InspectionResult) -> dict[str, InspectedElement]:
-    return {e.name or e.dom_path: e for e in result.elements}
+    return {e.name or e.dom_path: e for e in interactive(result)}
 
 
 def best(e: InspectedElement) -> str:
@@ -56,7 +60,7 @@ def best(e: InspectedElement) -> str:
 def test_login_page_elements_and_best_locators(executor: JobExecutor, site_v1: str) -> None:
     result = inspect(executor, site_v1, "index.html")
     assert result.title == "BookShelf · Sign in"
-    assert [(e.key, e.tag, e.role, e.name) for e in result.elements] == [
+    assert [(e.key, e.tag, e.role, e.name) for e in interactive(result)] == [
         ("e1", "input", "textbox", "Username"),
         ("e2", "input", "", "Password"),  # password inputs have no ARIA role
         ("e3", "button", "button", "Sign in"),
@@ -65,8 +69,8 @@ def test_login_page_elements_and_best_locators(executor: JobExecutor, site_v1: s
     assert best(els["Username"]) == 'page.get_by_role("textbox", name="Username", exact=True)'
     assert best(els["Password"]) == 'page.get_by_label("Password", exact=True)'
     assert best(els["Sign in"]) == 'page.get_by_role("button", name="Sign in", exact=True)'
-    assert [e.source_line for e in result.elements] == [16, 20, 23]
-    for e in result.elements:
+    assert [e.source_line for e in interactive(result)] == [16, 20, 23]
+    for e in interactive(result):
         ranks = [c.rank for c in e.locators]
         assert ranks == sorted(ranks), "candidates must be in ADR-006 priority order"
         assert e.flags == []
@@ -76,9 +80,9 @@ def test_login_page_elements_and_best_locators(executor: JobExecutor, site_v1: s
 def test_books_page_needs_setup_and_flags_poor_labels(executor: JobExecutor, site_v1: str) -> None:
     result = inspect(executor, site_v1, "books.html", setup=login_steps(site_v1))
     assert result.final_url.endswith("/books.html")
-    names = [(e.tag, e.name) for e in result.elements]
+    names = [(e.tag, e.name) for e in interactive(result)]
     assert names == [("button", "⎋"), ("input", "Search books"), ("select", ""), ("a", "Add book")]
-    logout, search, genre, add = result.elements
+    logout, search, genre, add = interactive(result)
     assert "weak_accessible_name" in logout.flags
     assert {"no_accessible_name", "no_visible_label"} <= set(genre.flags)
     assert best(genre) == 'page.locator("#genre-filter")'
@@ -90,12 +94,12 @@ def test_signed_out_redirect_is_reported(executor: JobExecutor, site_v1: str) ->
     result = inspect(executor, site_v1, "books.html")
     assert result.url.endswith("/books.html")
     assert result.final_url.endswith("/index.html")
-    assert [e.name for e in result.elements] == ["Username", "Password", "Sign in"]
+    assert [e.name for e in interactive(result)] == ["Username", "Password", "Sign in"]
 
 
 def test_add_page_and_scope(executor: JobExecutor, site_v1: str) -> None:
     full = inspect(executor, site_v1, "add.html", setup=login_steps(site_v1))
-    assert [e.name for e in full.elements] == [
+    assert [e.name for e in interactive(full)] == [
         "Back to books",
         "Title",
         "Author",
@@ -114,7 +118,7 @@ def test_add_page_and_scope(executor: JobExecutor, site_v1: str) -> None:
         scope=InspectionScope(include=["#book-form"], exclude=["a"]),
     )
     expected = ["Title", "Author", "Year published", "Genre", "Save"]
-    assert [e.name for e in scoped.elements] == expected
+    assert [e.name for e in interactive(scoped)] == expected
 
 
 @pytest.fixture
@@ -205,3 +209,22 @@ def test_snapshot_persists_full_evidence(executor: JobExecutor, site_v1: str, db
     assert sign_in.locators[0].spec["strategy"] == "role"
     assert snap.screenshot_path == "jobs/x/page.png"
     assert snap.html_sha256 == result.html_sha256
+
+
+def test_observable_regions_for_expected_results(executor: JobExecutor, site_v1: str) -> None:
+    """Alerts, status, headings and tables are recorded (o-keys) so expectations can check them."""
+    result = inspect(executor, site_v1, "add.html", setup=login_steps(site_v1))
+    obs = [e for e in result.elements if not e.interactive]
+    assert [(e.key, e.tag, e.role) for e in obs] == [
+        ("o1", "h1", "heading"),
+        ("o2", "span", "alert"),
+        ("o3", "span", "alert"),
+        ("o4", "span", "alert"),
+        ("o5", "span", "alert"),
+    ]
+    title_error = obs[1]
+    assert title_error.attributes["id"] == "title-error"
+    assert title_error.locators[title_error.default_locator or 0].expression == (
+        'page.locator("#title-error")'
+    )
+    assert "no_accessible_name" not in title_error.flags  # names are not expected on regions

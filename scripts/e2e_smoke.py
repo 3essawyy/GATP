@@ -134,7 +134,7 @@ class Smoke:
             r = self.call("POST", f"/api/pages/{s['start_page']}/inspections", 201, json={})
             snap = r["snapshot"]
             s["login_snap"] = snap
-            names = [e["name"] for e in snap["elements"]]
+            names = [e["name"] for e in snap["elements"] if e["details"]["interactive"]]
             assert names == ["Username", "Password", "Sign in"], names
             shot = self.api.get(f"/api/files/{snap['screenshot_path']}")
             assert shot.content[:4] == b"\x89PNG", "screenshot not served"

@@ -13,6 +13,7 @@ export function useProjectEvents(projectId: number) {
       qc.invalidateQueries({ queryKey: ['clarifications', projectId] });
       qc.invalidateQueries({ queryKey: ['snapshots'] });
       qc.invalidateQueries({ queryKey: ['insight', projectId] });
+      qc.invalidateQueries({ queryKey: ['plan', projectId] });
     };
     for (const kind of [
       'inspection_finished',

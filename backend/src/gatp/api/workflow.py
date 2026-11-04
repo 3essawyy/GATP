@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 from gatp.api.services import Services
 from gatp.store.dto import VersionDTO
+from gatp.test_designer.plan import TestPlan, unconfirmed_assumptions
 
 # Which artifact kinds each version-bound gate covers, and the workflow step it unlocks.
 GATE_KINDS: dict[str, tuple[str, ...]] = {
@@ -69,6 +70,11 @@ def check_approvable(services: Services, project_id: int, gate: str, version: Ve
     if gate != "G5" and services.artifacts.latest(artifact.id).id != version.id:
         raise GateBlockedError("only the latest version can be approved; it changed since")
     require_no_open_clarifications(services, project_id, GATE_STEP[gate])
+    if gate == "G1":
+        pending = unconfirmed_assumptions(TestPlan.model_validate_json(version.content))
+        if pending:
+            ids = ", ".join(e.id for e in pending)
+            raise GateBlockedError(f"confirm or remove assumption-based expectations first: {ids}")
 
 
 def _gate_step(services: Services, project_id: int, step: str, gate: str) -> StepState:

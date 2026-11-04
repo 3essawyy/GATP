@@ -1,29 +1,39 @@
 # Module: test-designer
 
 - **Owner:** TBD
-- **Status:** In progress (Phase 1 insight call, T-010)
+- **Status:** Implemented (insight T-010, test plans T-012)
 - **Code:** `backend/src/gatp/test_designer/`
 - **Tasks:** T-012
-- **ADRs:** ADR-003, ADR-006
+- **ADRs:** ADR-003, ADR-020, ADR-006
 
 ## Responsibility
 Proposes test cases grounded in the selected snapshot elements and the tester's goal/requirements. Separates **observations** (from the page) from **assumptions** (business rules), and raises clarification requests where expected behavior can't be established. Produces a versioned `test_plan` artifact for G1 approval.
 
-## Test case shape (draft)
+## Test plan (T-012, [ADR-020](../../decisions/ADR-020-test-plan-contract.md))
+`plan.py`: the `TestPlan` / `TestCase` / `PlanStep` / `Expectation` schema, template `test_plan` v1, `validate_plan()`, `normalise()` (stable expectation ids, confirmation rules), `propose_plan()` (proposal, or revision with feedback), and the offline example used by the `fake` provider.
+
 ```json
-{
-  "case_id": "TC-LOGIN-01", "title": "…", "priority": "high",
-  "preconditions": ["…"],
-  "steps": [{"action": "fill", "element_id": "E-0003", "value": "user@example.com"}],
-  "expected": [{"assertion": "url_contains", "value": "/dashboard",
-                "basis": "requirement|observation|assumption", "evidence": "REQ note / E-id"}],
-  "open_questions": ["…"]
-}
+{"id": "TC-01", "title": "Title is required", "priority": "high",
+ "steps": [{"action": "goto", "value": "http://127.0.0.1:8090/add.html"},
+           {"action": "fill", "element_id": "s2.e3", "value": "Frank Herbert"},
+           {"action": "click", "element_id": "s2.e6"}],
+ "expected": [{"id": "TC-01.x1", "kind": "text_equals", "element_id": "s2.o2",
+               "value": "Title is required.", "basis": "requirement",
+               "evidence": "FX-5: Title required", "confirmed": false}],
+ "open_questions": []}
 ```
-Any `element_id` not in the snapshot → rejected and regenerated or flagged. Any expected result with `basis=assumption` must be confirmed by the tester before G1.
+
+**Lifecycle (api `plan_service.py`):**
+1. Propose: `POST /api/projects/{id}/plan/propose` (requires G0) stores a `test_plan` version with `author=model`.
+2. Clarifications are synced: one per unconfirmed assumption (options *Confirm* / *Remove this expectation* / a corrected value) and one per open question. Both block G1.
+3. Each answer creates a new version (`author=user`).
+4. Tester edits go through `PUT /plan`, are validated, and create a new version.
+5. Revise with feedback: `POST /plan/propose {feedback}`.
+6. G1 approval requires no open clarifications and no unconfirmed assumptions.
 
 ## Implemented so far: Phase 1 insight (T-010)
 `insight.py`: template `insight` v1; `Insight` schema (summary, element notes, next actions with `basis: observed | assumption`, assumptions, questions); `scoped_elements(scope, snapshots)` applies the approved scope's include/exclude and builds untrusted element records with qualified ids `s<snapshot>.e<n>`; `check_ids()` rejects ids that were not sent; `request_insight()` calls the gateway. Exposed by `POST /api/projects/{id}/insight` (requires G0). Tests: `test_api_insight.py`.
 
 ## Known limitations
-TBD.
+- Plan quality depends on the model; the offline example plan only demonstrates the flow.
+- Test data values are chosen by the model or the tester; only expected results need a basis.

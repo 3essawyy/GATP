@@ -82,6 +82,8 @@ def _element_data(snap: SnapshotDTO, e: ElementDTO) -> dict[str, Any]:
     return {
         "id": qualified_id(snap.id, e.key),
         "page": snap.title,
+        "page_url": snap.url,
+        "interactive": bool(e.details.get("interactive", True)),
         "tag": e.tag,
         "role": e.role,
         "name": e.name,
@@ -94,7 +96,8 @@ def _element_data(snap: SnapshotDTO, e: ElementDTO) -> dict[str, Any]:
     }
 
 
-_ATTRS = {"type", "placeholder", "required", "data-testid", "href", "name", "inputmode"}
+# `id` lets the model tell similar regions apart (e.g. #title-error vs #author-error).
+_ATTRS = {"id", "type", "placeholder", "required", "data-testid", "href", "name", "inputmode"}
 
 
 def scoped_elements(

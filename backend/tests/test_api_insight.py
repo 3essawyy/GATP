@@ -78,7 +78,8 @@ def test_only_scoped_elements_are_sent_and_cited(
     resp = client.post(f"/api/projects/{pid}/insight")
     assert resp.status_code == 201, resp.text
     body = resp.json()
-    assert body["element_ids_sent"] == [f"s{sid}.e1", f"s{sid}.e3"]  # e2 excluded (TC-110)
+    # e2 excluded by the tester (TC-110); observables o1 (heading), o2 (alert) stay in scope
+    assert body["element_ids_sent"] == [f"s{sid}.e1", f"s{sid}.e3", f"s{sid}.o1", f"s{sid}.o2"]
     sent = fake_llm.requests[0]
     assert f"s{sid}.e2" not in sent.user
     assert '"name": "Password"' not in sent.user  # (it may appear as nearby text of e3)

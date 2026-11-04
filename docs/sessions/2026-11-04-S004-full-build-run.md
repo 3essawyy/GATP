@@ -1,6 +1,6 @@
 # Session S004 — 2026-11-04 — Full-build run (T-003 onward)
 
-- **Tasks touched:** T-003 … T-011 (Phase 1 complete except the real-model run)
+- **Tasks touched:** T-003 … T-012
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s`, one squash-merged PR per task
 
 ## Interview outcome (before the run)
@@ -31,7 +31,8 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - **Working agreement (Abdo, mid-session):** always verify on the real running system and act on the findings. Added `uv run poe smoke` (real fixture site + runner + API processes; also in CI) and a DoD line in CLAUDE.md. T-008 verified with it, headless and headed. PR #8.
 - **T-009:** UI: projects, workspace with API-computed step status, inspect (setup editor, regions, screenshot ⇄ findings, candidates, source modal), scope + goal + G0, clarification banner, SSE refresh. New `uv run poe ui-walkthrough` drives the real UI; its screenshots found 5 issues (React effect returning a Promise, setup-step locator not saved, unlabeled editor fields, wrong placeholder, console 404s), all fixed. Evidence in `docs/samples/phase1-walkthrough/`. PR #9.
 - **T-010:** Grounded insight call on the **approved** scope only (G0 required), qualified element ids checked against what was sent (repair retry → 502), observed vs assumption + questions, usage card (provider/model/version, tokens with source, model vs browser time, fresh/reused), exact request logged (migration 0005). Smoke + walkthrough extended; 4 UI polish fixes from the screenshot review. PR #10.
-- **T-011:** Phase 1 pack: HLD v0.2, design PDF (`poe pdf-phase1`), SG-004/005/006, DEFENSE.md, screen-recorded walkthrough (`--record`, shows the runner's own window), usage evidence, TC-102 Run 2 Pass (clean container, full SG-001 + real inspection), secret scan clean, `.env.example` completeness test. Testing found 3 issues (missing start-page badge vs SG-001, 4 undocumented settings, PDF diagram split), all fixed.
+- **T-011:** Phase 1 pack: HLD v0.2, design PDF (`poe pdf-phase1`), SG-004/005/006, DEFENSE.md, screen-recorded walkthrough (`--record`, shows the runner's own window), usage evidence, TC-102 Run 2 Pass (clean container, full SG-001 + real inspection), secret scan clean, `.env.example` completeness test. Testing found 3 issues (missing start-page badge vs SG-001, 4 undocumented settings, PDF diagram split), all fixed. PR #11.
+- **T-012:** Test plans: inspector observable regions (`o<n>`), structured `TestPlan` contract validated against the approved scope, stable expectation ids, clarifications for assumptions/questions that block G1 and update the plan as new versions, plan editor UI, revise with feedback, offline example plans for the `fake` provider. Walkthrough extended (screens 09–11); review fixed question wording and a misleading usage row.
 
 ## Decisions (with ADR links)
 - T-003: none beyond PLAN-003.
@@ -40,13 +41,15 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - T-006: [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md) runner transport on a private Unix socket.
 - T-007: [ADR-018](../decisions/ADR-018-inspection-setup-and-usability.md) setup steps; usable = unique and targets the element; positional CSS never default.
 - T-008: [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md) approvals bound to immutable versions; workflow computed.
+- T-012: [ADR-020](../decisions/ADR-020-test-plan-contract.md) plan contract, observable regions, offline examples.
 
 ## Open items / blockers
 - Waiting on Abdo to add `GATP_GEMINI_API_KEY` to the cloud environment; it is only visible to a **new** session. Then run `uv run poe llm-check` and fill SG-003 §6 (TC-105 live part, TC-111).
 - Ollama live check must be done on a team machine (ollama.com is blocked here).
+- **Tag `phase1-rc` not pushed:** the cloud git proxy rejects tag pushes (HTTP 403) and no GitHub tool here creates tags. Create it on GitHub (Releases → new release → tag `phase1-rc` on `74ade15`, the T-011 merge) or locally: `git tag phase1-rc 74ade15 && git push origin phase1-rc`.
 
 ## Next steps (in order)
-1. Phase 2: T-012 Collaborative test design + G1 (test cases from the approved scope; clarifications from model questions).
+1. T-013 Codegen: render POM + pytest from the approved plan with verified locators; AST + locator validation; `collect` job; code review + G2.
 2. Abdo: add `GATP_GEMINI_API_KEY` (new session) → `poe llm-check` → real-model evidence for TC-111.
 
 ## Notes for next session

@@ -103,6 +103,12 @@ def fingerprint(raw: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _key(raw: dict[str, Any], interactive: bool, n_interactive: int) -> str:
+    """``e<n>`` for interactive elements, ``o<n>`` for observable regions (alerts, headings, …)."""
+    index = int(raw["index"])
+    return f"e{index + 1}" if interactive else f"o{index - n_interactive + 1}"
+
+
 def verify(page: Page, index: int, spec: LocatorSpec) -> tuple[int, bool]:
     """Live count of ``spec`` and whether its single match is element ``index``."""
     locator = resolve(page, spec)
@@ -119,6 +125,7 @@ def inspect_page(
     """Inspect the page currently loaded in ``page``. ``html`` is the served source."""
     scope = scope or InspectionScope()
     raws: list[dict[str, Any]] = page.evaluate(EXTRACT_JS, scope.model_dump())
+    n_interactive = sum(1 for r in raws if r.get("interactive", True))
     lines = source_lines(html, [r["start_tag"] for r in raws])
     elements: list[InspectedElement] = []
     for raw, line in zip(raws, lines, strict=True):
@@ -137,12 +144,13 @@ def inspect_page(
                 )
             )
         default = next((i for i, c in enumerate(candidates) if c.usable and not c.positional), None)
+        interactive = bool(raw.get("interactive", True))
         flags = []
         if default is None:
             flags.append("no_unique_locator")
-        if not raw["name"]:
+        if interactive and not raw["name"]:
             flags.append("no_accessible_name")
-        elif not any(ch.isalnum() for ch in raw["name"]):
+        elif interactive and not any(ch.isalnum() for ch in raw["name"]):
             flags.append("weak_accessible_name")
         if (
             raw["tag"] in FIELD_TAGS
@@ -157,7 +165,8 @@ def inspect_page(
             flags.append("disabled")
         elements.append(
             InspectedElement(
-                key=f"e{raw['index'] + 1}",
+                key=_key(raw, interactive, n_interactive),
+                interactive=interactive,
                 tag=raw["tag"],
                 role=raw["role"],
                 name=raw["name"],
