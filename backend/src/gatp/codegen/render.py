@@ -293,6 +293,7 @@ def _conftest(header: str, origin: str) -> GeneratedFile:
             '    """Visible browser unless GATP_HEADLESS=1; optional Chromium path from GATP."""',
             "    args = dict(browser_type_launch_args)",
             '    args["headless"] = os.environ.get("GATP_HEADLESS", "0") == "1"',
+            '    args["slow_mo"] = int(os.environ.get("GATP_SLOW_MO", "0"))',
             '    if os.environ.get("GATP_CHROMIUM_EXECUTABLE"):',
             '        args["executable_path"] = os.environ["GATP_CHROMIUM_EXECUTABLE"]',
             "    return args",

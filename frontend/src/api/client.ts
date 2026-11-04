@@ -56,3 +56,5 @@ export type TestPlan = S['TestPlan'];
 export type TestCase = S['TestCase'];
 export type CodeResult = S['CodeOut'];
 export type CodeFile = S['CodeFileOut'];
+export type RunSubject = S['RunSubjectOut'];
+export type RunResult = S['RunOut'];

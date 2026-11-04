@@ -535,6 +535,44 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/projects/{project_id}/runs': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Runs */
+    get: operations['listRuns'];
+    put?: never;
+    /**
+     * Start Run
+     * @description Run exactly what the G3 approval names, in the runner (visible browser, sandbox).
+     */
+    post: operations['startRun'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/runs/subject': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Run Subject */
+    get: operations['getRunSubject'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/projects/{project_id}/scope': {
     parameters: {
       query?: never;
@@ -585,6 +623,23 @@ export interface paths {
     };
     /** Runner Health */
     get: operations['getRunnerHealth'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/runs/{run_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Run */
+    get: operations['getRun'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1260,6 +1315,82 @@ export interface components {
       /** Number */
       number: number;
     };
+    /** RunIn */
+    RunIn: {
+      /** Approval Id */
+      approval_id: number;
+    };
+    /** RunOut */
+    RunOut: {
+      /** Approval Id */
+      approval_id: number | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Duration Ms
+       * @description Test execution time in the runner (not model time)
+       */
+      duration_ms: number | null;
+      /** Finished At */
+      finished_at: string | null;
+      /** Id */
+      id: number;
+      /** Project Id */
+      project_id: number;
+      /** Results */
+      results: components['schemas']['RunResultOut'][];
+      /** Scope */
+      scope: {
+        [key: string]: unknown;
+      };
+      /** Status */
+      status: string;
+      /** Target Url */
+      target_url: string;
+    };
+    /** RunResultOut */
+    RunResultOut: {
+      /** Details */
+      details: string;
+      /** Duration Ms */
+      duration_ms: number;
+      /** Id */
+      id: number;
+      /** Message */
+      message: string;
+      /** Outcome */
+      outcome: string;
+      /** Screenshot Path */
+      screenshot_path: string;
+      /** Test Id */
+      test_id: string;
+    };
+    /**
+     * RunSubjectOut
+     * @description Exactly what a G3 approval will authorise.
+     */
+    RunSubjectOut: {
+      /**
+       * Available Tests
+       * @description Collected test ids from the validation
+       */
+      available_tests: string[];
+      /** Files */
+      files: string[];
+      /** Headless */
+      headless: boolean;
+      /** Isolation */
+      isolation: string;
+      /** Subject */
+      subject: {
+        [key: string]: unknown;
+      };
+      /** Timeout S */
+      timeout_s: number;
+    };
     /** RunnerHealth */
     RunnerHealth: {
       /** Available */
@@ -1396,7 +1527,7 @@ export interface components {
        * Status
        * @enum {string}
        */
-      status: 'todo' | 'needs_approval' | 'approved' | 'blocked';
+      status: 'todo' | 'needs_approval' | 'approved' | 'blocked' | 'failed';
       /** Step */
       step: string;
     };
@@ -2600,6 +2731,103 @@ export interface operations {
       };
     };
   };
+  listRuns: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RunOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  startRun: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RunIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RunOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getRunSubject: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RunSubjectOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
   getScope: {
     parameters: {
       query?: never;
@@ -2713,6 +2941,37 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['RunnerHealth'];
+        };
+      };
+    };
+  };
+  getRun: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        run_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RunOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
         };
       };
     };

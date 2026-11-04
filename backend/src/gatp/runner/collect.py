@@ -32,6 +32,9 @@ def scrubbed_env(home: Path) -> dict[str, str]:
 
 
 def write_files(files: dict[str, str], root: Path) -> None:
+    # Own pytest.ini: pytest must not walk up and pick GATP's pyproject.toml (its options,
+    # e.g. disabling the Playwright plugin) when the sandbox lives inside the repository.
+    (root / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
     for rel, content in files.items():
         target = (root / rel).resolve()
         if not target.is_relative_to(root.resolve()):
@@ -51,6 +54,7 @@ def collect(job: CollectJob, sandbox: Path) -> tuple[dict[str, Any], bool, str]:
         "-q",
         "-p",
         "no:cacheprovider",
+        f"--rootdir={sandbox}",
         "tests",
     ]
     try:

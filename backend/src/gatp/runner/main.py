@@ -32,6 +32,9 @@ def build_executor(settings: Settings) -> JobExecutor:
         ),
         sandbox_root=settings.runner_sandbox_dir,
         artifacts_root=settings.artifacts_dir,
+        isolation=settings.runner_isolation,
+        # hidden from test code: GATP's own data (DB, sandboxes), artifacts and .env secrets
+        hide=(settings.data_dir, settings.artifacts_dir, Path(".env")),
     )
 
 

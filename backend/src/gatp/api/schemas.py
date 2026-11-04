@@ -248,7 +248,7 @@ class AnswerIn(BaseModel):
 class StepOut(_Out):
     step: str
     gate: str | None
-    status: Literal["todo", "needs_approval", "approved", "blocked"]
+    status: Literal["todo", "needs_approval", "approved", "blocked", "failed"]
     detail: str
     open_clarifications: int
 

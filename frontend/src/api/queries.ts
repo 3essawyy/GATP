@@ -319,3 +319,45 @@ export function useEditFile(projectId: number) {
       ),
   );
 }
+
+export function useRunSubject(projectId: number, enabled: boolean) {
+  return useQuery({
+    queryKey: ['run-subject', projectId],
+    enabled,
+    retry: false,
+    queryFn: async () =>
+      unwrap(await api.GET('/api/projects/{project_id}/runs/subject', pid(projectId))),
+  });
+}
+
+export function useRuns(projectId: number) {
+  return useQuery({
+    queryKey: ['runs', projectId],
+    queryFn: async () => unwrap(await api.GET('/api/projects/{project_id}/runs', pid(projectId))),
+  });
+}
+
+/** G3: record the human approval of exactly this subject, then run it. */
+export function useApproveAndRun(projectId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (v: { actor: string; subject: Record<string, unknown> }) => {
+      const approval = unwrap(
+        await api.POST('/api/projects/{project_id}/approvals', {
+          ...pid(projectId),
+          body: { gate: 'G3', actor: v.actor, subject: v.subject },
+        }),
+      );
+      return unwrap(
+        await api.POST('/api/projects/{project_id}/runs', {
+          ...pid(projectId),
+          body: { approval_id: approval.id },
+        }),
+      );
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['runs', projectId] });
+      qc.invalidateQueries({ queryKey: ['workflow', projectId] });
+    },
+  });
+}

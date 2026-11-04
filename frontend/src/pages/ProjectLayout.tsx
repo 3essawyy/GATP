@@ -26,9 +26,9 @@ const STEP_LABELS: Record<string, string> = {
   scope: '2 · Scope & goal (G0)',
   plan: '3 · Test plan (G1)',
   code: '4 · Code (G2)',
+  run: '5 · Run (G3)',
 };
 const LATER = [
-  ['run', '5 · Run (G3)'],
   ['maintain', '6 · Maintain (G4)'],
   ['history', '7 · History (G5)'],
   ['usage', 'Model usage'],

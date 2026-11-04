@@ -23,6 +23,7 @@ from gatp.api.routes import (
     inspections,
     plan,
     projects,
+    runs,
     scope,
     system,
 )
@@ -73,7 +74,18 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    for module in (system, projects, inspections, scope, artifacts, gates, assist, plan, code):
+    for module in (
+        system,
+        projects,
+        inspections,
+        scope,
+        artifacts,
+        gates,
+        assist,
+        plan,
+        code,
+        runs,
+    ):
         app.include_router(module.router)
 
     for exc_type, (status, error_code) in ERRORS.items():

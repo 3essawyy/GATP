@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     runner_sandbox_dir: Path = Path("data/sandbox")
     runner_job_timeout_s: float = 60.0
     runner_slow_mo_ms: int = 0  # slow actions down so humans can follow the visible browser
+    runner_isolation: str = "bwrap"  # bwrap | process (approved test runs, ADR-022)
 
     # LLM gateway (ADR-003, ADR-016). Providers: gemini | ollama | fake. Empty fallback = none.
     llm_primary: str = "gemini"

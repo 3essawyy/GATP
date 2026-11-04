@@ -5,12 +5,14 @@ const COLORS: Record<string, string> = {
   needs_approval: 'yellow',
   approved: 'green',
   blocked: 'red',
+  failed: 'red',
 };
 const LABELS: Record<string, string> = {
   todo: 'to do',
   needs_approval: 'needs approval',
   approved: 'done',
   blocked: 'blocked',
+  failed: 'last run failed',
 };
 
 /** Shows a workflow step status exactly as the API computed it. */

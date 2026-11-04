@@ -14,12 +14,14 @@ from gatp.inspector.inspect import inspect_page
 from gatp.inspector.locators import resolve
 from gatp.runner.browser import Allowlist, BrowserOptions, open_page
 from gatp.runner.collect import collect
+from gatp.runner.execute import IsolationUnavailableError, RunOptions, run_tests
 from gatp.runner.jobs import (
     CollectJob,
     InspectJob,
     Job,
     JobResult,
     RecountJob,
+    RunTestsJob,
     SetupStep,
     origin,
 )
@@ -33,11 +35,29 @@ class JobExecutor:
     Playwright's sync API away from any event loop the caller's thread may be running.
     """
 
-    def __init__(self, options: BrowserOptions, sandbox_root: Path, artifacts_root: Path) -> None:
+    def __init__(
+        self,
+        options: BrowserOptions,
+        sandbox_root: Path,
+        artifacts_root: Path,
+        isolation: str = "bwrap",
+        hide: tuple[Path, ...] = (),
+    ) -> None:
         self.options = options
+        self.isolation = isolation
+        self.hide = hide
         self.sandbox_root = sandbox_root
         self.artifacts_root = artifacts_root
         self._worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix="gatp-job")
+
+    def run_options(self) -> RunOptions:
+        return RunOptions(
+            isolation=self.isolation,
+            headless=self.options.headless,
+            chromium_executable=self.options.executable_path,
+            slow_mo_ms=self.options.slow_mo_ms,
+            hide=self.hide,
+        )
 
     def run(self, job: Job) -> JobResult:
         """Run ``job`` on the worker thread and wait for its result."""
@@ -46,6 +66,31 @@ class JobExecutor:
     def _run(self, job: Job) -> JobResult:
         job_id = uuid.uuid4().hex[:12]
         started = time.perf_counter()
+        if isinstance(job, RunTestsJob):
+            with job_sandbox(self.sandbox_root, self.artifacts_root, job_id) as box:
+                try:
+                    data = run_tests(job, box.path, self.run_options())
+                    error = "timed out" if data["timed_out"] else ""
+                except IsolationUnavailableError as exc:
+                    data, error = {}, str(exc)
+                files = {}
+                results_dir = box.path / "results"
+                if results_dir.exists():
+                    for f in sorted(results_dir.rglob("*")):
+                        if f.is_file() and f.suffix in (".png", ".xml", ".json"):
+                            rel = f.relative_to(box.path).as_posix()
+                            files[rel] = box.keep(rel)
+                for r in data.get("results", []):
+                    r["screenshots"] = [files[s] for s in r["screenshots"] if s in files]
+            return JobResult(
+                job_id=job_id,
+                type=job.type,
+                status="failed" if error else "ok",
+                duration_ms=round((time.perf_counter() - started) * 1000),
+                files={k: v for k, v in files.items() if not k.endswith(".png")},
+                data=data,
+                error=error,
+            )
         if isinstance(job, CollectJob):
             with job_sandbox(self.sandbox_root, self.artifacts_root, job_id) as box:
                 data, failed, error = collect(job, box.path)

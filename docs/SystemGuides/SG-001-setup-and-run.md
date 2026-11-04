@@ -17,7 +17,7 @@ Run every command from the **repository root** unless the step says otherwise.
 ## Steps
 1. Install base packages:
    ```bash
-   sudo apt-get update && sudo apt-get install -y git curl ca-certificates
+   sudo apt-get update && sudo apt-get install -y git curl ca-certificates bubblewrap
    ```
 2. Install **uv**, using one of these:
    ```bash
@@ -100,6 +100,8 @@ uv run poe fixtures v2
 | `address already in use` on 8000 | Old API process still running | `fuser -k 8000/tcp`, or set `GATP_API_PORT` in `.env` and `GATP_API_URL` for Vite |
 | `poe browsers` fails on missing libraries | No sudo rights | Ask an admin to run `sudo $(uv run which playwright) install-deps chromium` |
 | `poe browsers` can't download Chromium (blocked network) | Corporate/sandbox proxy | Point `GATP_CHROMIUM_EXECUTABLE` in `.env` at an existing Chromium binary |
+| Test run fails: `bubblewrap is not installed` | Missing sandbox tool | `sudo apt-get install -y bubblewrap` |
+| Test run fails: `bwrap: setting up uid map: Permission denied` | Ubuntu 24.04 restricts user namespaces | `sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0` (or set `GATP_RUNNER_ISOLATION=process`, weaker) |
 | Fixture: `Address already in use` on 8090 | Other version still running | Stop it first (Ctrl+C), or `python fixtures/serve.py v2 --port 8091` |
 | WSL2: browser window doesn't appear | WSLg missing | Use Windows 11 / recent WSL (`wsl --update`) |
 | Runner fails with `Missing X server or $DISPLAY` | No desktop session (SSH/server) | Run it under a virtual display: `xvfb-run -a uv run poe runner` (`sudo apt-get install -y xvfb`) |

@@ -99,7 +99,28 @@ class CollectJob(BaseModel):
     timeout_s: float = Field(default=60.0, gt=0, le=300)
 
 
-Job = Annotated[InspectJob | RecountJob | CollectJob, Field(discriminator="type")]
+class RunTestsJob(BaseModel):
+    """Run approved test code (G3) in a fresh sandbox against the approved target (T-014)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    type: Literal["run_tests"] = "run_tests"
+    files: dict[Annotated[str, Field(pattern=SAFE_PATH)], str] = Field(min_length=1, max_length=50)
+    base_url: str
+    allowlist: list[str] = Field(min_length=1)
+    tests: list[str] = Field(default_factory=list, description="Node ids; empty = all")
+    timeout_s: float = Field(default=300.0, gt=0, le=1800)
+
+    @model_validator(mode="after")
+    def _base_url_inside_allowlist(self) -> RunTestsJob:
+        allowed = {origin(o) for o in self.allowlist}
+        if origin(self.base_url) not in allowed:
+            raise ValueError(f"base_url origin {origin(self.base_url)} is not in the allowlist")
+        self.allowlist = sorted(allowed)
+        return self
+
+
+Job = Annotated[InspectJob | RecountJob | CollectJob | RunTestsJob, Field(discriminator="type")]
 
 
 class JobRequest(BaseModel):
