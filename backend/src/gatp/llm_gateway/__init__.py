@@ -1,4 +1,5 @@
-"""LLM gateway: Gemini/Ollama providers, structured output, usage log (T-005).
+"""LLM gateway: the only module that talks to model providers (T-005, ADR-003, ADR-016).
 
-Placeholder package created in T-002; no code yet.
+Public API: ``LLMGateway.complete_structured`` (+ ``LLMResult``, ``LLMOutputError``,
+``LLMUnavailableError``), ``PromptTemplate`` / ``registry`` for feature prompts.
 """
