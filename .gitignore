@@ -33,3 +33,4 @@ Thumbs.db
 
 # UI walkthrough output (scripts/ui_walkthrough.py)
 walkthrough/
+scripts/pdf/node_modules/

@@ -26,3 +26,20 @@ Definition: [phase1.md § TC-102](phase1.md#tc-102--clean-setup-from-docs). Guid
 **Findings:** no undocumented step, and no secret needed. SG-001 needed no changes.
 
 **Status:** Pass for api/runner/frontend. **Remaining for full Pass:** the fixture site section (T-003), then a final run in T-011.
+
+## Run 2: 2026-11-04 (S004, T-011, full scope incl. fixture site and a real inspection)
+
+- **Machine:** clean `ubuntu:24.04` container as in Run 1; cloned `main` at the T-010 merge (`9742f41`).
+- **Extra sandbox-only items:** Chromium cannot be downloaded in this sandbox. Following the SG-001 troubleshooting row, the host's Chromium is mounted read-only and set via `GATP_CHROMIUM_EXECUTABLE`. The container has no desktop, so `xvfb` is installed and the runner is started with `xvfb-run` (also an SG-001 troubleshooting row).
+
+| SG-001 step | Result | Evidence |
+|---|---|---|
+| 1–6 | Pass | as in Run 1 |
+| 7 `poe browsers` | Partial | System libraries installed; Chromium download blocked by the sandbox (passes in CI) |
+| 8 `.env` | Pass | |
+| 9 fixture site + runner + api + web | Pass | `/api/health` via the Vite proxy OK; runner `available: true, headless: false`; fixture serves "Sign in to BookShelf" |
+| 10 real use | Pass | `POST /projects` → `POST /pages/1/inspections`: elements `Username, Password, Sign in`, browser time 2187 ms (headed Chromium on Xvfb) |
+
+**Finding:** SG-001 "Verify it worked" pointed at a health badge that, since T-009, only appeared inside a project. **Fixed:** the Projects page now shows *Runner ready* + *API ok*, SG-001 is updated, and the UI walkthrough asserts it.
+
+**Status:** **Pass** (all of SG-001, incl. the fixture site). The only sandbox-specific deviation is the Chromium download, which CI covers.

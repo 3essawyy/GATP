@@ -1,6 +1,6 @@
 # High-Level Design — GATP
 
-Status: **Draft v0.1** (2026-11-04, session S001). Satisfies REQ-P1-1 once diagrams are validated against the implementation.
+Status: **v0.2** (2026-11-04, session S004): diagrams validated against the Phase 1 implementation (`main` after T-010). Decisions: [ADR index](../decisions/README.md). Implementation status: §12.
 
 ## 1. Purpose and scope
 GATP is a supervised assistant. It never acts on its own judgment where the brief requires a human: test plans, code execution, and maintenance repairs all pass through explicit approval gates. Everything it says about a page is traceable to a stored inspection snapshot.
@@ -23,7 +23,7 @@ flowchart TB
   end
 
   subgraph Runner["Runner process (restricted)"]
-    RN["runner<br/>job executor, sandbox workdir,<br/>target allowlist"]
+    RN["runner<br/>typed jobs, sandbox per job,<br/>origin allowlist (routing)"]
     INS["inspector<br/>DOM + a11y extraction,<br/>locator ranking"]
     BR["Visible Chromium<br/>(Playwright)"]
   end
@@ -38,7 +38,7 @@ flowchart TB
   LLM --> GEM
   LLM -.fallback.-> OLL
   API & TD & CG & MT & LLM --> ST
-  API <-->|job protocol| RN
+  API <-->|typed jobs over private Unix socket| RN
   RN --> INS
   RN --> BR
   INS --> BR
@@ -69,12 +69,17 @@ sequenceDiagram
   participant L as llm-gateway
   participant S as store
 
-  T->>UI: URL + testing goal
-  UI->>A: create inspection
-  A->>R: inspect(url, scope)
-  R-->>S: InspectionSnapshot v1 (elements, locators, fingerprints, screenshot)
-  A-->>UI: structured findings
-  T->>UI: select elements / refine scope
+  T->>UI: start URL (origin = allowlist), pages, setup steps (e.g. sign in)
+  UI->>A: inspect page
+  A->>R: inspect(url, allowlist, setup, regions)
+  R-->>A: elements + live-verified locators + fingerprints + screenshot + served HTML
+  A->>S: immutable InspectionSnapshot
+  A-->>UI: findings linked to screenshot + source line
+  T->>UI: goal, include/exclude elements → scope vN
+  T->>UI: APPROVE SCOPE (G0)
+  A->>L: insight(approved in-scope elements only)
+  L-->>S: LLMCall log (request, tokens, latency, fresh/reused)
+  A-->>UI: grounded summary + next actions (observed vs assumption) + questions
   A->>L: suggest test cases (snapshot + goal + requirements)
   L-->>S: LLMCall log (tokens, latency)
   A-->>UI: proposed cases (observed vs assumed flagged) + clarification questions
@@ -169,3 +174,16 @@ Every LLM call logs: provider, model, version, prompt template ID, input/output 
 
 ## 11. Open design questions
 Tracked in the [latest session log](../sessions/README.md) and resolved via ADRs.
+
+## 12. Implementation status (Phase 1 submission)
+| Area | Status | Where |
+|---|---|---|
+| Inspection in a separate runner process (visible browser, allowlist, sandbox per job, setup steps) | Done (T-006, T-007) | [runner](../modules/runner/README.md), [inspector](../modules/inspector/README.md), [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md), [ADR-018](../decisions/ADR-018-inspection-setup-and-usability.md) |
+| Findings UI linked to screenshot + source; goal; scope selection; G0 | Done (T-009) | [web-ui](../modules/web-ui/README.md) |
+| Store: snapshots + immutable versioned artifacts, diff, restore (G5 API) | Done (T-004, T-008) | [store](../modules/store/README.md), [ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md) |
+| Approval gates bound to exact versions; clarifications; computed workflow | Done (T-008) | [api](../modules/api/README.md), [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md) |
+| LLM gateway (Gemini/Ollama/fake), validation, cache, usage log | Done (T-005); real Gemini run pending key | [llm-gateway](../modules/llm-gateway/README.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md) |
+| Grounded Phase 1 model call + usage display | Done (T-010) | [test-designer](../modules/test-designer/README.md) |
+| Test design (G1), codegen (G2), execution (G3), maintenance (G4), history UI (G5), usage panel | Phase 2 (T-012 … T-019) | [tasks](../tasks/README.md) |
+
+Verification on the real system: `uv run poe smoke` (API + runner + fixture site, also in CI) and `uv run poe ui-walkthrough` (the full Phase 1 UI flow; evidence in [samples](../samples/README.md)).

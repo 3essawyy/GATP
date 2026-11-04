@@ -5,13 +5,15 @@ a browser like a tester would. Screenshots (and optionally a video) go to the ou
 
 Usage:
     uv run poe ui-walkthrough                    # screenshots to ./walkthrough/
-    uv run poe ui-walkthrough --out docs/samples/phase1-walkthrough --video
     uv run poe ui-walkthrough --headed           # runner browser visible too
+    xvfb-run -a -s "-screen 0 1440x900x24" uv run poe ui-walkthrough --record demo.webm
+        # screen recording of the whole display: GATP UI + the runner's visible browser
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -24,10 +26,10 @@ from playwright.sync_api import Locator, Page, expect, sync_playwright
 
 
 class Walkthrough(Smoke):
-    def __init__(self, headed: bool, out: Path, video: bool) -> None:
-        super().__init__(headed=headed, keep=False)
+    def __init__(self, headed: bool, out: Path, record: Path | None) -> None:
+        super().__init__(headed=headed or record is not None, keep=False)
         self.out = out
-        self.video = video
+        self.record = record
         self.web_port = free_port()
         self.web = f"http://127.0.0.1:{self.web_port}"
         self.shots: list[str] = []
@@ -70,6 +72,7 @@ class Walkthrough(Smoke):
         site = self.site
         page.goto(self.web)
         expect(page.get_by_role("heading", name="Projects")).to_be_visible()
+        expect(page.get_by_test_id("api-health")).to_contain_text("API ok")  # SG-001 'Verify'
         page.get_by_label("Project name").fill("BookShelf demo")
         page.get_by_label("Start URL").fill(f"{site}/index.html")
         self.shot(page, "projects-new")
@@ -152,18 +155,89 @@ class Walkthrough(Smoke):
         expect(page.get_by_test_id("insight-panel")).to_contain_text("untrusted_page_data")
         self.shot(page, "model-insight", page.get_by_test_id("insight-panel"))
 
+        page.get_by_test_id("ask-model").click()  # identical request -> served from the cache
+        expect(page.get_by_test_id("usage")).to_contain_text("reused")
+        pid = page.url.split("/projects/")[1].split("/")[0]
+        calls = self.api.get(f"/api/projects/{pid}/llm-calls").json()
+        snaps = [
+            {"title": s["title"], "url": s["url"], "browser_ms": s["meta"].get("browser_ms")}
+            for p in self.api.get(f"/api/projects/{pid}/pages").json()
+            for s in [
+                self.api.get(
+                    f"/api/snapshots/{self.api.get(f'/api/pages/{p["id"]}/snapshots').json()[0]['id']}"
+                ).json()
+            ]
+        ]
+        evidence = {"inspections": snaps, "llm_calls": calls}
+        (self.out / "usage-evidence.json").write_text(
+            json.dumps(evidence, indent=2, ensure_ascii=False) + "\n"
+        )
+
+    def start_recording(self) -> subprocess.Popen[bytes] | None:
+        """Record the whole X display (GATP UI + the runner's visible browser) with ffmpeg."""
+        if not self.record:
+            return None
+        display = os.environ.get("DISPLAY")
+        if not display:
+            raise RuntimeError(
+                "--record needs a display; run under: xvfb-run -a -s '-screen 0 1440x900x24'"
+            )
+        self.record.parent.mkdir(parents=True, exist_ok=True)
+        return subprocess.Popen(
+            [
+                "ffmpeg",
+                "-y",
+                "-loglevel",
+                "error",
+                "-video_size",
+                "1440x900",
+                "-framerate",
+                "15",
+                "-f",
+                "x11grab",
+                "-i",
+                display,
+                "-c:v",
+                "libvpx-vp9",
+                "-b:v",
+                "600k",
+                "-deadline",
+                "realtime",
+                "-cpu-used",
+                "8",
+                str(self.record),
+            ],
+            stdin=subprocess.PIPE,
+        )
+
+    def stop_recording(self, recorder: subprocess.Popen[bytes] | None) -> None:
+        if recorder is None or recorder.stdin is None:
+            return
+        recorder.stdin.write(b"q")
+        recorder.stdin.flush()
+        recorder.wait(timeout=60)
+        size = self.record.stat().st_size // 1024 if self.record else 0
+        print(f"recorded {self.record} ({size} kB)")
+
     def run_ui(self) -> int:
         self.out.mkdir(parents=True, exist_ok=True)
         for old in self.out.glob("*.png"):
             old.unlink()
         executable = os.environ.get("GATP_CHROMIUM_EXECUTABLE") or None
+        recorder = self.start_recording()
         with sync_playwright() as pw:
-            browser = pw.chromium.launch(executable_path=executable)
-            context = browser.new_context(
-                viewport={"width": 1440, "height": 900},
-                record_video_dir=str(self.out) if self.video else None,
-                record_video_size={"width": 1440, "height": 900} if self.video else None,
-            )
+            if self.record:
+                # Visible, slowed-down browser so the screen recording is watchable.
+                browser = pw.chromium.launch(
+                    executable_path=executable,
+                    headless=False,
+                    slow_mo=250,
+                    args=["--window-position=0,0", "--window-size=1440,900"],
+                )
+                context = browser.new_context(no_viewport=True)
+            else:
+                browser = pw.chromium.launch(executable_path=executable)
+                context = browser.new_context(viewport={"width": 1440, "height": 900})
             page = context.new_page()
             errors: list[str] = []
             page.on("pageerror", lambda exc: errors.append(f"page error: {exc}"))
@@ -181,8 +255,11 @@ class Walkthrough(Smoke):
                 self.shot(page, "FAILED")
                 print(f"FAIL  {type(exc).__name__}: {exc}")
                 status = 1
+            if self.record:
+                page.wait_for_timeout(2000)  # hold the last screen for a moment
             context.close()
             browser.close()
+        self.stop_recording(recorder)
         for e in errors:
             print(f"  {e[:400]}")
             status = 1 if e.startswith("page error") else status
@@ -199,10 +276,10 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--headed", action="store_true")
-    parser.add_argument("--video", action="store_true")
+    parser.add_argument("--record", type=Path, help="screen-record to this .webm (needs a display)")
     parser.add_argument("--out", type=Path, default=Path("walkthrough"))
     args = parser.parse_args()
-    w = Walkthrough(args.headed, args.out.resolve(), args.video)
+    w = Walkthrough(args.headed, args.out.resolve(), args.record.resolve() if args.record else None)
     try:
         w.up()
         return w.run_ui()

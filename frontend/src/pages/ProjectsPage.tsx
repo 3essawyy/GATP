@@ -14,6 +14,8 @@ import { Link, useNavigate } from 'react-router';
 
 import { useCreateProject, useProjects } from '../api/queries';
 import { ErrorAlert } from '../components/ErrorAlert';
+import { HealthBadge } from '../components/HealthBadge';
+import { RunnerBadge } from '../components/RunnerBadge';
 
 /** List projects and start a new one from a URL (its origin becomes the allowlist). */
 export function ProjectsPage() {
@@ -26,7 +28,13 @@ export function ProjectsPage() {
   return (
     <Container size="md" py="md">
       <Stack>
-        <Title order={2}>Projects</Title>
+        <Group justify="space-between">
+          <Title order={2}>Projects</Title>
+          <Group>
+            <RunnerBadge />
+            <HealthBadge />
+          </Group>
+        </Group>
         <Card withBorder>
           <form
             onSubmit={(e) => {
