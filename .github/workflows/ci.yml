@@ -33,6 +33,8 @@ jobs:
         run: uv run poe types
       - name: Tests (pytest, incl. import contracts)
         run: uv run poe test
+      - name: End-to-end smoke (real fixture site + runner + API processes)
+        run: uv run poe smoke
 
   frontend:
     name: Frontend (eslint, prettier, tsc, build, client freshness)

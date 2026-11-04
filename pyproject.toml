@@ -76,6 +76,10 @@ args = [{ name = "message", positional = true, help = "short description" }]
 help = "Check model config: list Gemini models for your key and make one tiny logged call"
 cmd = "python -m gatp.llm_gateway.check"
 
+[tool.poe.tasks.smoke]
+help = "End-to-end smoke test: real fixture site + runner + API processes (add --headed, --keep)"
+cmd = "python scripts/e2e_smoke.py"
+
 [tool.poe.tasks.gen-client]
 help = "Export the OpenAPI schema and regenerate the TypeScript client types"
 sequence = [
@@ -124,6 +128,7 @@ select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "N", "S", "PT"]
 
 [tool.ruff.lint.per-file-ignores]
 "backend/tests/**" = ["S101"]
+"scripts/**" = ["S101", "E501", "PT018"]
 
 # ---------------------------------------------------------------- mypy
 [tool.mypy]

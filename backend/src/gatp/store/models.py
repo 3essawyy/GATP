@@ -53,6 +53,7 @@ class Page(Base):
     project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"), index=True)
     url: Mapped[str] = mapped_column(String(2000))
     name: Mapped[str] = mapped_column(String(200), default="")
+    setup: Mapped[list[Any]] = mapped_column(default=list, server_default="[]")
     created_at: Mapped[datetime] = mapped_column(default=utcnow)
 
     project: Mapped[Project] = relationship(back_populates="pages")

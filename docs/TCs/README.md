@@ -33,8 +33,8 @@ Update **Status** with date + commit whenever a TC is run.
 | TC-106 | Runner blocks non-allowlisted origins and unknown jobs | Automated | **Pass** 2026-11-04 (T-006): `test_runner_*.py` |
 | TC-107 | Inspection of URL opens visible browser and lists elements linked to source | Manual | Partial: extraction + source lines automated (T-007, `test_inspector.py`); UI part pending T-009 |
 | TC-108 | Locator candidates ranked; non-unique flagged | Automated | **Pass** 2026-11-04 (T-007): `test_inspector.py` |
-| TC-109 | Gates block without approval; edits invalidate approval | Automated | Not run |
-| TC-110 | User sets goal, selects elements, refines scope | Manual | Not run |
+| TC-109 | Gates block without approval; edits invalidate approval | Automated | **Pass** 2026-11-04 (T-008): `test_api_gates.py` |
+| TC-110 | User sets goal, selects elements, refines scope | Manual | Partial: storage/versioning automated (T-008); UI part pending T-009, "sent to model" pending T-010 |
 | TC-111 | Grounded model call with model/version/tokens/latency recorded | Manual | Not run |
 | TC-201 | Proposed cases cite observed elements; assumptions flagged | Automated + Manual | Not run |
 | TC-202 | Plan edit, clarification, approval (G1) | Manual | Not run |

@@ -1,6 +1,6 @@
 # Session S004 — 2026-11-04 — Full-build run (T-003 onward)
 
-- **Tasks touched:** T-003, T-004, T-005, T-006, T-007 (more appended as completed)
+- **Tasks touched:** T-003 … T-008 (more appended as completed)
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s`, one squash-merged PR per task
 
 ## Interview outcome (before the run)
@@ -26,7 +26,9 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - Fixed: the ADR index was missing the ADR-014 row (a silent replace failure in S003). PR #4.
 - **T-005:** LLM gateway: httpx Gemini/Ollama/fake providers, versioned templates with untrusted-data framing, cache (`reused` rows), backoff + fallback, Pydantic validation + one repair retry + semantic `check` hook, every attempt logged (`llm_calls`, migration 0002 adds `template_version`), `poe llm-check`, SG-003. 20 new tests (TC-105 automated Pass). PR #5.
 - **T-006:** Runner: typed jobs (`inspect` stub, `recount`) over HTTP on a private Unix socket (0600 in 0700 dir, no TCP port), single worker thread, per-job 0700 sandbox, Playwright allowlist routing with blocked-request log, headed Chromium (verified under `xvfb-run`), `RunnerClient`, `LocatorSpec`. 17 runner tests (TC-106 Pass). PR #6.
-- **T-007:** Inspector: read-only in-page extraction, ADR-006 candidates verified live (count + identity), non-positional default, flags for weak elements, source lines from served HTML, fingerprints; runner `inspect` with scope + setup steps (sign-in) + redirect check; store migration 0003; api converter; sample snapshots in `docs/samples/`. 8 inspector tests (TC-108 Pass).
+- **T-007:** Inspector: read-only in-page extraction, ADR-006 candidates verified live (count + identity), non-positional default, flags for weak elements, source lines from served HTML, fingerprints; runner `inspect` with scope + setup steps (sign-in) + redirect check; store migration 0003; api converter; sample snapshots in `docs/samples/`. 8 inspector tests (TC-108 Pass). PR #7.
+- **T-008:** API core: services container + DB migration on startup, projects/pages/setup steps/requirements, inspections via the runner, snapshots/files, scope (G0) as versioned artifact, artifacts (versions, edit, diff, G5 restore), approvals bound to exact versions, clarifications, computed workflow, SSE events, error mapping, regenerated TS client. 17 API tests (TC-109 Pass).
+- **Working agreement (Abdo, mid-session):** always verify on the real running system and act on the findings. Added `uv run poe smoke` (real fixture site + runner + API processes; also in CI) and a DoD line in CLAUDE.md. T-008 verified with it, headless and headed.
 
 ## Decisions (with ADR links)
 - T-003: none beyond PLAN-003.
@@ -34,13 +36,14 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - T-005: [ADR-016](../decisions/ADR-016-llm-gateway-design.md) gateway design; default `gemini-2.5-flash` (limits unverified: Google docs host blocked in the sandbox).
 - T-006: [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md) runner transport on a private Unix socket.
 - T-007: [ADR-018](../decisions/ADR-018-inspection-setup-and-usability.md) setup steps; usable = unique and targets the element; positional CSS never default.
+- T-008: [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md) approvals bound to immutable versions; workflow computed.
 
 ## Open items / blockers
 - Waiting on Abdo to add `GATP_GEMINI_API_KEY` to the cloud environment; it is only visible to a **new** session. Then run `uv run poe llm-check` and fill SG-003 §6 (TC-105 live part, TC-111).
 - Ollama live check must be done on a team machine (ollama.com is blocked here).
 
 ## Next steps (in order)
-1. T-008 API core (projects, pages, inspections via runner, workflow state, gates, clarifications, migrate on startup, TS client).
+1. T-009 UI (project list, workspace with step nav, inspection findings with screenshot highlight + source, scope/goal), verified by driving the real UI in a browser.
 
 ## Notes for next session
 - In this cloud container, Python Playwright needs `GATP_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` (the preinstalled revision differs from the one the pinned Playwright expects).

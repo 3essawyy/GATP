@@ -4,6 +4,135 @@
  */
 
 export interface paths {
+  '/api/artifacts/{artifact_id}/diff': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Diff Versions */
+    get: operations['diffVersions'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/artifacts/{artifact_id}/restore': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Restore Version
+     * @description Restore = new version with old content. Needs a G5 approval of exactly that version.
+     */
+    post: operations['restoreVersion'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/artifacts/{artifact_id}/versions': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Versions */
+    get: operations['listVersions'];
+    put?: never;
+    /**
+     * Edit Artifact
+     * @description A tester edit: always a new version (author ``user``); approvals stay on the old one.
+     */
+    post: operations['editArtifact'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/artifacts/{artifact_id}/versions/{number}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Version */
+    get: operations['getVersion'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/clarifications/{clarification_id}/answer': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Answer Clarification */
+    post: operations['answerClarification'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/files/{path}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get File
+     * @description Serve a stored artifact file (screenshot, page HTML). Confined to ``artifacts/``.
+     */
+    get: operations['getFile'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/gates': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Gates */
+    get: operations['listGates'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/health': {
     parameters: {
       query?: never;
@@ -24,10 +153,480 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/pages/{page_id}/inspections': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Inspect Page
+     * @description Ask the runner to open the page (visible browser), inspect it and store a snapshot.
+     */
+    post: operations['inspectPage'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/pages/{page_id}/setup': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Set Page Setup
+     * @description Steps run before inspecting this page (e.g. sign in), ADR-018. URLs must be on-origin.
+     */
+    put: operations['setPageSetup'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/pages/{page_id}/snapshots': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Snapshots */
+    get: operations['listSnapshots'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Projects */
+    get: operations['listProjects'];
+    put?: never;
+    /** Create Project */
+    post: operations['createProject'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Project */
+    get: operations['getProject'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/approvals': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Approvals */
+    get: operations['listApprovals'];
+    put?: never;
+    /**
+     * Approve
+     * @description Record a human approval bound to an exact version (G0-G2, G5) or a subject (G3, G4).
+     */
+    post: operations['approve'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/artifacts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Artifacts */
+    get: operations['listArtifacts'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/clarifications': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Clarifications */
+    get: operations['listClarifications'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/events': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Project Events
+     * @description Live updates (inspection started/finished, approvals, …) as Server-Sent Events.
+     */
+    get: operations['projectEvents'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/goal': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Set Goal */
+    put: operations['setGoal'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/pages': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Pages */
+    get: operations['listPages'];
+    put?: never;
+    /** Add Page */
+    post: operations['addPage'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/requirements': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Requirements */
+    get: operations['listRequirements'];
+    put?: never;
+    /** Add Requirement */
+    post: operations['addRequirement'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/scope': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Scope */
+    get: operations['getScope'];
+    /**
+     * Save Scope
+     * @description Store the tester's selection, exclusions and goal as a new scope version.
+     */
+    put: operations['saveScope'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/workflow': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Workflow */
+    get: operations['getWorkflow'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/runner/health': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Runner Health */
+    get: operations['getRunnerHealth'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/snapshots/{snapshot_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Snapshot */
+    get: operations['getSnapshot'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** AnswerIn */
+    AnswerIn: {
+      /** Actor */
+      actor: string;
+      /** Answer */
+      answer: string;
+    };
+    /** ApprovalIn */
+    ApprovalIn: {
+      /** Actor */
+      actor: string;
+      /** Artifact Version Id */
+      artifact_version_id?: number | null;
+      /**
+       * Comment
+       * @default
+       */
+      comment: string;
+      /**
+       * Gate
+       * @enum {string}
+       */
+      gate: 'G0' | 'G1' | 'G2' | 'G3' | 'G4' | 'G5';
+      /** Subject */
+      subject?: {
+        [key: string]: unknown;
+      };
+    };
+    /** ApprovalOut */
+    ApprovalOut: {
+      /** Actor */
+      actor: string;
+      /** Artifact Version Id */
+      artifact_version_id: number | null;
+      /** Comment */
+      comment: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Gate */
+      gate: string;
+      /** Id */
+      id: number;
+      /** Project Id */
+      project_id: number;
+      /** Subject */
+      subject: {
+        [key: string]: unknown;
+      };
+    };
+    /** ArtifactOut */
+    ArtifactOut: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Id */
+      id: number;
+      /** Kind */
+      kind: string;
+      /** Name */
+      name: string;
+      /** Project Id */
+      project_id: number;
+    };
+    /** ClarificationOut */
+    ClarificationOut: {
+      /** Answer */
+      answer: string;
+      /** Answered At */
+      answered_at: string | null;
+      /** Answered By */
+      answered_by: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Evidence */
+      evidence: {
+        [key: string]: unknown;
+      };
+      /** Id */
+      id: number;
+      /** Kind */
+      kind: string;
+      /** Options */
+      options: unknown[];
+      /** Project Id */
+      project_id: number;
+      /** Question */
+      question: string;
+      /** Status */
+      status: string;
+      /** Step */
+      step: string;
+    };
+    /** DiffOut */
+    DiffOut: {
+      /** Artifact Id */
+      artifact_id: number;
+      /** From Number */
+      from_number: number;
+      /** Rows */
+      rows: components['schemas']['DiffRowOut'][];
+      /** To Number */
+      to_number: number;
+      /** Unified */
+      unified: string;
+    };
+    /** DiffRowOut */
+    DiffRowOut: {
+      /** Left */
+      left: string;
+      /** Left No */
+      left_no: number | null;
+      /** Right */
+      right: string;
+      /** Right No */
+      right_no: number | null;
+      /** Tag */
+      tag: string;
+    };
+    /** ElementOut */
+    ElementOut: {
+      /** Attributes */
+      attributes: {
+        [key: string]: unknown;
+      };
+      /** Bbox */
+      bbox: {
+        [key: string]: unknown;
+      };
+      /** Details */
+      details: {
+        [key: string]: unknown;
+      };
+      /** Fingerprint */
+      fingerprint: {
+        [key: string]: unknown;
+      };
+      /** Id */
+      id: number;
+      /** Key */
+      key: string;
+      /** Locators */
+      locators: components['schemas']['LocatorOut'][];
+      /** Name */
+      name: string;
+      /** Role */
+      role: string;
+      /** Source Line */
+      source_line: number | null;
+      /** Tag */
+      tag: string;
+      /** Text */
+      text: string;
+    };
+    /** GateInfo */
+    GateInfo: {
+      /** Description */
+      description: string;
+      /** Gate */
+      gate: string;
+    };
+    /** GoalIn */
+    GoalIn: {
+      /** Goal */
+      goal: string;
+    };
+    /** HTTPValidationError */
+    HTTPValidationError: {
+      /** Detail */
+      detail?: components['schemas']['ValidationError'][];
+    };
     /**
      * Health
      * @description Liveness information for the API process.
@@ -43,6 +642,365 @@ export interface components {
       /** Version */
       version: string;
     };
+    /** InspectIn */
+    InspectIn: {
+      /**
+       * @default {
+       *       "exclude": [],
+       *       "include": []
+       *     }
+       */
+      scope: components['schemas']['InspectionScope'];
+    };
+    /** InspectionOut */
+    InspectionOut: {
+      /** Blocked Requests */
+      blocked_requests: {
+        [key: string]: string;
+      }[];
+      /**
+       * Duration Ms
+       * @description Browser time in the runner (not model time)
+       */
+      duration_ms: number;
+      snapshot: components['schemas']['SnapshotOut'];
+    };
+    /**
+     * InspectionScope
+     * @description CSS selectors of containers to include (empty = whole page) or exclude.
+     */
+    InspectionScope: {
+      /**
+       * Exclude
+       * @default []
+       */
+      exclude: string[];
+      /**
+       * Include
+       * @default []
+       */
+      include: string[];
+    };
+    /** LocatorOut */
+    LocatorOut: {
+      /** Expression */
+      expression: string;
+      /** Id */
+      id: number;
+      /** Match Count */
+      match_count: number;
+      /** Rank */
+      rank: number;
+      /** Spec */
+      spec: {
+        [key: string]: unknown;
+      };
+      /** Strategy */
+      strategy: string;
+      /** Targets Element */
+      targets_element: boolean;
+      /** Unique */
+      unique: boolean;
+    };
+    /**
+     * LocatorSpec
+     * @description One locator. ``value`` is the role / label / test id / placeholder / text / CSS.
+     */
+    LocatorSpec: {
+      /**
+       * Exact
+       * @default true
+       */
+      exact: boolean;
+      /** Name */
+      name?: string | null;
+      /**
+       * Strategy
+       * @enum {string}
+       */
+      strategy: 'role' | 'label' | 'test_id' | 'placeholder' | 'text' | 'css';
+      /** Value */
+      value: string;
+    };
+    /** PageIn */
+    PageIn: {
+      /**
+       * Name
+       * @default
+       */
+      name: string;
+      /** Url */
+      url: string;
+    };
+    /** PageOut */
+    PageOut: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Id */
+      id: number;
+      /** Name */
+      name: string;
+      /** Project Id */
+      project_id: number;
+      /** Setup */
+      setup: {
+        [key: string]: unknown;
+      }[];
+      /** Url */
+      url: string;
+    };
+    /** PageSetupIn */
+    PageSetupIn: {
+      /** Steps */
+      steps: components['schemas']['SetupStep'][];
+    };
+    /** ProjectIn */
+    ProjectIn: {
+      /** Name */
+      name: string;
+      /**
+       * Url
+       * @description Any URL of the target site; its origin becomes the allowlist
+       */
+      url: string;
+    };
+    /** ProjectOut */
+    ProjectOut: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Goal */
+      goal: string;
+      /** Id */
+      id: number;
+      /** Name */
+      name: string;
+      /** Origin */
+      origin: string;
+    };
+    /** RequirementIn */
+    RequirementIn: {
+      /** Text */
+      text: string;
+    };
+    /** RequirementOut */
+    RequirementOut: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Id */
+      id: number;
+      /** Project Id */
+      project_id: number;
+      /** Text */
+      text: string;
+    };
+    /** RestoreIn */
+    RestoreIn: {
+      /**
+       * Approval Id
+       * @description G5 approval of exactly that version
+       */
+      approval_id: number;
+      /** Number */
+      number: number;
+    };
+    /** RunnerHealth */
+    RunnerHealth: {
+      /** Available */
+      available: boolean;
+      /**
+       * Detail
+       * @default
+       */
+      detail: string;
+      /** Headless */
+      headless?: boolean | null;
+    };
+    /** ScopeIn */
+    ScopeIn: {
+      /**
+       * Actor
+       * @default tester
+       */
+      actor: string;
+      /**
+       * Goal
+       * @default
+       */
+      goal: string;
+      /**
+       * Notes
+       * @default
+       */
+      notes: string;
+      /** Pages */
+      pages: components['schemas']['ScopePage'][];
+    };
+    /** ScopeOut */
+    ScopeOut: {
+      /** Approved */
+      approved: boolean;
+      /** Artifact Id */
+      artifact_id: number;
+      scope: components['schemas']['ScopeIn'];
+      version: components['schemas']['VersionOut'];
+    };
+    /** ScopePage */
+    ScopePage: {
+      /**
+       * Exclude
+       * @description Element keys to leave out
+       */
+      exclude?: string[];
+      /**
+       * Include
+       * @description Element keys; empty = all
+       */
+      include?: string[];
+      /** Snapshot Id */
+      snapshot_id: number;
+    };
+    /**
+     * SetupStep
+     * @description One tester-approved step run before inspecting (e.g. signing in). Data, not code.
+     */
+    SetupStep: {
+      /**
+       * Action
+       * @enum {string}
+       */
+      action: 'goto' | 'fill' | 'click' | 'select';
+      locator?: components['schemas']['LocatorSpec'] | null;
+      /**
+       * Url
+       * @default
+       */
+      url: string;
+      /**
+       * Value
+       * @default
+       */
+      value: string;
+    };
+    /** SnapshotOut */
+    SnapshotOut: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Elements */
+      elements: components['schemas']['ElementOut'][];
+      /** Html Path */
+      html_path: string;
+      /** Html Sha256 */
+      html_sha256: string;
+      /** Id */
+      id: number;
+      /** Meta */
+      meta: {
+        [key: string]: unknown;
+      };
+      /** Page Id */
+      page_id: number;
+      /** Screenshot Path */
+      screenshot_path: string;
+      /** Title */
+      title: string;
+      /** Url */
+      url: string;
+    };
+    /** SnapshotSummary */
+    SnapshotSummary: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Element Count */
+      element_count: number;
+      /** Id */
+      id: number;
+      /** Page Id */
+      page_id: number;
+      /** Title */
+      title: string;
+      /** Url */
+      url: string;
+    };
+    /** StepOut */
+    StepOut: {
+      /** Detail */
+      detail: string;
+      /** Gate */
+      gate: string | null;
+      /** Open Clarifications */
+      open_clarifications: number;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: 'todo' | 'needs_approval' | 'approved' | 'blocked';
+      /** Step */
+      step: string;
+    };
+    /** ValidationError */
+    ValidationError: {
+      /** Context */
+      ctx?: Record<string, never>;
+      /** Input */
+      input?: unknown;
+      /** Location */
+      loc: (string | number)[];
+      /** Message */
+      msg: string;
+      /** Error Type */
+      type: string;
+    };
+    /** VersionIn */
+    VersionIn: {
+      /**
+       * Actor
+       * @default tester
+       */
+      actor: string;
+      /** Content */
+      content: string;
+      /** Reason */
+      reason: string;
+    };
+    /** VersionOut */
+    VersionOut: {
+      /** Artifact Id */
+      artifact_id: number;
+      /** Author */
+      author: string;
+      /** Content */
+      content: string;
+      /** Content Sha256 */
+      content_sha256: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Id */
+      id: number;
+      /** Number */
+      number: number;
+      /** Parent Number */
+      parent_number: number | null;
+      /** Reason */
+      reason: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -52,6 +1010,257 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+  diffVersions: {
+    parameters: {
+      query: {
+        a: number;
+        b: number;
+      };
+      header?: never;
+      path: {
+        artifact_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['DiffOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  restoreVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        artifact_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RestoreIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VersionOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listVersions: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        artifact_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VersionOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  editArtifact: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        artifact_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VersionIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VersionOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        artifact_id: number;
+        number: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VersionOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  answerClarification: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        clarification_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AnswerIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ClarificationOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getFile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        path: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listGates: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GateInfo'][];
+        };
+      };
+    };
+  };
   getHealth: {
     parameters: {
       query?: never;
@@ -68,6 +1277,669 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['Health'];
+        };
+      };
+    };
+  };
+  inspectPage: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        page_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InspectIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InspectionOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  setPageSetup: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        page_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PageSetupIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PageOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listSnapshots: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        page_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SnapshotSummary'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listProjects: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProjectOut'][];
+        };
+      };
+    };
+  };
+  createProject: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProjectIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProjectOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getProject: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProjectOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listApprovals: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApprovalOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  approve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ApprovalIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApprovalOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listArtifacts: {
+    parameters: {
+      query?: {
+        kind?: string | null;
+      };
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ArtifactOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listClarifications: {
+    parameters: {
+      query?: {
+        status?: string | null;
+      };
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ClarificationOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  projectEvents: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/event-stream': unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  setGoal: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GoalIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProjectOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listPages: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PageOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  addPage: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PageIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PageOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  listRequirements: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RequirementOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  addRequirement: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RequirementIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RequirementOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getScope: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ScopeOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  saveScope: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ScopeIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ScopeOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getWorkflow: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StepOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getRunnerHealth: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RunnerHealth'];
+        };
+      };
+    };
+  };
+  getSnapshot: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        snapshot_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SnapshotOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
         };
       };
     };

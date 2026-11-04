@@ -10,9 +10,9 @@ from datetime import datetime
 from typing import Any, Literal
 
 Author = Literal["user", "model", "repair", "restore"]
-ArtifactKind = Literal["test_plan", "test_case", "page_object", "test_file"]
+ArtifactKind = Literal["scope", "test_plan", "test_case", "page_object", "test_file"]
 AUTHORS: tuple[str, ...] = ("user", "model", "repair", "restore")
-ARTIFACT_KINDS: tuple[str, ...] = ("test_plan", "test_case", "page_object", "test_file")
+ARTIFACT_KINDS: tuple[str, ...] = ("scope", "test_plan", "test_case", "page_object", "test_file")
 
 
 @dataclass(frozen=True)
@@ -31,6 +31,7 @@ class PageDTO:
     url: str
     name: str
     created_at: datetime
+    setup: tuple[dict[str, Any], ...] = ()  # tester-approved setup steps (ADR-018)
 
 
 @dataclass(frozen=True)
