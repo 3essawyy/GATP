@@ -1,6 +1,6 @@
 # ADR-012: Backend and developer tooling (uv, ruff, mypy strict, poethepoet, single package)
 
-- **Status:** Accepted
+- **Status:** Accepted; platform assumption (native Windows support) superseded by [ADR-014](ADR-014-linux-only-platform.md)
 - **Date:** 2026-11-04
 - **Session:** S002
 - **Related:** REQ-P1-S, REQ-P2-6, T-002, TC-102; refines [ADR-002](ADR-002-tech-stack.md), [ADR-004](ADR-004-runner-isolation.md)
