@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
+from gatp.api.plan_service import apply_answer
 from gatp.api.routes.deps import Svc
 from gatp.api.schemas import (
     AnswerIn,
@@ -61,6 +62,7 @@ def list_clarifications(
 @router.post("/clarifications/{clarification_id}/answer", operation_id="answerClarification")
 def answer_clarification(clarification_id: int, body: AnswerIn, svc: Svc) -> ClarificationOut:
     answered = svc.gates.answer(clarification_id, body.answer, body.actor)
+    apply_answer(svc, answered)  # e.g. confirm/remove/correct a plan assumption (new version)
     svc.events.publish(answered.project_id, "clarification_answered", {"id": clarification_id})
     return ClarificationOut.model_validate(answered)
 

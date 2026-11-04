@@ -50,6 +50,11 @@ export function FindingsTable({ elements, selectedKey, onSelect, onShowSource }:
                     {e.role || e.tag} {e.name ? `“${e.name}”` : <em>(no name)</em>}
                   </Text>
                   <Group gap={4}>
+                    {e.details.interactive === false && (
+                      <Badge size="xs" color="gray" variant="outline">
+                        region (for expected results)
+                      </Badge>
+                    )}
                     {flags.map((f) => (
                       <Badge key={f} size="xs" color="orange" variant="light">
                         {FLAG_TEXT[f] ?? f}

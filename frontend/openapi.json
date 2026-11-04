@@ -428,6 +428,77 @@
         "title": "ElementOut",
         "type": "object"
       },
+      "Expectation": {
+        "properties": {
+          "basis": {
+            "enum": [
+              "requirement",
+              "observation",
+              "assumption"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "confirmed": {
+            "default": false,
+            "description": "Set by the tester, never by the model",
+            "title": "Confirmed",
+            "type": "boolean"
+          },
+          "element_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Element or region id (not for url_*)",
+            "title": "Element Id"
+          },
+          "evidence": {
+            "description": "Which requirement, what was observed, or why it is assumed",
+            "title": "Evidence",
+            "type": "string"
+          },
+          "id": {
+            "default": "",
+            "description": "Assigned by GATP; leave empty",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "visible",
+              "hidden",
+              "text_equals",
+              "text_contains",
+              "value_equals",
+              "url_contains",
+              "count_equals",
+              "enabled",
+              "disabled",
+              "checked"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "value": {
+            "default": "",
+            "description": "Expected text/value/URL part/count",
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "basis",
+          "evidence"
+        ],
+        "title": "Expectation",
+        "type": "object"
+      },
       "GateInfo": {
         "properties": {
           "description": {
@@ -966,6 +1037,140 @@
         "title": "PageSetupIn",
         "type": "object"
       },
+      "PlanEditIn": {
+        "properties": {
+          "actor": {
+            "default": "tester",
+            "maxLength": 100,
+            "title": "Actor",
+            "type": "string"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/TestPlan"
+          },
+          "reason": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan",
+          "reason"
+        ],
+        "title": "PlanEditIn",
+        "type": "object"
+      },
+      "PlanOut": {
+        "properties": {
+          "approved": {
+            "title": "Approved",
+            "type": "boolean"
+          },
+          "artifact_id": {
+            "title": "Artifact Id",
+            "type": "integer"
+          },
+          "blockers": {
+            "description": "Why G1 is not possible yet (empty = approvable)",
+            "items": {
+              "type": "string"
+            },
+            "title": "Blockers",
+            "type": "array"
+          },
+          "call": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LlmCallOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "element_labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Display label per element id, e.g. button \"Save\"",
+            "title": "Element Labels",
+            "type": "object"
+          },
+          "open_clarifications": {
+            "items": {
+              "$ref": "#/components/schemas/ClarificationOut"
+            },
+            "title": "Open Clarifications",
+            "type": "array"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/TestPlan"
+          },
+          "validation_errors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Validation Errors",
+            "type": "array"
+          },
+          "version": {
+            "$ref": "#/components/schemas/VersionOut"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "version",
+          "plan",
+          "approved",
+          "blockers",
+          "validation_errors",
+          "open_clarifications"
+        ],
+        "title": "PlanOut",
+        "type": "object"
+      },
+      "PlanStep": {
+        "properties": {
+          "action": {
+            "enum": [
+              "goto",
+              "fill",
+              "click",
+              "select",
+              "check",
+              "uncheck",
+              "press"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "element_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Interactive element id; not for goto",
+            "title": "Element Id"
+          },
+          "value": {
+            "default": "",
+            "description": "Text to fill, option to select, key, or goto URL",
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "title": "PlanStep",
+        "type": "object"
+      },
       "ProjectIn": {
         "properties": {
           "name": {
@@ -1019,6 +1224,19 @@
           "created_at"
         ],
         "title": "ProjectOut",
+        "type": "object"
+      },
+      "ProposeIn": {
+        "properties": {
+          "feedback": {
+            "default": "",
+            "description": "Revise the current plan",
+            "maxLength": 5000,
+            "title": "Feedback",
+            "type": "string"
+          }
+        },
+        "title": "ProposeIn",
         "type": "object"
       },
       "RequirementIn": {
@@ -1391,6 +1609,92 @@
           "open_clarifications"
         ],
         "title": "StepOut",
+        "type": "object"
+      },
+      "TestCase": {
+        "properties": {
+          "expected": {
+            "items": {
+              "$ref": "#/components/schemas/Expectation"
+            },
+            "maxItems": 15,
+            "minItems": 1,
+            "title": "Expected",
+            "type": "array"
+          },
+          "id": {
+            "description": "TC-01, TC-02, \u2026",
+            "title": "Id",
+            "type": "string"
+          },
+          "open_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Open Questions",
+            "type": "array"
+          },
+          "preconditions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Preconditions",
+            "type": "array"
+          },
+          "priority": {
+            "default": "medium",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Priority",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/PlanStep"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Steps",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "steps",
+          "expected"
+        ],
+        "title": "TestCase",
+        "type": "object"
+      },
+      "TestPlan": {
+        "properties": {
+          "cases": {
+            "items": {
+              "$ref": "#/components/schemas/TestCase"
+            },
+            "maxItems": 15,
+            "minItems": 1,
+            "title": "Cases",
+            "type": "array"
+          },
+          "notes": {
+            "default": "",
+            "title": "Notes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cases"
+        ],
+        "title": "TestPlan",
         "type": "object"
       },
       "ValidationError": {
@@ -2727,6 +3031,160 @@
         "summary": "Add Page",
         "tags": [
           "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/plan": {
+      "get": {
+        "operationId": "getPlan",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/PlanOut"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Getplan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Plan",
+        "tags": [
+          "plan"
+        ]
+      },
+      "put": {
+        "description": "A tester edit: validated against the approved scope, stored as a new version.",
+        "operationId": "editPlan",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanEditIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Edit Plan",
+        "tags": [
+          "plan"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/plan/propose": {
+      "post": {
+        "description": "Ask the model for a plan grounded in the approved scope (or revise it with feedback).",
+        "operationId": "proposePlan",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProposeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Propose",
+        "tags": [
+          "plan"
         ]
       }
     },

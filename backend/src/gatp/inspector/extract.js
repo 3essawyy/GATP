@@ -22,6 +22,9 @@
     const tag = el.tagName.toLowerCase();
     const type = (el.getAttribute('type') || 'text').toLowerCase();
     if (tag === 'a') return el.hasAttribute('href') ? 'link' : '';
+    if (/^h[1-6]$/.test(tag)) return 'heading';
+    if (tag === 'table') return 'table';
+    if (tag === 'caption') return 'caption';
     if (tag === 'button' || tag === 'summary') return 'button';
     if (tag === 'select') return el.multiple || el.size > 1 ? 'listbox' : 'combobox';
     if (tag === 'textarea') return 'textbox';
@@ -98,11 +101,21 @@
     return out;
   }
 
+  // Non-interactive but observable regions that expected results can check (T-012).
+  const OBSERVABLE = [
+    '[role="alert"]', '[role="status"]', '[aria-live]', '[role="dialog"]',
+    'h1', 'h2', 'h3', 'table', '[role="table"]', 'caption',
+  ].join(',');
+
   const within = (el, sels) => sels.some((s) => { try { return !!el.closest(s); } catch { return false; } });
   const include = (scope && scope.include) || [];
   const exclude = (scope && scope.exclude) || [];
-  const all = [...document.querySelectorAll(INTERACTIVE)].filter((el) =>
-    (include.length === 0 || within(el, include)) && !within(el, exclude));
+  const inScope = (el) => (include.length === 0 || within(el, include)) && !within(el, exclude);
+  const interactive = [...document.querySelectorAll(INTERACTIVE)].filter(inScope);
+  const interactiveSet = new Set(interactive);
+  const observable = [...document.querySelectorAll(OBSERVABLE)]
+    .filter((el) => inScope(el) && !interactiveSet.has(el));
+  const all = [...interactive, ...observable];
   window.__gatpEls = all;
 
   const formIndex = new Map();
@@ -120,6 +133,7 @@
     formIndex.set(k, indexInForm + 1);
     return {
       index: i,
+      interactive: i < interactive.length,
       tag: el.tagName.toLowerCase(),
       role,
       name: short(accessibleName(el)),

@@ -36,8 +36,8 @@ Update **Status** with date + commit whenever a TC is run.
 | TC-109 | Gates block without approval; edits invalidate approval | Automated | **Pass** 2026-11-04 (T-008): `test_api_gates.py` |
 | TC-110 | User sets goal, selects elements, refines scope | Manual | **Pass** 2026-11-04 (T-009/T-010): walkthrough + `test_api_insight.py` (excluded elements absent from the request) |
 | TC-111 | Grounded model call with model/version/tokens/latency recorded | Manual | Partial: automated + UI with the fake provider Pass (T-010); **real Gemini run pending key** |
-| TC-201 | Proposed cases cite observed elements; assumptions flagged | Automated + Manual | Not run |
-| TC-202 | Plan edit, clarification, approval (G1) | Manual | Not run |
+| TC-201 | Proposed cases cite observed elements; assumptions flagged | Automated + Manual | **Pass** 2026-11-04 (T-012): `test_api_plan.py` + walkthrough (offline provider); real-model run pending key |
+| TC-202 | Plan edit, clarification, approval (G1) | Manual | **Pass** 2026-11-04 (T-012): walkthrough screenshots 09–11 + `test_api_plan.py` |
 | TC-203 | Generated POM code passes syntax + locator validation | Automated | Not run |
 | TC-204 | Invented locator rejected; code reviewable | Automated + Manual | Not run |
 | TC-205 | Execution requires G3; visible browser; results + screenshots | Manual | Not run |

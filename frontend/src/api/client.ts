@@ -51,3 +51,6 @@ export function unwrap<T>(result: { data?: T; error?: unknown; response: Respons
 export const fileUrl = (path: string) => `/api/files/${path}`;
 export type InsightResult = S['InsightOut'];
 export type LlmCall = S['LlmCallOut'];
+export type PlanResult = S['PlanOut'];
+export type TestPlan = S['TestPlan'];
+export type TestCase = S['TestCase'];

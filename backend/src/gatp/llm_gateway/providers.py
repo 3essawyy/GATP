@@ -47,6 +47,7 @@ class ProviderRequest:
     user: str
     json_schema: dict[str, Any]
     temperature: float = 0.0
+    template_id: str = ""  # lets the offline fake provider pick a template-specific example
 
 
 @dataclass(frozen=True)

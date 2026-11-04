@@ -22,7 +22,8 @@ class LocatorCandidateOut(BaseModel):
 
 
 class InspectedElement(BaseModel):
-    key: str  # e1, e2, … stable within the snapshot
+    key: str  # e1, e2, … (interactive) / o1, o2, … (observable) - stable within the snapshot
+    interactive: bool = True  # False = observable region (alert, status, heading, table)
     tag: str
     role: str
     name: str

@@ -24,7 +24,7 @@ Milestones: **M1 = Phase 1 submission (Week 9)** · **M2 = Phase 2 submission (W
 
 | ID | Title | Modules | Depends on | Target | Status |
 |---|---|---|---|---|---|
-| [T-012](T-012-test-designer.md) | Collaborative test design + G1 | test-designer, api, web-ui | T-010 | W+3 | Todo |
+| [T-012](T-012-test-designer.md) | Collaborative test design + G1 | test-designer, api, web-ui | T-010 | W+3 | Done |
 | [T-013](T-013-codegen.md) | POM code generation + validation + review (G2) | codegen, runner | T-012 | W+3 | Todo |
 | [T-014](T-014-execution.md) | Approved execution, results, screenshots (G3) | runner, api, web-ui | T-013 | W+4 | Todo |
 | [T-015](T-015-feedback-rerun.md) | Feedback → revise → approved rerun | api, test-designer, codegen | T-014 | W+4 | Todo |

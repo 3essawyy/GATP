@@ -155,6 +155,9 @@ class Walkthrough(Smoke):
         expect(page.get_by_test_id("insight-panel")).to_contain_text("untrusted_page_data")
         self.shot(page, "model-insight", page.get_by_test_id("insight-panel"))
 
+        self.plan_steps(page)
+
+        page.get_by_test_id("step-scope").click()
         page.get_by_test_id("ask-model").click()  # identical request -> served from the cache
         expect(page.get_by_test_id("usage")).to_contain_text("reused")
         pid = page.url.split("/projects/")[1].split("/")[0]
@@ -172,6 +175,45 @@ class Walkthrough(Smoke):
         (self.out / "usage-evidence.json").write_text(
             json.dumps(evidence, indent=2, ensure_ascii=False) + "\n"
         )
+
+    def plan_steps(self, page: Page) -> None:
+        """T-012: propose -> clarifications -> G1 -> edit invalidates approval."""
+        page.get_by_test_id("step-plan").click()
+        expect(page.get_by_role("heading", name="Test plan")).to_be_visible()
+        page.get_by_test_id("propose-plan").click()
+        expect(page.get_by_test_id("plan-version")).to_contain_text("version 1", timeout=120_000)
+        expect(page.get_by_test_id("plan-blockers")).to_contain_text("unconfirmed assumption")
+        expect(page.get_by_test_id("step-plan")).to_contain_text("blocked")
+        self.shot(page, "plan-proposed")
+        # Answer every open clarification in the banner (assumptions: Confirm; questions: text).
+        for _ in range(10):
+            banner = page.get_by_text("Clarification needed (plan)").first
+            if not banner.is_visible():
+                break
+            alert = (
+                page.locator(".mantine-Alert-root")
+                .filter(has_text="Clarification needed (plan)")
+                .first
+            )
+            confirm = alert.get_by_role("button", name="Confirm")
+            if confirm.count():
+                confirm.click()
+            else:
+                alert.get_by_placeholder("Your answer").fill("Letters and digits only")
+                alert.get_by_role("button", name="Answer").click()
+            page.wait_for_timeout(500)
+        expect(page.get_by_test_id("approve-g1")).to_be_enabled(timeout=10_000)
+        page.get_by_test_id("approve-g1").click()
+        expect(page.get_by_test_id("plan-approved")).to_be_visible()
+        expect(page.get_by_test_id("step-plan")).to_contain_text("done")
+        self.shot(page, "plan-approved")
+        page.get_by_label("TC-01 title").fill("Add-book form: example input is processed")
+        page.get_by_label("Edit reason").fill("clearer title")
+        page.get_by_test_id("save-plan").click()
+        expect(page.get_by_test_id("plan-version")).to_contain_text("version 4 · user")
+        expect(page.get_by_test_id("approve-g1")).to_be_visible()  # edit -> re-approval needed
+        expect(page.get_by_test_id("step-plan")).to_contain_text("needs approval")
+        self.shot(page, "plan-edited-needs-reapproval")
 
     def start_recording(self) -> subprocess.Popen[bytes] | None:
         """Record the whole X display (GATP UI + the runner's visible browser) with ffmpeg."""

@@ -194,6 +194,20 @@ class GateRepository:
             s.flush()
             return _clar(row)
 
+    def resolve(self, clarification_id: int, status: str, note: str) -> ClarificationDTO:
+        """Close an open clarification without a tester answer (e.g. ``superseded`` by an edit)."""
+        with self.db.session() as s:
+            row = s.get(Clarification, clarification_id)
+            if row is None:
+                raise NotFoundError(f"clarification {clarification_id}")
+            if row.status == "open":
+                row.status = status
+                row.answer = note
+                row.answered_by = "GATP"
+                row.answered_at = utcnow()
+            s.flush()
+            return _clar(row)
+
     def get_clarification(self, clarification_id: int) -> ClarificationDTO:
         with self.db.session() as s:
             row = s.get(Clarification, clarification_id)

@@ -38,6 +38,9 @@ Real example: [docs/samples/inspection-bookshelf-v1-add-book.json](../../samples
 | `flags` | `no_unique_locator`, `no_accessible_name`, `weak_accessible_name`, `no_visible_label`, `hidden`, `disabled` |
 | `fingerprint` | Tag, role, name, text, label, type, id, name attr, test id, placeholder, href, form, index in form, nearby text, DOM path, centre point (input to maintenance, T-016) |
 
+## Observable regions (T-012)
+Besides interactive elements, the inspector records **observable regions**: `[role=alert]`, `[role=status]`, `[aria-live]`, `[role=dialog]`, `h1`–`h3`, tables and captions. They get keys `o1, o2, …` (interactive elements keep `e1, e2, …`) and `interactive: false`. They have verified locators (e.g. `page.locator("#title-error")`) so expected results can check them ([ADR-020](../../decisions/ADR-020-test-plan-contract.md)). Steps may never act on them. Name flags are not raised for regions.
+
 ## Algorithm
 1. **Extract (in page, read-only):** `extract.js` selects interactive elements: links, buttons, inputs (not hidden), selects, textareas, `summary`, interactive ARIA roles, `[onclick]`, positive `tabindex`, `contenteditable`. Include/exclude scope filters are applied. For each element it computes the implicit role and a simplified accessible name (aria-labelledby → aria-label → `<label>` → button value → title → placeholder; text content for buttons/links), plus attributes, DOM path, bbox, visibility and nearby text. The elements stay in `window.__gatpEls`.
 2. **Candidates:** `candidate_specs()` builds candidates in order: role+name, label (or aria-label), test id, placeholder, text (short link/button text only), CSS `#id`, CSS `tag[name=…]`, then the positional DOM path. Duplicates are dropped.
