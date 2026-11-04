@@ -62,7 +62,7 @@ class Smoke:
     def start(self, name: str, argv: list[str]) -> None:
         log = (self.tmp / f"{name}.log").open("wb")
         self.procs.append(
-            subprocess.Popen(argv, cwd=ROOT, env=self.env, stdout=log, stderr=subprocess.STDOUT)  # noqa: S603
+            subprocess.Popen(argv, cwd=ROOT, env=self.env, stdout=log, stderr=subprocess.STDOUT)
         )
 
     def wait_for(self, what: str, probe: Callable[[], bool], timeout: float = 30) -> None:

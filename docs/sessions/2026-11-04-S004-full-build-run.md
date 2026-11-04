@@ -1,6 +1,6 @@
 # Session S004 — 2026-11-04 — Full-build run (T-003 onward)
 
-- **Tasks touched:** T-003 … T-008 (more appended as completed)
+- **Tasks touched:** T-003 … T-009 (more appended as completed)
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s`, one squash-merged PR per task
 
 ## Interview outcome (before the run)
@@ -28,7 +28,8 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - **T-006:** Runner: typed jobs (`inspect` stub, `recount`) over HTTP on a private Unix socket (0600 in 0700 dir, no TCP port), single worker thread, per-job 0700 sandbox, Playwright allowlist routing with blocked-request log, headed Chromium (verified under `xvfb-run`), `RunnerClient`, `LocatorSpec`. 17 runner tests (TC-106 Pass). PR #6.
 - **T-007:** Inspector: read-only in-page extraction, ADR-006 candidates verified live (count + identity), non-positional default, flags for weak elements, source lines from served HTML, fingerprints; runner `inspect` with scope + setup steps (sign-in) + redirect check; store migration 0003; api converter; sample snapshots in `docs/samples/`. 8 inspector tests (TC-108 Pass). PR #7.
 - **T-008:** API core: services container + DB migration on startup, projects/pages/setup steps/requirements, inspections via the runner, snapshots/files, scope (G0) as versioned artifact, artifacts (versions, edit, diff, G5 restore), approvals bound to exact versions, clarifications, computed workflow, SSE events, error mapping, regenerated TS client. 17 API tests (TC-109 Pass).
-- **Working agreement (Abdo, mid-session):** always verify on the real running system and act on the findings. Added `uv run poe smoke` (real fixture site + runner + API processes; also in CI) and a DoD line in CLAUDE.md. T-008 verified with it, headless and headed.
+- **Working agreement (Abdo, mid-session):** always verify on the real running system and act on the findings. Added `uv run poe smoke` (real fixture site + runner + API processes; also in CI) and a DoD line in CLAUDE.md. T-008 verified with it, headless and headed. PR #8.
+- **T-009:** UI: projects, workspace with API-computed step status, inspect (setup editor, regions, screenshot ⇄ findings, candidates, source modal), scope + goal + G0, clarification banner, SSE refresh. New `uv run poe ui-walkthrough` drives the real UI; its screenshots found 5 issues (React effect returning a Promise, setup-step locator not saved, unlabeled editor fields, wrong placeholder, console 404s), all fixed. Evidence in `docs/samples/phase1-walkthrough/`.
 
 ## Decisions (with ADR links)
 - T-003: none beyond PLAN-003.
@@ -43,7 +44,7 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - Ollama live check must be done on a team machine (ollama.com is blocked here).
 
 ## Next steps (in order)
-1. T-009 UI (project list, workspace with step nav, inspection findings with screenshot highlight + source, scope/goal), verified by driving the real UI in a browser.
+1. T-010 Grounded LLM summary / next action from the approved scope (fake provider until the key exists) + usage display; extend the walkthrough.
 
 ## Notes for next session
 - In this cloud container, Python Playwright needs `GATP_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` (the preinstalled revision differs from the one the pinned Playwright expects).

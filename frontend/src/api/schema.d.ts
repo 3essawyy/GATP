@@ -380,7 +380,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get Scope */
+    /**
+     * Get Scope
+     * @description The latest scope, or ``null`` if none was saved yet (not an error).
+     */
     get: operations['getScope'];
     /**
      * Save Scope
@@ -466,7 +469,7 @@ export interface components {
        * Comment
        * @default
        */
-      comment: string;
+      comment?: string;
       /**
        * Gate
        * @enum {string}
@@ -650,7 +653,7 @@ export interface components {
        *       "include": []
        *     }
        */
-      scope: components['schemas']['InspectionScope'];
+      scope?: components['schemas']['InspectionScope'];
     };
     /** InspectionOut */
     InspectionOut: {
@@ -674,12 +677,12 @@ export interface components {
        * Exclude
        * @default []
        */
-      exclude: string[];
+      exclude?: string[];
       /**
        * Include
        * @default []
        */
-      include: string[];
+      include?: string[];
     };
     /** LocatorOut */
     LocatorOut: {
@@ -711,7 +714,7 @@ export interface components {
        * Exact
        * @default true
        */
-      exact: boolean;
+      exact?: boolean;
       /** Name */
       name?: string | null;
       /**
@@ -728,7 +731,7 @@ export interface components {
        * Name
        * @default
        */
-      name: string;
+      name?: string;
       /** Url */
       url: string;
     };
@@ -820,7 +823,7 @@ export interface components {
        * Detail
        * @default
        */
-      detail: string;
+      detail?: string;
       /** Headless */
       headless?: boolean | null;
     };
@@ -830,17 +833,17 @@ export interface components {
        * Actor
        * @default tester
        */
-      actor: string;
+      actor?: string;
       /**
        * Goal
        * @default
        */
-      goal: string;
+      goal?: string;
       /**
        * Notes
        * @default
        */
-      notes: string;
+      notes?: string;
       /** Pages */
       pages: components['schemas']['ScopePage'][];
     };
@@ -883,12 +886,12 @@ export interface components {
        * Url
        * @default
        */
-      url: string;
+      url?: string;
       /**
        * Value
        * @default
        */
-      value: string;
+      value?: string;
     };
     /** SnapshotOut */
     SnapshotOut: {
@@ -971,7 +974,7 @@ export interface components {
        * Actor
        * @default tester
        */
-      actor: string;
+      actor?: string;
       /** Content */
       content: string;
       /** Reason */
@@ -1813,7 +1816,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ScopeOut'];
+          'application/json': components['schemas']['ScopeOut'] | null;
         };
       };
       /** @description Validation Error */

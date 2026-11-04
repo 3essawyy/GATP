@@ -8,7 +8,7 @@ from gatp.api.routes.deps import Svc
 from gatp.api.schemas import ScopeIn, ScopeOut, VersionOut
 from gatp.api.services import Services
 from gatp.api.workflow import is_approved
-from gatp.store.errors import NotFoundError, ValidationError
+from gatp.store.errors import ValidationError
 
 router = APIRouter(prefix="/api", tags=["scope"])
 SCOPE_NAME = "scope"
@@ -59,8 +59,8 @@ def save_scope(project_id: int, body: ScopeIn, svc: Svc) -> ScopeOut:
 
 
 @router.get("/projects/{project_id}/scope", operation_id="getScope")
-def get_scope(project_id: int, svc: Svc) -> ScopeOut:
+def get_scope(project_id: int, svc: Svc) -> ScopeOut | None:
+    """The latest scope, or ``null`` if none was saved yet (not an error)."""
+    svc.projects.get(project_id)
     existing = svc.artifacts.find(project_id, "scope", SCOPE_NAME)
-    if existing is None:
-        raise NotFoundError(f"project {project_id} has no scope yet")
-    return _out(svc, existing.id)
+    return None if existing is None else _out(svc, existing.id)

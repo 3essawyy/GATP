@@ -15,7 +15,7 @@ Presents every workflow step and collects human input and approvals. Contains **
 | Consumes | api (JSON) | Generated TS client from OpenAPI (`src/api/`) |
 | Consumes | api (SSE) | Live run/inspection progress events |
 
-## Screens (planned)
+## Screens (planned, full product)
 | Screen | Purpose | REQ |
 |---|---|---|
 | Project / URL | Enter target URL, start inspection | REQ-P1-2 |
@@ -44,5 +44,28 @@ Dev networking: the client uses relative `/api/...` URLs and Vite proxies them t
 
 Implemented (T-002): `HealthBadge` shows *Checking API…* / green *API ok · vX* / red *API unreachable* using `useHealth` (polls every 10 s).
 
+## Implemented (T-009)
+| Route | Screen | Talks to |
+|---|---|---|
+| `/` | `ProjectsPage`: list + create (name, start URL → origin) | `listProjects`, `createProject` |
+| `/projects/:id` | `ProjectLayout`: header (project, origin, tester name, runner + API badges), step nav with **API-computed** status per step, open clarifications banner (answer buttons), SSE subscription | `getProject`, `getWorkflow`, `listClarifications`, `answerClarification`, `projectEvents` |
+| `…/inspect` | `InspectPage`: add pages; per page tab: setup-steps editor, include/exclude regions, Inspect/Re-inspect (live "browser is open" state, browser time, blocked requests), screenshot with element boxes ⇄ findings table (flags, best locator, all candidates with usable/count), source-line modal | `listPages`, `addPage`, `setPageSetup`, `inspectPage`, `listSnapshots`, `getSnapshot`, `getFile` |
+| `…/scope` | `ScopePage`: goal, notes, per-page element checkboxes (default all included), Save scope → version N, Approve G0 as <tester> | `getScope`, `saveScope`, `approve` |
+| `…/plan`, `…/code` | Placeholders until T-012/T-013 | — |
+
+Components: `FindingsTable`, `ScreenshotView` (bbox overlay scaled to the screenshot), `SourceModal`, `SetupStepsEditor` (every field has an accessible label), `StatusBadge`, `RunnerBadge`, `HealthBadge`, `ErrorAlert` (shows the API's `detail`), `useTesterName` (localStorage).
+
+## "No business logic in the UI" checklist (reviewed for T-009)
+- [x] Workflow/gate status: only displayed from `GET /workflow`; the UI never decides whether a step is done.
+- [x] Approve buttons send the **version id the API returned**; validity (latest version, right gate, no open clarification) is checked by the API, and its error is shown verbatim.
+- [x] Locator usability, flags, default locator: shown from the snapshot; nothing is computed in TS.
+- [x] Scope: the UI sends the unticked element keys as `exclude`; validation (keys exist, snapshot belongs to project) happens in the API.
+- [x] Only presentation logic in TS: bbox → percentage position, date formatting, splitting the comma-separated region inputs.
+
+## Verification
+`uv run poe ui-walkthrough` starts the real fixture site, runner, API and Vite, then drives the full Phase 1 flow in a browser and saves a screenshot per step (evidence: [docs/samples/phase1-walkthrough/](../../samples/phase1-walkthrough/)). It fails on any page error.
+
 ## Known limitations
-TBD.
+- Setup-step values (e.g. test passwords) are shown in plain text in the editor; use test accounts only (ADR-018).
+- The production bundle is >500 kB (Mantine); acceptable for a local tool, will be split when Monaco arrives (T-013).
+- No routing for individual snapshots/history yet (T-018).

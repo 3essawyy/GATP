@@ -2436,6 +2436,7 @@
     },
     "/api/projects/{project_id}/scope": {
       "get": {
+        "description": "The latest scope, or ``null`` if none was saved yet (not an error).",
         "operationId": "getScope",
         "parameters": [
           {
@@ -2453,7 +2454,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ScopeOut"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ScopeOut"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Getscope"
                 }
               }
             },
