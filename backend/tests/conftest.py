@@ -16,6 +16,7 @@ from playwright.sync_api import Browser, Page, sync_playwright
 
 from gatp.api.app import create_app
 from gatp.config import get_settings
+from gatp.store.db import Database
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -82,3 +83,11 @@ def page(browser: Browser) -> Iterator[Page]:
     p = context.new_page()
     yield p
     context.close()
+
+
+@pytest.fixture
+def db(tmp_path: Path) -> Database:
+    """A fresh, migrated SQLite database in a temp folder."""
+    database = Database(f"sqlite:///{tmp_path / 'data' / 'gatp.sqlite'}")
+    database.migrate()
+    return database

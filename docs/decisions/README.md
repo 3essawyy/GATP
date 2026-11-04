@@ -17,12 +17,13 @@ Never delete or rewrite an accepted ADR. To change a decision, add a new ADR and
 | [ADR-011](ADR-011-bonus-deferred.md) | Bonus decided after Phase 1 feedback | Accepted (deferred) | 2026-11-04 |
 | [ADR-012](ADR-012-backend-and-dev-tooling.md) | Backend and dev tooling: uv, ruff, mypy strict, poethepoet, single package | Accepted (platform part superseded by ADR-014) | 2026-11-04 |
 | [ADR-013](ADR-013-frontend-libraries.md) | Frontend libraries: npm, ESLint+Prettier, Mantine, TanStack Query, openapi-typescript/fetch, Monaco | Accepted | 2026-11-04 |
+| [ADR-014](ADR-014-linux-only-platform.md) | Linux-only platform (WSL2 for Windows users) | Accepted | 2026-11-04 |
+| [ADR-015](ADR-015-db-access-sqlalchemy-alembic.md) | DB access: SQLAlchemy 2 + Alembic; immutability enforced twice | Accepted | 2026-11-04 |
 
 ## Open decisions (to become ADRs)
 | Topic | Decide in |
 |---|---|
 | Exact Gemini model ID + verified free-tier limits | T-005 |
-| DB access layer + migrations tool | T-004 |
 | Core ↔ runner job protocol (HTTP vs queue vs stdin/stdout) | T-006 |
 | LLM-vs-template split in code generation | T-013 |
 | Match weights / threshold / margin | T-017 |
