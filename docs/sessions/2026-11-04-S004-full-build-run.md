@@ -80,6 +80,46 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 6. **T-021** Phase 2 pack: HLD v0.3, PDF, demo recording (`ui_walkthrough.py --record` under `xvfb-run`), DEFENSE.md update, tag `phase2-rc` (tags must be created on GitHub, see open items).
 7. Abdo: add `GATP_GEMINI_API_KEY` (new session) → `poe llm-check` → real-model evidence for TC-111.
 
+## Remaining acceptance tests (TC) and where they come from
+| TC | Needs | Task |
+|---|---|---|
+| TC-209 clear change → repair → approve → rerun passes | repair proposals, G4 apply, rerun affected | T-017 |
+| TC-210 ambiguous → clarification, never auto-resolved | maintain clarifications with candidates | T-017 |
+| TC-211 version diff + restore | UI only (API done in T-004/T-008) | T-018 |
+| TC-212 usage per call + averages, model vs test time | UI over `llm_calls` + `runs` | T-019 |
+| TC-213 prompt injection treated as data; sandbox confinement | injection fixture page + tests; bwrap probe already proven in T-014 | T-020 |
+| TC-215 full Phase 2 demo end to end | walkthrough extended through T-017, recorded | T-021 |
+| TC-111 real model evidence | Gemini key in a new session (Abdo) | — |
+
+## Risks for the Phase 2 submission
+- **Only one site has ever been tested.** Everything was verified on our BookShelf fixture. The instructor's site may have no test ids, weaker labels, iframes, or client-side routing.
+  - Before T-021, do a dry run of the whole flow on a second, different local app. A small one is fine (e.g. another static site written for it). Log what breaks.
+  - The weakest point is likely the matching thresholds (ADR-024).
+- **No real model output yet.** The flow was never run with Gemini. Real plans may cite more element kinds, longer evidence, or loosen checks differently from the offline example. The guard should catch that, but the prompts are untested on a real model. Do TC-111 early.
+- **The walkthrough is the demo script.** `ui_walkthrough.py` runs the whole demo, so keep it working after every task. Its `--record` mode makes the video (needs `xvfb-run` + ffmpeg).
+- **Timing:** each walkthrough is ~60 s headless. The recorded demo with a visible browser and `GATP_RUNNER_SLOW_MO_MS` will be several minutes; check the brief's length limit.
+
+## Technical debt (known, deliberately deferred)
+- `rescans` / `change_sets` are protected by the ORM guard only. Snapshots and versions also have SQLite triggers; add triggers for these two in T-017's migration.
+- Live progress during a run is start/finish only (SSE). There is no per-test streaming.
+- The runner runs one job at a time, so a long test run blocks inspections (documented in SG-006).
+- The weakening guard ignores changes to test **steps**; they still need re-approval (ADR-023, SG-006).
+- The frontend bundle is over 500 kB (Vite warning). Code-split per page if load time matters.
+- CI actions (`actions/checkout@v4`, `setup-node@v4`, `cache@v4`, `setup-uv@v6`) run on deprecated Node 20, and GitHub already forces Node 24. Bump them before they stop working.
+- Starlette prints a deprecation warning for `httpx` in TestClient; `httpx2` isn't installable here.
+- `process` isolation (fallback without bubblewrap) can read GATP's data. It is only for machines without bwrap; every run records which isolation it used.
+
+## Lessons from this session (keep doing these)
+- **Verify on the real system, not just unit tests.** Every task's real run or screenshot review found at least one bug the tests did not, for example:
+  - setup steps were missing in the generated page objects;
+  - pytest picked up GATP's own config inside the sandbox;
+  - CI couldn't find the browser in the sandbox;
+  - the model's notes were invisible;
+  - the add page couldn't be compared after the sign-in change.
+- **Write probes before building on a sandbox or external tool.** E.g. a test that tries to read the DB from inside bwrap. They proved isolation instead of assuming it.
+- **Keep the model out of deterministic decisions.** Codegen, matching and gate checks are plain code. The model proposes plans and explains. That keeps runs reproducible and gives each decision an explanation for the defense.
+- **One PR per task, docs in the same PR.** ADR + PLAN + task doc (Verification, Explain it) + TC row. The owners prepare for the code defense from those task docs.
+
 ## How to resume quickly
 - **State:** `main` has T-003…T-015 merged. T-016 is on PR / the session branch.
 - **Checks:**
