@@ -28,7 +28,7 @@ Milestones: **M1 = Phase 1 submission (Week 9)** · **M2 = Phase 2 submission (W
 | [T-013](T-013-codegen.md) | POM code generation + validation + review (G2) | codegen, runner | T-012 | W+3 | Done |
 | [T-014](T-014-execution.md) | Approved execution, results, screenshots (G3) | runner, api, web-ui | T-013 | W+4 | Done |
 | [T-015](T-015-feedback-rerun.md) | Feedback → revise → approved rerun | api, test-designer, codegen | T-014 | W+4 | Done |
-| [T-016](T-016-rescan-diff.md) | Rescan + snapshot diff + change flags | maintainer | T-007, T-014 | W+5 | Todo |
+| [T-016](T-016-rescan-diff.md) | Rescan + snapshot diff + change flags | maintainer | T-007, T-014 | W+5 | In review |
 | [T-017](T-017-repairs.md) | Repair proposals, ambiguity clarification, apply (G4), rerun affected | maintainer, api, web-ui | T-016 | W+5 | Todo |
 | [T-018](T-018-versioning-ui.md) | Version history, diffs, restore (G5) | store, web-ui | T-004, T-013 | W+6 | Todo |
 | [T-019](T-019-usage-visibility.md) | Usage panel: per-call metrics, averages, fresh vs reused, test vs model time | llm-gateway, web-ui | T-010, T-014 | W+6 | Todo |

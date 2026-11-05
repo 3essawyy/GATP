@@ -535,6 +535,43 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/projects/{project_id}/rescans': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Start Rescan
+     * @description Inspect every approved page again and compare with the snapshots the tests use.
+     */
+    post: operations['rescanProject'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/rescans/latest': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Latest Rescan */
+    get: operations['getLatestRescan'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/projects/{project_id}/runs': {
     parameters: {
       query?: never;
@@ -746,6 +783,22 @@ export interface components {
       name: string;
       /** Project Id */
       project_id: number;
+    };
+    /** ChangeSetOut */
+    ChangeSetOut: {
+      /** Id */
+      id: number;
+      /** New Snapshot Id */
+      new_snapshot_id: number;
+      /** Old Snapshot Id */
+      old_snapshot_id: number;
+      /**
+       * Summary
+       * @description page_url, html_changed, counts (referenced elements), elements, appeared
+       */
+      summary: {
+        [key: string]: unknown;
+      };
     };
     /** ClarificationOut */
     ClarificationOut: {
@@ -1314,6 +1367,27 @@ export interface components {
       project_id: number;
       /** Text */
       text: string;
+    };
+    /** RescanOut */
+    RescanOut: {
+      /** Change Sets */
+      change_sets: components['schemas']['ChangeSetOut'][];
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Id */
+      id: number;
+      /** Project Id */
+      project_id: number;
+      /**
+       * Summary
+       * @description pages (errors, setup trial), referenced_changes
+       */
+      summary: {
+        [key: string]: unknown;
+      };
     };
     /** RestoreIn */
     RestoreIn: {
@@ -2733,6 +2807,68 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['RequirementOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  rescanProject: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RescanOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  getLatestRescan: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        project_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RescanOut'] | null;
         };
       };
       /** @description Validation Error */

@@ -17,4 +17,5 @@ Known limits of GATP, stated plainly. Each links to where it is decided or docum
 | Users | Single local user, no login; the server binds to 127.0.0.1; approver names are self-declared | Local tool by design (S004) | [api LLD](../modules/api/README.md) |
 | Platform | Linux / WSL2 only | Team decision | [ADR-014](../decisions/ADR-014-linux-only-platform.md) |
 | Concurrency | One runner job at a time | One visible browser for the human to follow | [runner LLD](../modules/runner/README.md) |
+| Matching thresholds | Weights/thresholds (0.70 / 0.15 / 0.45) are tuned on the BookShelf fixture | Constants in `maintainer/match.py`; evidence shown for every decision | [ADR-024](../decisions/ADR-024-rescan-matching-rules.md) |
 | Weakening guard | Covers expected results, whole cases and test-file assertions/skips; changes to test **steps** are not classified as weakening (they still need G1) | Every new version needs re-approval anyway | [ADR-023](../decisions/ADR-023-feedback-and-weakening-guard.md) |

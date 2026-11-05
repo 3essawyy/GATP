@@ -21,6 +21,7 @@ from gatp.api.routes import (
     code,
     gates,
     inspections,
+    maintain,
     plan,
     projects,
     runs,
@@ -85,6 +86,7 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
         plan,
         code,
         runs,
+        maintain,
     ):
         app.include_router(module.router)
 

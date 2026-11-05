@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from gatp.api.services import Services
 from gatp.store.dto import VersionDTO
 from gatp.store.reports import ReportRepository
+from gatp.store.rescans import RescanRepository
 from gatp.store.runs import RunRepository
 from gatp.test_designer.plan import TestPlan, unconfirmed_assumptions
 
@@ -119,6 +120,7 @@ def workflow_state(services: Services, project_id: int) -> list[StepState]:
         _gate_step(services, project_id, "plan", "G1"),
         _gate_step(services, project_id, "code", "G2"),
         _run_step(services, project_id),
+        _maintain_step(services, project_id),
     ]
 
 
@@ -134,3 +136,22 @@ def _run_step(services: Services, project_id: int) -> StepState:
     detail = f"run #{last.id} {last.status}: {passed}/{len(last.results)} passed"
     status = "approved" if last.status == "passed" else "failed"
     return StepState("run", "G3", status, detail, 0)
+
+
+def _maintain_step(services: Services, project_id: int) -> StepState:
+    open_count = len(services.gates.clarifications(project_id, step="maintain", status="open"))
+    if open_count:
+        return StepState("maintain", "G4", "blocked", "open clarification(s)", open_count)
+    last = RescanRepository(services.db).latest(project_id)
+    if last is None:
+        return StepState("maintain", "G4", "todo", "no rescan yet", 0)
+    changed = int(last.summary.get("referenced_changes", 0))
+    errors = int(last.summary.get("page_errors", 0))
+    if changed or errors:
+        parts = [f"{changed} used element(s) changed"] + (
+            [f"{errors} page error(s)"] if errors else []
+        )
+        return StepState(
+            "maintain", "G4", "needs_approval", f"rescan #{last.id}: " + ", ".join(parts), 0
+        )
+    return StepState("maintain", "G4", "approved", f"rescan #{last.id}: no used element changed", 0)

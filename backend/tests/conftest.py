@@ -118,6 +118,20 @@ def site_v1() -> Iterator[str]:
     yield from _serve("v1")
 
 
+@pytest.fixture
+def site_switchable() -> Iterator[Any]:
+    """A fixture server starting on v1 whose ``switch("v2")`` changes the site in place."""
+    server = fixture_serve.make_server("v1", port=0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    server.url = f"http://127.0.0.1:{server.server_port}"
+    try:
+        yield server
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
 @pytest.fixture(scope="session")
 def site_v2() -> Iterator[str]:
     """Base URL of the BookShelf v2 fixture site on a free port."""

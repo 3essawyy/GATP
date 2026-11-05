@@ -373,3 +373,24 @@ export function useApproveAndRun(projectId: number) {
     },
   });
 }
+
+/** T-016: rescan the approved pages and compare with the snapshots the tests use. */
+export function useLatestRescan(projectId: number) {
+  return useQuery({
+    queryKey: ['rescan', projectId],
+    queryFn: async () =>
+      unwrap(await api.GET('/api/projects/{project_id}/rescans/latest', pid(projectId))),
+  });
+}
+
+export function useRescan(projectId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () =>
+      unwrap(await api.POST('/api/projects/{project_id}/rescans', pid(projectId))),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['rescan', projectId] });
+      void qc.invalidateQueries({ queryKey: ['workflow', projectId] });
+    },
+  });
+}
