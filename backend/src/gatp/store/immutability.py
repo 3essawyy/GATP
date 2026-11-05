@@ -23,6 +23,8 @@ _IMMUTABLE = (
     models.Element,
     models.LocatorCandidate,
     models.ArtifactVersion,
+    models.Rescan,  # evidence of what a rescan observed (T-016)
+    models.ChangeSet,
 )
 _installed = False
 

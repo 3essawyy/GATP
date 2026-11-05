@@ -1,6 +1,6 @@
 # Session S004 — 2026-11-04 — Full-build run (T-003 onward)
 
-- **Tasks touched:** T-003 … T-015
+- **Tasks touched:** T-003 … T-016 (T-016 in review)
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s`, one squash-merged PR per task
 
 ## Interview outcome (before the run)
@@ -35,7 +35,12 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - **T-012:** Test plans: inspector observable regions (`o<n>`), structured `TestPlan` contract validated against the approved scope, stable expectation ids, clarifications for assumptions/questions that block G1 and update the plan as new versions, plan editor UI, revise with feedback, offline example plans for the `fake` provider. Walkthrough extended (screens 09–11); review fixed question wording and a misleading usage row. PR #12.
 - **T-013:** Deterministic codegen (POM + tests + conftest) from the G1 plan; static validation (syntax, verified locators, structure, safety), runner recount (with setup steps) + new `collect` job; reports bound to versions (migration 0006); G2 rule; Code page. **Real run** of a generated test found the missing sign-in in tests → page objects replay setup steps; collect caught a generator import bug. Smoke + walkthrough extended (screens 12–13). PR #13.
 - **T-014:** Approved execution: G3 subject (exact code versions + target + tests), single-use approvals, `run_tests` job in bubblewrap (secrets hidden, read-only system, cleared env) with an allowlist plugin, junit + screenshots → results; Run page. Real-runner probes found 3 bugs (pytest picking up GATP's pyproject inside the repo, bwrap mount, screenshot matching), all fixed. Smoke runs a real G3 run; walkthrough screens 14–15 show a real, visible failure. PR #14 (CI found that Playwright looked for browsers under the sandbox HOME; fixed).
-- **T-015:** Feedback → revise → approved rerun: run failures (mapped back to expectation ids) go to the model as untrusted data; a guard compares every revision/edit with the last approved version and raises `weakening` clarifications (Accept / Restore only) that block G1/G2. Walkthrough screens 16–18: feedback → flagged removals → G1/G2/new G3 → rerun passes.
+- **T-015:** Feedback → revise → approved rerun: run failures (mapped back to expectation ids) go to the model as untrusted data; a guard compares every revision/edit with the last approved version and raises `weakening` clarifications (Accept / Restore only) that block G1/G2. Walkthrough screens 16–18: feedback → flagged removals → G1/G2/new G3 → rerun passes. PR #15.
+- **T-016 (PR open, not yet merged):** Rescan + diff + change flags.
+  - Rescans all approved pages into new snapshots. Deterministic matching (`maintainer/match.py`) gives unchanged / clear (≥ 0.70, margin 0.15, no split) / ambiguous / missing, with per-field evidence.
+  - Read-only setup retry when sign-in breaks on a clear match. Rescans + change sets are stored (migration 0007).
+  - Maintain page; switchable fixture server.
+  - Fixture result: FXC-1 clear (0.85), FXC-2 ambiguous (Save draft 0.81 / Publish 0.69, split), FXC-3 "page HTML changed". Walkthrough screen 19.
 
 ## Decisions (with ADR links)
 - T-003: none beyond PLAN-003.
@@ -48,6 +53,7 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - T-013: [ADR-021](../decisions/ADR-021-deterministic-codegen.md) deterministic codegen, version-bound reports, setup steps in page objects, Monaco dropped.
 - T-014: [ADR-022](../decisions/ADR-022-approved-execution-sandbox.md) G3 subject, one run per approval, bubblewrap, allowlist plugin.
 - T-015: [ADR-023](../decisions/ADR-023-feedback-and-weakening-guard.md) run feedback → revision; weakening guard against the approved version.
+- T-016: [ADR-024](../decisions/ADR-024-rescan-matching-rules.md) matching rules incl. the "split" rule; read-only setup retry; rescans/change sets write-once.
 
 ## Open items / blockers
 - Waiting on Abdo to add `GATP_GEMINI_API_KEY` to the cloud environment; it is only visible to a **new** session. Then run `uv run poe llm-check` and fill SG-003 §6 (TC-105 live part, TC-111).
@@ -55,9 +61,37 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 - **Tag `phase1-rc` not pushed:** the cloud git proxy rejects tag pushes (HTTP 403) and no GitHub tool here creates tags. Create it on GitHub (Releases → new release → tag `phase1-rc` on `74ade15`, the T-011 merge) or locally: `git tag phase1-rc 74ade15 && git push origin phase1-rc`.
 
 ## Next steps (in order)
-1. T-016 Rescan + snapshot diff + change flags (v1 → v2 fixture: FXC-1/2/3).
-2. Abdo: add `GATP_GEMINI_API_KEY` (new session) → `poe llm-check` → real-model evidence for TC-111.
+1. **Merge T-016's PR** once CI is green (open it from `claude/serene-johnson-xtbl4s` if this session's PR is gone). Then sync the session branch (`git checkout -B <branch> origin/main` + `merge -s ours` of the old remote tip; force-push is blocked).
+2. **T-017 Repairs (G4) + clarification + rerun affected.** Design already implied by ADR-007/024; write PLAN-017 + ADR-025.
+   - From the latest rescan, a **clear match** becomes a `repair_proposals` row (table exists since 0001). Evidence: the change-set item and breakdown. The LLM only *explains* the change in plain language (new template; offline example for `fake`).
+   - **Ambiguous / missing** elements raise a clarification on step `maintain` with the candidates as options (e.g. "Save draft", "Publish", "Element removed: keep test failing").
+     - The tester's choice turns it into a proposal.
+     - Never auto-pick (FXC-2).
+   - **G4 approval** of a proposal (or a batch) applies it, and **only locators** change:
+     - new page-object versions (author `repair`), replacing the old locator expression with the new one;
+     - updated page setup steps where the setup used that element (FXC-1 → add.html step 4);
+     - plan element ids remapped to the new snapshot (`s<old>.eN` → `s<new>.eM`) so codegen and validation keep working. Assertions and steps stay intact; the T-015 weakening guard must stay silent for locator-only repairs.
+   - After applying: re-validate (static + recount + collect), G2, then propose a **rerun of only affected tests** (tests whose page objects or setup changed) via G3, using the existing run subject's `tests` list.
+   - The scope must move to the new snapshots. Either save a new scope version pointing at the rescanned snapshots (with G0), or treat the G4 apply as re-baselining. Decide in ADR-025 (recommendation: new scope version created by the repair, needing G0 again, consistent with "every change is a new version").
+   - **UI:** proposals with before/after locator + evidence + explanation, approve G4, clarification choices, "rerun affected" button. **Walkthrough:** v2 → rescan → approve FXC-1 repair → answer FXC-2 (Publish) → G4 → validate/G2 → G3 rerun affected → pass. TC-209/TC-210.
+3. **T-018** versions UI (history, diffs, G5 restore; backend exists since T-004/T-008).
+4. **T-019** usage panel (per-call metrics, averages, fresh vs reused, test vs model time; data already in `llm_calls` and `runs`).
+5. **T-020** security hardening tests (prompt injection in page text, allowlist, sandbox escape attempts).
+6. **T-021** Phase 2 pack: HLD v0.3, PDF, demo recording (`ui_walkthrough.py --record` under `xvfb-run`), DEFENSE.md update, tag `phase2-rc` (tags must be created on GitHub, see open items).
+7. Abdo: add `GATP_GEMINI_API_KEY` (new session) → `poe llm-check` → real-model evidence for TC-111.
+
+## How to resume quickly
+- **State:** `main` has T-003…T-015 merged. T-016 is on PR / the session branch.
+- **Checks:**
+  - `uv run poe check` (≈ 140 tests, ~2 min);
+  - `uv run poe smoke`;
+  - `cd scripts && uv run python ui_walkthrough.py --out <dir>`, which produces screens 01–19 (~60 s). Review the screenshots, since that has found real bugs every task.
+- **Demo order the walkthrough already follows:** inspect (with sign-in setup) → scope G0 → plan G1 (clarifications) → code G2 (an invented locator is caught) → G3 run (real failures) → feedback → weakened checks flagged → rerun passes → site v2 → rescan flags. T-017 continues from screen 19.
+- **Fixture switch:** tests use `site_switchable.switch("v2")`. The harness uses `Harness.switch_site("v2")`. Humans restart `uv run poe fixtures v2` on the same port.
 
 ## Notes for next session
 - In this cloud container, Python Playwright needs `GATP_CHROMIUM_EXECUTABLE=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` (the preinstalled revision differs from the one the pinned Playwright expects).
 - Docker: start `dockerd` manually if you need it (TC-102 reruns).
+- uv in this container: `export UV_SYSTEM_CERTS=1; unset UV_NATIVE_TLS`.
+- **CI differs from the cloud container.** CI runs as a non-root user with Playwright's own browsers and **no** `GATP_CHROMIUM_EXECUTABLE`. Env-related bugs show up only there; T-014's sandbox HOME bug was one. Keep run assertions printing the failure detail.
+- **The offline (`fake`) provider drives every demo.** Its plan uses assumption checks that fail for real on v1 (empty error regions), and its revision drops failing checks (labelled). Both are intentional for TC-206/TC-207.

@@ -318,6 +318,22 @@ class Walkthrough(Smoke):
         expect(page.get_by_test_id("run-status").first).to_have_text("passed", timeout=180_000)
         expect(page.get_by_test_id("step-run")).to_contain_text("done")
         self.shot(page, "rerun-passed")
+        self.maintain_steps(page)
+
+    def maintain_steps(self, page: Page) -> None:
+        """T-016: the site changes (v1 -> v2) -> rescan -> clear match + ambiguous flagged."""
+        self.switch_site("v2")
+        page.get_by_test_id("step-maintain").click()
+        expect(page.get_by_role("heading", name="Maintain")).to_be_visible()
+        page.get_by_test_id("rescan").click()
+        expect(page.get_by_test_id("rescan-status")).to_contain_text(
+            "used element(s) changed", timeout=180_000
+        )
+        expect(page.get_by_test_id("setup-alert")).to_contain_text("read-only")
+        expect(page.get_by_text("changed: clear match").first).to_be_visible()
+        expect(page.get_by_text("ambiguous: you decide").first).to_be_visible()
+        expect(page.get_by_test_id("step-maintain")).to_contain_text("needs approval")
+        self.shot(page, "rescan-flags")
 
     def start_recording(self) -> subprocess.Popen[bytes] | None:
         """Record the whole X display (GATP UI + the runner's visible browser) with ffmpeg."""

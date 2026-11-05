@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router';
 
 import { CodePage } from './pages/CodePage';
 import { InspectPage } from './pages/InspectPage';
+import { MaintainPage } from './pages/MaintainPage';
 import { PlanPage } from './pages/PlanPage';
 import { ProjectLayout } from './pages/ProjectLayout';
 import { ProjectsPage } from './pages/ProjectsPage';
@@ -19,6 +20,7 @@ export function App() {
         <Route path="plan" element={<PlanPage />} />
         <Route path="code" element={<CodePage />} />
         <Route path="run" element={<RunPage />} />
+        <Route path="maintain" element={<MaintainPage />} />
       </Route>
     </Routes>
   );

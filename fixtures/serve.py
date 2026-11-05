@@ -8,7 +8,6 @@ shows stale pages. See fixtures/README.md for behaviors and v1 -> v2 changes.
 from __future__ import annotations
 
 import argparse
-import functools
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -18,7 +17,10 @@ DEFAULT_PORT = 8090
 
 
 class NoStoreHandler(SimpleHTTPRequestHandler):
-    """Static file handler that disables caching and keeps logs short."""
+    """Static file handler that disables caching; serves the server's current site version."""
+
+    def __init__(self, request: object, client_address: object, server: SiteServer) -> None:
+        super().__init__(request, client_address, server, directory=str(server.site))  # type: ignore[arg-type]
 
     def end_headers(self) -> None:
         self.send_header("Cache-Control", "no-store")
@@ -32,12 +34,23 @@ def site_dir(version: str) -> Path:
     return FIXTURES_DIR / f"site-{version}"
 
 
-def make_server(
-    version: str, port: int = DEFAULT_PORT, host: str = "127.0.0.1"
-) -> ThreadingHTTPServer:
+class SiteServer(ThreadingHTTPServer):
+    """Serves one fixture version; ``switch()`` changes it in place (same origin, T-016)."""
+
+    def __init__(self, version: str, address: tuple[str, int]) -> None:
+        self.version = version
+        self.site = site_dir(version)
+        super().__init__(address, NoStoreHandler)
+
+    def switch(self, version: str) -> None:
+        """Serve ``version`` from now on (the site "changes" while the URL stays the same)."""
+        self.site = site_dir(version)
+        self.version = version
+
+
+def make_server(version: str, port: int = DEFAULT_PORT, host: str = "127.0.0.1") -> SiteServer:
     """Build (but do not start) a server for ``version``. Port 0 picks a free port."""
-    handler = functools.partial(NoStoreHandler, directory=str(site_dir(version)))
-    return ThreadingHTTPServer((host, port), handler)
+    return SiteServer(version, (host, port))
 
 
 def main(argv: list[str] | None = None) -> None:

@@ -185,6 +185,36 @@
         "title": "ArtifactOut",
         "type": "object"
       },
+      "ChangeSetOut": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "new_snapshot_id": {
+            "title": "New Snapshot Id",
+            "type": "integer"
+          },
+          "old_snapshot_id": {
+            "title": "Old Snapshot Id",
+            "type": "integer"
+          },
+          "summary": {
+            "additionalProperties": true,
+            "description": "page_url, html_changed, counts (referenced elements), elements, appeared",
+            "title": "Summary",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "old_snapshot_id",
+          "new_snapshot_id",
+          "summary"
+        ],
+        "title": "ChangeSetOut",
+        "type": "object"
+      },
       "ClarificationOut": {
         "properties": {
           "answer": {
@@ -1426,6 +1456,45 @@
           "created_at"
         ],
         "title": "RequirementOut",
+        "type": "object"
+      },
+      "RescanOut": {
+        "properties": {
+          "change_sets": {
+            "items": {
+              "$ref": "#/components/schemas/ChangeSetOut"
+            },
+            "title": "Change Sets",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "integer"
+          },
+          "summary": {
+            "additionalProperties": true,
+            "description": "pages (errors, setup trial), referenced_changes",
+            "title": "Summary",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "summary",
+          "created_at",
+          "change_sets"
+        ],
+        "title": "RescanOut",
         "type": "object"
       },
       "RestoreIn": {
@@ -3809,6 +3878,99 @@
         "summary": "Add Requirement",
         "tags": [
           "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/rescans": {
+      "post": {
+        "description": "Inspect every approved page again and compare with the snapshots the tests use.",
+        "operationId": "rescanProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RescanOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start Rescan",
+        "tags": [
+          "maintain"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/rescans/latest": {
+      "get": {
+        "operationId": "getLatestRescan",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RescanOut"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Getlatestrescan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Latest Rescan",
+        "tags": [
+          "maintain"
         ]
       }
     },

@@ -58,3 +58,4 @@ export type CodeResult = S['CodeOut'];
 export type CodeFile = S['CodeFileOut'];
 export type RunSubject = S['RunSubjectOut'];
 export type RunResult = S['RunOut'];
+export type Rescan = S['RescanOut'];

@@ -253,6 +253,17 @@ class RunResult(Base):
     run: Mapped[Run] = relationship(back_populates="results")
 
 
+class Rescan(Base):
+    """One user-requested rescan of a project's pages (T-016): groups its change sets."""
+
+    __tablename__ = "rescans"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"), index=True)
+    summary: Mapped[dict[str, Any]] = mapped_column(default=dict)  # pages, errors, setup checks
+    created_at: Mapped[datetime] = mapped_column(default=utcnow)
+
+
 class ChangeSet(Base):
     """Comparison of an old and a new snapshot of the same page (maintenance)."""
 
@@ -260,6 +271,9 @@ class ChangeSet(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"), index=True)
+    rescan_id: Mapped[int | None] = mapped_column(
+        ForeignKey("rescans.id"), index=True, default=None
+    )
     old_snapshot_id: Mapped[int] = mapped_column(ForeignKey("inspection_snapshots.id"))
     new_snapshot_id: Mapped[int] = mapped_column(ForeignKey("inspection_snapshots.id"))
     summary: Mapped[dict[str, Any]] = mapped_column(default=dict)

@@ -111,6 +111,9 @@ class JobExecutor:
                     else:
                         files, data = self._recount(page, job)
                 failed, error = False, ""
+            except SetupStepError as exc:
+                files, failed, error = {}, True, str(exc)[:500]
+                data = {"failed_setup_step": exc.step}
             except PlaywrightError as exc:
                 files, data, failed, error = {}, {}, True, str(exc).splitlines()[0][:500]
         return JobResult(
@@ -129,8 +132,7 @@ class JobExecutor:
         page: Page, job: InspectJob, box: Sandbox
     ) -> tuple[dict[str, str], dict[str, object]]:
         """Run setup steps, open the page, inspect it, keep screenshot + served HTML."""
-        for step in job.setup:
-            _run_step(page, step)
+        _run_setup(page, job.setup)
         page.goto(job.url, wait_until="load")
         page.wait_for_timeout(300)  # let onload scripts (e.g. client-side redirects) run
         page.wait_for_load_state("load")
@@ -146,11 +148,39 @@ class JobExecutor:
 
     @staticmethod
     def _recount(page: Page, job: RecountJob) -> tuple[dict[str, str], dict[str, object]]:
-        for step in job.setup:
-            _run_step(page, step)
+        _run_setup(page, job.setup)
         page.goto(job.url, wait_until="load")
         counts = [resolve(page, spec).count() for spec in job.locators]
         return {}, {"counts": counts}
+
+
+SETUP_ACTION_TIMEOUT_MS = 10_000
+
+
+class SetupStepError(PlaywrightError):
+    """A tester-approved setup step failed (e.g. its locator no longer matches, T-016)."""
+
+    def __init__(self, step: int, message: str) -> None:
+        super().__init__(message)
+        self.step = step
+
+
+def _run_setup(page: Page, steps: list[SetupStep]) -> None:
+    for n, step in enumerate(steps, 1):
+        try:
+            _run_step(page, step)
+        except PlaywrightError as exc:
+            target = (
+                step.url
+                if step.action == "goto"
+                else step.locator.to_python()
+                if step.locator
+                else ""
+            )
+            first = str(exc).splitlines()[0][:300]
+            raise SetupStepError(
+                n, f"setup step {n} ({step.action} {target}) failed: {first}"
+            ) from exc
 
 
 def _run_step(page: Page, step: SetupStep) -> None:
@@ -162,9 +192,9 @@ def _run_step(page: Page, step: SetupStep) -> None:
         raise ValueError(f"{step.action} needs a locator")
     target = resolve(page, step.locator)
     if step.action == "fill":
-        target.fill(step.value)
+        target.fill(step.value, timeout=SETUP_ACTION_TIMEOUT_MS)
     elif step.action == "click":
-        target.click()
+        target.click(timeout=SETUP_ACTION_TIMEOUT_MS)
         page.wait_for_load_state("load")
     else:
-        target.select_option(step.value)
+        target.select_option(step.value, timeout=SETUP_ACTION_TIMEOUT_MS)

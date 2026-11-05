@@ -85,6 +85,19 @@ class Smoke:
         self.wait_for("api", lambda: self.api.get("/api/health").status_code == 200)
         self.wait_for("runner", lambda: self.api.get("/api/runner/health").json()["available"])
 
+    def switch_site(self, version: str) -> None:
+        """Restart the fixture site as ``version`` on the same port: the site "changes"."""
+        old = self.procs.pop(0)  # started first in up()
+        old.send_signal(signal.SIGTERM)
+        old.wait(timeout=10)
+        py = sys.executable
+        log = (self.tmp / f"fixtures-{version}.log").open("wb")
+        argv = [py, "fixtures/serve.py", version, "--port", str(self.site_port)]
+        self.procs.insert(
+            0, subprocess.Popen(argv, cwd=ROOT, env=self.env, stdout=log, stderr=subprocess.STDOUT)
+        )
+        self.wait_for(f"fixture site {version}", lambda: httpx.get(self.site).status_code == 200)
+
     def down(self) -> None:
         for p in self.procs:
             p.send_signal(signal.SIGTERM)

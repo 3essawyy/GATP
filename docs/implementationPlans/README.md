@@ -19,3 +19,4 @@ One plan per non-trivial task, numbered like its task (`PLAN-012` ↔ `T-012`). 
 | [PLAN-013](PLAN-013-codegen.md) | T-013 Code generation + validation | Executed |
 | [PLAN-014](PLAN-014-execution.md) | T-014 Approved execution | Executed |
 | [PLAN-015](PLAN-015-feedback-rerun.md) | T-015 Feedback → revise → approved rerun | Executed |
+| [PLAN-016](PLAN-016-rescan-diff.md) | T-016 Rescan + snapshot diff + change flags | Executed |
