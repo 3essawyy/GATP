@@ -62,7 +62,7 @@ The orchestrator. Exposes the JSON/SSE API, owns the workflow state machine, enf
 | `events.py` | `EventBus` for SSE |
 | `inspections.py` | `to_snapshot_in()` (runner result → store snapshot) |
 | `schemas.py` | All request/response models |
-| `routes/` | `system`, `projects`, `inspections`, `scope`, `artifacts`, `gates` |
+| `routes/` | `system`, `projects`, `inspections`, `scope`, `artifacts`, `gates`, `assist`, `plan`, `code`, `runs`, `maintain` |
 | `main.py`, `export_openapi.py` | Entrypoint, schema export |
 
 ## Error mapping

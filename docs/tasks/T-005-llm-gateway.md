@@ -1,6 +1,6 @@
 # T-005: LLM gateway — Gemini + Ollama, structured output, usage log
 
-- **Status:** Done (live-model verification pending: needs `GATP_GEMINI_API_KEY` in a new session and an Ollama machine)
+- **Status:** Done (Gemini verified 2026-11-20; Ollama check pending on a machine that can reach it)
 - **Phase:** P1
 - **Target:** W+1
 - **Modules:** llm-gateway, store
@@ -22,11 +22,12 @@ One provider-agnostic, logged, schema-validated way to call models (ADR-003).
 
 ## Acceptance criteria
 - [x] Unit tests with a fake provider: logging fields, cache marking, fallback path, schema rejection
-- [ ] Manual check against real Gemini and local Ollama (recorded in task notes). **Deferred:** no key in this session, and Ollama is unreachable from the sandbox. `uv run poe llm-check` is the check, and SG-003 §6 is where the results go.
+- [x] Manual check against real Gemini: `llm-check` OK on 2026-11-20 (`gemini-3.5-flash`, see SG-003 §6).
+- [ ] Manual check against local Ollama from the WSL runner machine. `uv run poe llm-check` is the check, and SG-003 §6 is where the result goes.
 - [x] `.env.example` and SG-003 (model config) written
 
 ## Notes
-- **Model pinning:** Google's docs host is blocked in the cloud sandbox. The default `gemini-2.5-flash` and its free-tier limits (10 RPM / 250k TPM / 250 RPD) come from a search snippet of Google's rate-limit page and must be confirmed with `poe llm-check`.
+- **Model pinning:** Google's docs host is blocked in the cloud sandbox. `gemini-2.5-flash` was the original default (free-tier limits 10 RPM / 250k TPM / 250 RPD, from a search snippet of Google's rate-limit page). On 2026-11-20 it returned HTTP 404 (no longer available to new users), so the default is now `gemini-3.5-flash`, confirmed with `poe llm-check`.
 - `poe llm-check` here (no key, no Ollama) reports `gemini: unavailable (key not set)` and `ollama: not reachable`, both logged as `unavailable` rows. That's the expected behavior.
 
 ## Explain it (code-defense prep)

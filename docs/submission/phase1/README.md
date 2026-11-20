@@ -18,7 +18,7 @@ GATP is a human-in-the-loop web testing assistant. It inspects a page in a visib
 ## Phase 1 rubric map
 | Rubric (pts) | How GATP meets it | Evidence |
 |---|---|---|
-| Architecture & design (4) | Separate runner process on a private Unix socket; thin UI over a FastAPI orchestrator; store with immutable versions; LLM gateway; 19 ADRs | HLD (this PDF), [ADRs](../../decisions/README.md), TC-101 |
+| Architecture & design (4) | Separate runner process on a private Unix socket; thin UI over a FastAPI orchestrator; store with immutable versions; LLM gateway; 19 Phase 1 ADRs (ADR-001 to 019; ADR-020 to 024 cover early Phase 2 work) | HLD (this PDF), [ADRs](../../decisions/README.md), TC-101 |
 | Page inspection (3) | Visible Chromium in the runner; interactive elements with role, name, label, attributes, nearby text; ranked locators **verified live** (unique **and** targets the element); flags for weak elements; screenshot highlight + source line | TC-106, TC-107, TC-108; [screenshots](../../samples/phase1-walkthrough/) |
 | Human interaction (2) | Pages + sign-in setup steps, region include/exclude, element selection, testing goal, notes; scope approved at G0; edits create new versions and reopen the gate; clarifications block their step | TC-109, TC-110 |
 | Feasibility evidence (1) | Grounded model call on the **approved** in-scope elements only; element ids validated; observations vs assumptions + questions; usage logged | TC-111 |

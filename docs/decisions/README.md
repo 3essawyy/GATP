@@ -16,7 +16,7 @@ Never delete or rewrite an accepted ADR. To change a decision, add a new ADR and
 | [ADR-010](ADR-010-phase1-scope-frontload.md) | Phase 1 front-loads Phase 2 | Accepted | 2026-11-04 |
 | [ADR-011](ADR-011-bonus-deferred.md) | Bonus decided after Phase 1 feedback | Accepted (deferred) | 2026-11-04 |
 | [ADR-012](ADR-012-backend-and-dev-tooling.md) | Backend and dev tooling: uv, ruff, mypy strict, poethepoet, single package | Accepted (platform part superseded by ADR-014) | 2026-11-04 |
-| [ADR-013](ADR-013-frontend-libraries.md) | Frontend libraries: npm, ESLint+Prettier, Mantine, TanStack Query, openapi-typescript/fetch, Monaco | Accepted | 2026-11-04 |
+| [ADR-013](ADR-013-frontend-libraries.md) | Frontend libraries: npm, ESLint+Prettier, Mantine, TanStack Query, openapi-typescript/fetch, Monaco | Accepted (Monaco part superseded by ADR-021) | 2026-11-04 |
 | [ADR-014](ADR-014-linux-only-platform.md) | Linux-only platform (WSL2 for Windows users) | Accepted | 2026-11-04 |
 | [ADR-015](ADR-015-db-access-sqlalchemy-alembic.md) | DB access: SQLAlchemy 2 + Alembic; immutability enforced twice | Accepted | 2026-11-04 |
 | [ADR-016](ADR-016-llm-gateway-design.md) | LLM gateway: httpx providers, validated JSON, repair retry, per-attempt log, fake provider | Accepted | 2026-11-04 |

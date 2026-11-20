@@ -1,6 +1,6 @@
 # T-011: Phase 1 submission pack
 
-- **Status:** Done. Release candidate tagged `phase1-rc`. The final tag `phase1` is set at submission, after the team's live check and the real Gemini run.
+- **Status:** Done. Release candidate tagged `phase1-rc`. The real Gemini run is done (2026-11-20). The final tag `phase1` is set at submission, after the narrated demo.
 - **Phase:** P1
 - **Target:** before W9
 - **Modules:** docs (+ small UI fix, `.env.example`)
@@ -8,14 +8,14 @@
 - **Depends on:** T-010
 - **Plan:** [PLAN-011](../implementationPlans/PLAN-011-phase1-submission.md)
 - **Deliverables:** [docs/submission/phase1/](../submission/phase1/README.md): `GATP-phase1-design.pdf`, `phase1-walkthrough.webm`, `usage-evidence.json`, `DEFENSE.md`
-- **TCs:** TC-101 Pass, TC-102 Pass, TC-103…TC-110 Pass, TC-111 partial (real model pending)
+- **TCs:** TC-101 Pass, TC-102 Pass, TC-103…TC-110 Pass, TC-111 Pass (real Gemini run 2026-11-20)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 
 ## Goal
 Everything the Phase 1 submission requires, verified.
 
 ## Acceptance criteria
-- [x] All Phase 1 TCs pass and are recorded in TCs/README, **except TC-111's real-model run**, which needs `GATP_GEMINI_API_KEY` (the automated part passes)
+- [x] All Phase 1 TCs pass and are recorded in TCs/README, including TC-111 with a real Gemini run (2026-11-20)
 - [x] No secrets in the repo (scan clean); `.env.example` complete (enforced by `test_env_example.py`)
 - [x] Code-defense rehearsal material: [DEFENSE.md](../submission/phase1/DEFENSE.md). The rehearsal itself is a team activity (checklist in that file).
 
@@ -48,4 +48,4 @@ Everything the Phase 1 submission requires, verified.
 
 **Likely questions:**
 - *Is the demo video staged?* It's the automated walkthrough against the real processes. The runner's separate browser window is visible in it, and the same script runs as a test.
-- *Where is the model evidence?* `usage-evidence.json` and the UI usage card. This release uses the labelled offline provider; the real Gemini run is the first remaining step.
+- *Where is the model evidence?* `usage-evidence.json` and the UI usage card. It comes from a real Gemini run on 2026-11-20 (`gemini-3.5-flash`); the narrated demo video is the remaining step.

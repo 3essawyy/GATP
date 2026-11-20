@@ -1,6 +1,6 @@
 # T-012: Collaborative test design + G1
 
-- **Status:** Done (real-model run pending key)
+- **Status:** Done (offline provider verified; real-model run of the plan step still to do)
 - **Phase:** P2
 - **Target:** W+3
 - **Modules:** test-designer, api, web-ui, inspector, llm-gateway
@@ -8,7 +8,7 @@
 - **Depends on:** T-010
 - **Plan:** [PLAN-012](../implementationPlans/PLAN-012-test-designer.md)
 - **ADRs:** [ADR-020](../decisions/ADR-020-test-plan-contract.md)
-- **TCs:** TC-201 Pass, TC-202 Pass (offline provider; real-model run pending)
+- **TCs:** TC-201 Pass, TC-202 Pass (offline provider; real-model run still to do)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 
 ## Goal

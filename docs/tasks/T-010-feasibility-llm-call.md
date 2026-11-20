@@ -1,13 +1,13 @@
 # T-010: Grounded LLM summary / next action + usage display
 
-- **Status:** Done (real-model run pending: needs `GATP_GEMINI_API_KEY` in a new session; see SG-003 §6)
+- **Status:** Done (real Gemini run 2026-11-20: see SG-003 §6 and `docs/submission/phase1/usage-evidence.json`)
 - **Phase:** P1
 - **Target:** W+2
 - **Modules:** test-designer (`insight.py`), llm-gateway, api, web-ui, store
 - **Requirements:** REQ-P1-4, REQ-P1-D, REQ-Q2, REQ-Q7, REQ-Q8, REQ-Q9, REQ-Q10
 - **Depends on:** T-005, T-009
 - **Plan:** [PLAN-010](../implementationPlans/PLAN-010-feasibility-llm-call.md)
-- **TCs:** TC-111 (automated Pass with fake provider; real-model run pending), TC-110 (model part Pass)
+- **TCs:** TC-111 Pass (fake provider in T-010; real Gemini run 2026-11-20), TC-110 (model part Pass)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 - **Branch / PR:** `claude/serene-johnson-xtbl4s` → squash-merged to `main`
 

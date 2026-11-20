@@ -14,7 +14,7 @@ The only place that talks to model providers. Provides a provider-agnostic `comp
 |---|---|---|
 | Provides | `complete_structured(...)` | Returns validated object + `LLMCall` record |
 | Consumes | Gemini API (free tier) | API key from `.env` |
-| Consumes | Ollama HTTP API | Local, `OLLAMA_HOST` |
+| Consumes | Ollama HTTP API | Local, `GATP_OLLAMA_HOST` |
 | Consumes | store | Writes `LLMCall` rows |
 
 ## Files

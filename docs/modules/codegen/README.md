@@ -41,4 +41,4 @@ The report is stored with the exact code version ids (`validation_reports`, migr
 
 ## Known limitations
 - One test file per plan (all cases); page objects expose locators, not higher-level action methods.
-- `collect` imports test modules (after static safety checks) in a process sandbox; bubblewrap arrives with execution.
+- `collect` imports test modules (after static safety checks) in a process sandbox (scrubbed environment, sandbox working directory). Bubblewrap is used for approved test runs (`run_tests`), not for `collect`.
