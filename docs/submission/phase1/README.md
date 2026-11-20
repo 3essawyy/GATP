@@ -29,5 +29,8 @@ Following [ADR-010](../../decisions/ADR-010-phase1-scope-frontload.md), some Pha
 ## Known limitations
 See [SG-006 Limitations](../../SystemGuides/SG-006-limitations.md). The most important one: this release's committed model evidence uses the clearly labelled offline `fake` provider; the real **Gemini** run is done with a free key on the team machine (`uv run poe llm-check`, then the demo).
 
+## Status and blockers
+What is done and what is still open before submitting: [BLOCKERS-AND-STATUS.md](BLOCKERS-AND-STATUS.md).
+
 ## Team and code defense
 Component owners: [modules/README](../../modules/README.md). Defense preparation: [DEFENSE.md](DEFENSE.md) (likely questions per component, from each task's *Explain it* section).
