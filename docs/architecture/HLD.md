@@ -182,7 +182,7 @@ Tracked in the [latest session log](../sessions/README.md) and resolved via ADRs
 | Findings UI linked to screenshot + source; goal; scope selection; G0 | Done (T-009) | [web-ui](../modules/web-ui/README.md) |
 | Store: snapshots + immutable versioned artifacts, diff, restore (G5 API) | Done (T-004, T-008) | [store](../modules/store/README.md), [ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md) |
 | Approval gates bound to exact versions; clarifications; computed workflow | Done (T-008) | [api](../modules/api/README.md), [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md) |
-| LLM gateway (Gemini/Ollama/fake), validation, cache, usage log | Done (T-005); real Gemini run pending key | [llm-gateway](../modules/llm-gateway/README.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md) |
+| LLM gateway (Gemini/Ollama/fake), validation, cache, usage log | Done (T-005); real Gemini run 2026-11-20 (gemini-3.5-flash) | [llm-gateway](../modules/llm-gateway/README.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md) |
 | Grounded Phase 1 model call + usage display | Done (T-010) | [test-designer](../modules/test-designer/README.md) |
 | Test design (G1), codegen (G2), execution (G3), maintenance (G4), history UI (G5), usage panel | Phase 2 (T-012 … T-019) | [tasks](../tasks/README.md) |
 

@@ -6,8 +6,8 @@ GATP helps a human tester inspect a webpage, design test cases, generate Playwri
 
 | Phase | Due | Points | Status |
 |---|---|---|---|
-| Phase 1 — Architecture and guided inspection | Week 9 | 10 | Planning |
-| Phase 2 — Complete supervised workflow | Week 13 | 20 | Planning |
+| Phase 1 — Architecture and guided inspection | Week 9 | 10 | Done: submission pack ready, demo video pending |
+| Phase 2 — Complete supervised workflow | Week 13 | 20 | In progress (T-012 to T-016 done; repairs, history UI, usage panel remain) |
 | Bonus — Creative work | Week 13 | +1 | Deferred (decide after P1 feedback) |
 
 ## Stack (see [ADRs](docs/decisions/README.md))

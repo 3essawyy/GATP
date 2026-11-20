@@ -16,6 +16,7 @@ ADR-003 chose Gemini Flash (free tier) as primary and Ollama as fallback, but le
 - **Default models:**
   - `gemini-2.5-flash`. Free-tier limits as quoted from Google's rate-limit page via search, 2026-11-04: 10 RPM / 250k TPM / 250 RPD. **Not yet verified against a live key.** `uv run poe llm-check` lists the models the key can use and makes one call. The first session with the key runs it, and SG-003 records the result.
   - Ollama `qwen2.5-coder:3b`.
+  - **Update 2026-11-20:** `gemini-2.5-flash` returned HTTP 404 ("no longer available to new users") on a live key. The default is now `gemini-3.5-flash` (provider-reported version `gemini-3.6-flash`) and `GATP_LLM_TIMEOUT_S` is 120 s, because a real insight call took about 70 s on the free tier. See [SG-003 §6](../SystemGuides/SG-003-models.md).
   - Both are configurable via `GATP_GEMINI_MODEL` / `GATP_OLLAMA_MODEL`.
 - **`complete_structured(template_id, inputs, schema, page_data=, check=)`** is the only call API:
   1. **Render** a versioned `PromptTemplate`. Page data is JSON inside `<untrusted_page_data>`, a closing tag inside the data is escaped, and system rules say the data is not instructions.

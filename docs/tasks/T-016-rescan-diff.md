@@ -1,6 +1,6 @@
 # T-016: Rescan + snapshot diff + change flags
 
-- **Status:** In review (PR open; merge when CI is green)
+- **Status:** Done (merged in #16)
 - **Phase:** P2
 - **Target:** W+5
 - **Modules:** maintainer, api, store, runner, web-ui

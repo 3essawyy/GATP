@@ -1,7 +1,7 @@
 # Module: runner
 
 - **Owner:** TBD
-- **Status:** Implemented (transport, inspect stub, recount; T-006)
+- **Status:** Implemented (transport, inspect, recount; T-006; approved runs under bubblewrap, T-014)
 - **Code:** `backend/src/gatp/runner/` (separate entrypoint, separate process)
 - **Tasks:** T-006, T-014
 - **ADRs:** ADR-004, ADR-008, ADR-012, ADR-017
@@ -46,7 +46,7 @@ Every `JobResult` has `job_id`, `type`, `status` (`ok`/`failed`), `duration_ms` 
 - **Network:** requests to other origins are aborted (`blockedbyclient`) and listed in `blocked_requests`.
 - **Files:** a fresh 0700 sandbox per job, removed afterwards; only explicitly kept files reach `artifacts/`.
 - **Access:** the socket is 0600 in a 0700 directory, and there's no TCP port.
-- **Timeouts:** per job (`timeout_s`, default 30 s, max 600 s), applied as Playwright's default timeout.
+- **Timeouts:** per job (`timeout_s`), applied as Playwright's default timeout. Defaults and caps differ by job type: inspect 30 s (max 600 s), collect 60 s (max 300 s), run_tests 300 s (max 1800 s); see `runner/jobs.py`.
 - **Browser:** headed Chromium. `GATP_RUNNER_HEADLESS=true` only in CI. `GATP_RUNNER_SLOW_MO_MS` slows actions down for demos.
 
 ## Config
@@ -63,5 +63,5 @@ Every `JobResult` has `job_id`, `type`, `status` (`ok`/`failed`), `duration_ms` 
 `test_runner_jobs.py`, `test_runner_browser.py`, `test_runner_process.py` (TC-106).
 
 ## Known limitations
-- Process isolation, not a container. The runner shares the OS user with the api; test-code confinement (bubblewrap) arrives with `run_tests` in T-014/T-020.
+- Process isolation, not a container. The runner shares the OS user with the api; test-code confinement is bubblewrap, the default for `run_tests` since T-014 (T-020 is hardening only).
 - One job at a time (by design: one visible browser).

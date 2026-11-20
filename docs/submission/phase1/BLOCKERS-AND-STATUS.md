@@ -39,7 +39,7 @@ Critical path: B3 (B1 and B2 are done). B4 → B5 can run in parallel.
 - Defense sheet: [DEFENSE.md](DEFENSE.md).
 
 ### Build tasks (all Done)
-T-001 docs scaffold, T-002 repo skeleton and CI, T-003 fixture site, T-004 store, T-005 LLM gateway (live check pending key), T-006 runner, T-007 inspector, T-008 API core, T-009 inspection UI, T-010 grounded LLM call (real run pending key), T-011 submission pack.
+T-001 docs scaffold, T-002 repo skeleton and CI, T-003 fixture site, T-004 store, T-005 LLM gateway, T-006 runner, T-007 inspector, T-008 API core, T-009 inspection UI, T-010 grounded LLM call, T-011 submission pack.
 
 ### Fixes found during verification
 SG-001 health badge missing on the start page (fixed, walkthrough asserts it); 4 undocumented settings in `.env.example` (fixed, test enforces it); PDF diagram split across three pages (fixed); secret scan clean.
