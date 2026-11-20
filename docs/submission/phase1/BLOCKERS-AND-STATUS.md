@@ -8,17 +8,17 @@ Snapshot of 2026-11-20 (updated after the tag). Sources: [T-011](../../tasks/T-0
 |---|---|---|---|---|
 | B1 | ~~Real-model run.~~ **Done 2026-11-20:** `uv run poe llm-check` passes with `gemini-3.5-flash` (provider version `gemini-3.6-flash`, 136 in / 10 out tokens, ~30 to 40 s latency). Default model changed from the retired `gemini-2.5-flash`. | REQ-P1-4 (1 pt) | none | Done: see [SG-003](../../SystemGuides/SG-003-models.md) §6 |
 | B2 | ~~Re-export evidence with the real model.~~ **Done 2026-11-20:** `gemini-3.5-flash` (provider version `gemini-3.6-flash`), 2,433 in / 1,437 out tokens (provider-reported), 69.3 s model time, then `reused`. `usage-evidence.json`, the UI card screenshot and SG-003 §6 refreshed; TC-111 Pass. | REQ-P1-4, REQ-P1-S | none | Done |
-| B3 | **Narrated live demo.** Record it following [SG-004](../../SystemGuides/SG-004-demo-script.md). The committed `.webm` is an automated backup (offline provider), and its frames show the runner's own Chromium window. Expect ~70 s for the model call on the free tier. | REQ-P1-D | none (B2 done) | Video exists and matches the demo sequence |
+| B3 | ~~Narrated live demo.~~ **Done 2026-11-20:** `Phase1-Demo.mp4` (151 MB) recorded by hand through all 13 steps of [SG-004](../../SystemGuides/SG-004-demo-script.md) with `gemini-3.5-flash-lite` (4.6 s, 2,419 in / 557 out tokens, then `reused`). Stored in `ClassroomAssets/`, **not committed**; upload to Drive and submit the link. | REQ-P1-D | none | Done |
 | B4 | **Component owners.** Replace `TBD` in [modules/README](../../modules/README.md) with names. | Code defense | Team decision | All 9 modules have an owner |
 | B5 | **Defense rehearsal.** Each owner rehearses their component using [DEFENSE.md](DEFENSE.md). | Code defense | B4 | Checklist in DEFENSE.md ticked |
 | B6 | ~~Final tag.~~ **Done 2026-11-20:** annotated tag `phase1` on `ef03bd6`, pushed to origin. | REQ-P1-S (team convention) | none | Done |
 
-Critical path: B3, the narrated demo (B1, B2 and B6 are done). B4 → B5 can run in parallel.
+Critical path: nothing blocks the Classroom hand-in now (B1, B2, B3 and B6 are done). B4 → B5 (owners and rehearsal) only matter for the code discussion.
 
 ### Things to verify (not confirmed by me)
 - `phase1-rc` was never created (S004 notes the tag push was rejected). The final tag `phase1` exists on `ef03bd6` (set 2026-11-20).
 - The exact Week 9 deadline date is not in the repo (the tasks README only gives relative weeks). Confirm it with the instructor or TA.
-- The recorded `.webm` demo backup still shows the offline provider; B3 (the narrated demo) should use the real model.
+- The `.webm` backup still shows the offline provider. The narrated demo used the real model, but with `gemini-3.5-flash-lite`, while `usage-evidence.json` is the `gemini-3.5-flash` run (69 s). Both are real; say so in the hand-in note.
 
 ## Already done
 
@@ -28,7 +28,10 @@ Critical path: B3, the narrated demo (B1, B2 and B6 are done). B4 → B5 can run
 | Working page inspection | 3 | Done | Visible Chromium in a separate runner; elements, attributes, ranked and live-verified locators; TC-106 to TC-108 Pass; [samples](../../samples/) |
 | Basic human interaction | 2 | Done | Goal, element selection, region include/exclude, G0 scope approval; TC-109, TC-110 Pass |
 | Feasibility evidence | 1 | Done | Real Gemini call logged with model/version, provider-reported tokens and latency; TC-111 Pass ([usage-evidence.json](usage-evidence.json)) |
-| Demo | none | Backup only | [phase1-walkthrough.webm](phase1-walkthrough.webm); narrated demo pending (B3) |
+| Demo | none | Done | Narrated recording (B3, `ClassroomAssets/Phase1-Demo.mp4`, Drive link); automated backup [phase1-walkthrough.webm](phase1-walkthrough.webm) |
+
+### Classroom hand-in (`ClassroomAssets/`)
+`GATP-source.zip` (code only, see T-011), `GATP-system-design.png` (design), `usage-evidence.json`, `inspectionLogs/` (the two sample inspection outputs) and `Phase1-Demo.mp4`. The design PDF below is kept in the repo but is not part of the hand-in.
 
 ### Submission package contents
 - Design doc: [GATP-phase1-design.pdf](GATP-phase1-design.pdf) (cover page mapping each brief item to evidence, then the HLD).

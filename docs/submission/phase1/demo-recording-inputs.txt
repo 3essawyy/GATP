@@ -1,0 +1,93 @@
+GATP PHASE 1 DEMO - COPY/PASTE INPUTS
+UI: http://localhost:5173        Start the stack: .\scripts\demo-up.ps1   (PowerShell, no -Fake)
+Type each value EXACTLY as shown (no leading/trailing space; a leading space got saved last time).
+
+------------------------------------------------------------
+STEP 1  Projects -> Create
+------------------------------------------------------------
+Project name:
+BookShelf demo
+
+Start URL:
+http://127.0.0.1:8090/index.html
+
+------------------------------------------------------------
+STEP 2  Header name box
+------------------------------------------------------------
+Yousef Mohamed Elessaw
+
+------------------------------------------------------------
+STEP 3-5  Inspect /index.html   (click e3 "Sign in", then "line 23")
+------------------------------------------------------------
+(no input)
+
+------------------------------------------------------------
+STEP 6  Add page, then "Before inspecting" steps
+------------------------------------------------------------
+Page URL:
+http://127.0.0.1:8090/add.html
+
+Setup steps (Add step each; order matters):
+  1. action: goto     url:    http://127.0.0.1:8090/index.html     <- FULL URL, not index.html
+  2. action: fill     by: label      value: Username     text: tester
+  3. action: fill     by: label      value: Password     text: secret123
+  4. action: click    by: test_id    value: login-submit
+
+Then: Save steps -> Inspect /add.html
+
+Single-line copies:
+http://127.0.0.1:8090/index.html
+Username
+tester
+Password
+secret123
+login-submit
+
+------------------------------------------------------------
+STEP 7  Point at e4 "Year published"  (flagged: no visible label)
+------------------------------------------------------------
+
+------------------------------------------------------------
+STEP 8  Step "2 - Scope & goal"
+------------------------------------------------------------
+Goal:
+Adding a book validates title, author, year and genre
+
+Untick (index.html):  e1 Username, e2 Password, e3 Sign in
+Untick (add.html):    e1 Back to books, e7 Cancel
+Keep ticked:          e2 Title, e3 Author, e4 Year published, e5 Genre, e6 Save
+Click: Save scope  -> version 1, "needs approval"
+
+------------------------------------------------------------
+STEP 9  Version bump
+------------------------------------------------------------
+Untick e6 Save -> Save scope  (version 2, approval resets)
+Tick e6 Save again -> Save scope (version 3).  MAKE SURE Save is ticked before step 10.
+
+------------------------------------------------------------
+STEP 10-13
+------------------------------------------------------------
+10  Approve scope (G0)
+11  Summarise & suggest next actions   (~70 s on Gemini; narrate the wait)
+12  Show usage card + "Exactly what was sent"
+13  Click Summarise again -> "reused (cached, no new model call)"
+
+------------------------------------------------------------
+NARRATION CUES
+------------------------------------------------------------
+1   The start URL's origin is the only site the browser may load (allowlist).
+2   My name is recorded with every approval.
+3   A real Chromium window opens in a SEPARATE runner process; GATP never runs the browser inside the API.
+4   Every candidate locator was executed on the live page; "usable" means it matches exactly one element.
+5   Each finding links to its line in the HTML the site served.
+6   Protected pages are reached by tester-approved steps: data, not code.
+7   GATP flags weak elements instead of pretending they are fine.
+8-9 Editing the scope creates a new version and resets the approval.
+10  The human gate: only now may the inspection be used for design.
+11  One grounded call: only in-scope elements are sent, every cited element id is checked; actions are
+    marked observed vs assumption, plus questions for the tester.
+12  Model, version, tokens (reported vs estimated), MODEL time vs BROWSER time, fresh vs reused, exact request.
+13  Identical request is reused from the cache: no new model call (REQ-Q10).
+
+If Gemini errors: do not switch to fake silently. Say so, rerun, or use .\scripts\demo-up.ps1 -Fake and state the
+usage card labels it as fake.

@@ -22,7 +22,7 @@ The orchestrator. Exposes the JSON/SSE API, owns the workflow state machine, enf
 |---|---|---|
 | System | `GET /health`, `GET /runner/health`, `GET /gates` | Runner health reports `available` / `headless` |
 | Projects | `POST /projects`, `GET /projects`, `GET /projects/{id}`, `PUT /projects/{id}/goal` | Creating a project stores its **origin** (the runner allowlist) and adds the start page |
-| Pages | `GET/POST /projects/{id}/pages`, `PUT /pages/{id}/setup` | Pages and setup-step `goto` URLs must be on the project origin (ADR-018) |
+| Pages | `GET/POST /projects/{id}/pages`, `PUT /pages/{id}/setup` | Pages and setup-step `goto` URLs must be full http(s) URLs on the project origin (ADR-018); a relative or non-http(s) URL is a 422, not a 500 |
 | Requirements | `GET/POST /projects/{id}/requirements` | Tester's free-text requirements |
 | Inspection | `POST /pages/{id}/inspections`, `GET /pages/{id}/snapshots`, `GET /snapshots/{id}`, `GET /files/{path}` | Runs the runner's `inspect` job with the page's setup steps, stores an immutable snapshot, returns browser time separately |
 | Scope (G0) | `PUT/GET /projects/{id}/scope` | Selection (`include`/`exclude` element keys per snapshot), goal, notes → versioned `scope` artifact |

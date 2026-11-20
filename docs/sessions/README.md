@@ -9,3 +9,4 @@ One log per working session: what was done, decided, left open, and what to do n
 | [S003](2026-11-04-S003-linux-migration-tc102.md) | 2026-11-04 | Linux migration + TC-102 clean-machine run | T-002 |
 | [S004](2026-11-04-S004-full-build-run.md) | 2026-11-04 | Full-build run (T-003 onward) | T-003… |
 | [S005](2026-11-20-S005-phase1-closeout.md) | 2026-11-20 | Phase 1 close-out: real-model evidence, docs audit, tag | T-005, T-010, T-011 |
+| [S006](2026-11-20-S006-demo-recording-and-handin.md) | 2026-11-20 | Narrated demo, 422 fix, one-command launcher, code-only hand-in | T-008, T-011 |

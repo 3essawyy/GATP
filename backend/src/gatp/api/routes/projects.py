@@ -64,7 +64,16 @@ def set_page_setup(page_id: int, body: PageSetupIn, svc: Svc) -> PageOut:
     page = svc.projects.get_page(page_id)
     project = svc.projects.get(page.project_id)
     for step in body.steps:
-        if step.action == "goto" and origin(step.url) != project.origin:
+        if step.action != "goto":
+            continue
+        try:
+            step_origin = origin(step.url)
+        except ValueError:  # relative or non-http(s) URL: a tester mistake, not a server error
+            raise ValidationError(
+                f"setup url {step.url!r} must be a full http(s) URL, "
+                f"e.g. {project.origin}/index.html"
+            ) from None
+        if step_origin != project.origin:
             raise ValidationError(f"setup url {step.url} is outside {project.origin}")
     steps = [s.model_dump(mode="json", exclude_defaults=True) for s in body.steps]
     return PageOut.model_validate(svc.projects.set_page_setup(page_id, steps))

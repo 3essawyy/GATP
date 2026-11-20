@@ -18,7 +18,7 @@ Milestones: **M1 = Phase 1 submission (Week 9)** · **M2 = Phase 2 submission (W
 | [T-008](T-008-api-core.md) | API core: projects/inspections, workflow state, gates, clarifications, TS client | api | T-004, T-007 | W+2 | Done |
 | [T-009](T-009-ui-inspection.md) | UI: URL, findings linked to source, selection, scope, goal | web-ui | T-008 | W+2 | Done |
 | [T-010](T-010-feasibility-llm-call.md) | Grounded LLM summary / next action + usage display | llm-gateway, api, web-ui | T-005, T-009 | W+2 | Done |
-| [T-011](T-011-phase1-submission.md) | Phase 1 submission pack | docs | T-010 | before W9 | Done (real-model evidence 2026-11-20; demo video and `phase1` tag pending) |
+| [T-011](T-011-phase1-submission.md) | Phase 1 submission pack | docs | T-010 | before W9 | Done (real-model evidence, `phase1` tag and narrated demo video, all 2026-11-20; Classroom upload is the team's step) |
 
 ## Phase 2 (front-loaded as far as possible before Week 9)
 

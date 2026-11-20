@@ -1,0 +1,857 @@
+{
+  "job": {
+    "type": "inspect",
+    "url": "http://127.0.0.1:8090/add.html",
+    "allowlist": [
+      "http://127.0.0.1:8090"
+    ],
+    "setup": [
+      {
+        "action": "goto",
+        "url": "http://127.0.0.1:8090/index.html"
+      },
+      {
+        "action": "fill",
+        "locator": {
+          "strategy": "label",
+          "value": "Username"
+        },
+        "value": "tester"
+      },
+      {
+        "action": "fill",
+        "locator": {
+          "strategy": "label",
+          "value": "Password"
+        },
+        "value": "secret123"
+      },
+      {
+        "action": "click",
+        "locator": {
+          "strategy": "test_id",
+          "value": "login-submit"
+        }
+      }
+    ]
+  },
+  "duration_ms": 1783,
+  "blocked_requests": [],
+  "files": {
+    "screenshot": "jobs/a47ae994122b/page.png",
+    "html": "jobs/a47ae994122b/page.html"
+  },
+  "inspection": {
+    "url": "http://127.0.0.1:8090/add.html",
+    "final_url": "http://127.0.0.1:8090/add.html",
+    "title": "BookShelf · Add book",
+    "elements": [
+      {
+        "key": "e1",
+        "tag": "a",
+        "role": "link",
+        "name": "Back to books",
+        "text": "Back to books",
+        "label": "",
+        "attributes": {
+          "href": "books.html"
+        },
+        "dom_path": "body > header > a",
+        "bbox": {
+          "x": 1149,
+          "y": 12,
+          "width": 107,
+          "height": 20
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "BookShelf",
+          "Add a book"
+        ],
+        "form": "",
+        "index_in_form": 0,
+        "source_line": 10,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "link",
+              "name": "Back to books",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"link\", name=\"Back to books\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 5,
+            "spec": {
+              "strategy": "text",
+              "value": "Back to books",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_text(\"Back to books\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "body > header > a",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"body > header > a\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "a",
+          "role": "link",
+          "name": "Back to books",
+          "text": "Back to books",
+          "label": "",
+          "type": "",
+          "id": "",
+          "name_attr": "",
+          "test_id": "",
+          "placeholder": "",
+          "href": "books.html",
+          "form": "",
+          "index_in_form": 0,
+          "nearby_text": [
+            "BookShelf",
+            "Add a book"
+          ],
+          "dom_path": "body > header > a",
+          "center": [
+            1202,
+            22
+          ]
+        }
+      },
+      {
+        "key": "e2",
+        "tag": "input",
+        "role": "textbox",
+        "name": "Title",
+        "text": "",
+        "label": "Title",
+        "attributes": {
+          "id": "title",
+          "name": "title"
+        },
+        "dom_path": "input#title",
+        "bbox": {
+          "x": 247,
+          "y": 173,
+          "width": 786,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Title"
+        ],
+        "form": "book-form",
+        "index_in_form": 0,
+        "source_line": 16,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "textbox",
+              "name": "Title",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"textbox\", name=\"Title\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 2,
+            "spec": {
+              "strategy": "label",
+              "value": "Title",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_label(\"Title\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "#title",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"#title\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input[name=\"title\"]",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input[name=\\\"title\\\"]\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input#title",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input#title\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "input",
+          "role": "textbox",
+          "name": "Title",
+          "text": "",
+          "label": "Title",
+          "type": "",
+          "id": "title",
+          "name_attr": "title",
+          "test_id": "",
+          "placeholder": "",
+          "href": "",
+          "form": "book-form",
+          "index_in_form": 0,
+          "nearby_text": [
+            "Title"
+          ],
+          "dom_path": "input#title",
+          "center": [
+            640,
+            191
+          ]
+        }
+      },
+      {
+        "key": "e3",
+        "tag": "input",
+        "role": "textbox",
+        "name": "Author",
+        "text": "",
+        "label": "Author",
+        "attributes": {
+          "id": "author",
+          "name": "author"
+        },
+        "dom_path": "input#author",
+        "bbox": {
+          "x": 247,
+          "y": 251,
+          "width": 786,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Author"
+        ],
+        "form": "book-form",
+        "index_in_form": 1,
+        "source_line": 21,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "textbox",
+              "name": "Author",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"textbox\", name=\"Author\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 2,
+            "spec": {
+              "strategy": "label",
+              "value": "Author",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_label(\"Author\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "#author",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"#author\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input[name=\"author\"]",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input[name=\\\"author\\\"]\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input#author",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input#author\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "input",
+          "role": "textbox",
+          "name": "Author",
+          "text": "",
+          "label": "Author",
+          "type": "",
+          "id": "author",
+          "name_attr": "author",
+          "test_id": "",
+          "placeholder": "",
+          "href": "",
+          "form": "book-form",
+          "index_in_form": 1,
+          "nearby_text": [
+            "Author"
+          ],
+          "dom_path": "input#author",
+          "center": [
+            640,
+            269
+          ]
+        }
+      },
+      {
+        "key": "e4",
+        "tag": "input",
+        "role": "textbox",
+        "name": "Year published",
+        "text": "",
+        "label": "",
+        "attributes": {
+          "id": "year",
+          "name": "year",
+          "placeholder": "Year published",
+          "inputmode": "numeric"
+        },
+        "dom_path": "input#year",
+        "bbox": {
+          "x": 247,
+          "y": 305,
+          "width": 786,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [],
+        "form": "book-form",
+        "index_in_form": 2,
+        "source_line": 25,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "textbox",
+              "name": "Year published",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"textbox\", name=\"Year published\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 4,
+            "spec": {
+              "strategy": "placeholder",
+              "value": "Year published",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_placeholder(\"Year published\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "#year",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"#year\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input[name=\"year\"]",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input[name=\\\"year\\\"]\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input#year",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input#year\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [
+          "no_visible_label"
+        ],
+        "fingerprint": {
+          "tag": "input",
+          "role": "textbox",
+          "name": "Year published",
+          "text": "",
+          "label": "",
+          "type": "",
+          "id": "year",
+          "name_attr": "year",
+          "test_id": "",
+          "placeholder": "Year published",
+          "href": "",
+          "form": "book-form",
+          "index_in_form": 2,
+          "nearby_text": [],
+          "dom_path": "input#year",
+          "center": [
+            640,
+            323
+          ]
+        }
+      },
+      {
+        "key": "e5",
+        "tag": "select",
+        "role": "combobox",
+        "name": "Genre",
+        "text": "Choose… Fiction Science History Children",
+        "label": "Genre",
+        "attributes": {
+          "id": "genre",
+          "name": "genre"
+        },
+        "dom_path": "select#genre",
+        "bbox": {
+          "x": 247,
+          "y": 383,
+          "width": 786,
+          "height": 37
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Genre"
+        ],
+        "form": "book-form",
+        "index_in_form": 0,
+        "source_line": 30,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "combobox",
+              "name": "Genre",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"combobox\", name=\"Genre\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 2,
+            "spec": {
+              "strategy": "label",
+              "value": "Genre",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_label(\"Genre\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "#genre",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"#genre\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "select[name=\"genre\"]",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"select[name=\\\"genre\\\"]\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "select#genre",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"select#genre\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "select",
+          "role": "combobox",
+          "name": "Genre",
+          "text": "Choose… Fiction Science History Children",
+          "label": "Genre",
+          "type": "",
+          "id": "genre",
+          "name_attr": "genre",
+          "test_id": "",
+          "placeholder": "",
+          "href": "",
+          "form": "book-form",
+          "index_in_form": 0,
+          "nearby_text": [
+            "Genre"
+          ],
+          "dom_path": "select#genre",
+          "center": [
+            640,
+            401
+          ]
+        }
+      },
+      {
+        "key": "e6",
+        "tag": "button",
+        "role": "button",
+        "name": "Save",
+        "text": "Save",
+        "label": "",
+        "attributes": {
+          "type": "submit",
+          "data-testid": "save-book"
+        },
+        "dom_path": "form#book-form > button",
+        "bbox": {
+          "x": 247,
+          "y": 438,
+          "width": 68,
+          "height": 34
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Genre Choose… Fiction Science History Children"
+        ],
+        "form": "book-form",
+        "index_in_form": 0,
+        "source_line": 39,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "button",
+              "name": "Save",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"button\", name=\"Save\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 3,
+            "spec": {
+              "strategy": "test_id",
+              "value": "save-book",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_test_id(\"save-book\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 5,
+            "spec": {
+              "strategy": "text",
+              "value": "Save",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_text(\"Save\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "form#book-form > button",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"form#book-form > button\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "button",
+          "role": "button",
+          "name": "Save",
+          "text": "Save",
+          "label": "",
+          "type": "submit",
+          "id": "",
+          "name_attr": "",
+          "test_id": "save-book",
+          "placeholder": "",
+          "href": "",
+          "form": "book-form",
+          "index_in_form": 0,
+          "nearby_text": [
+            "Genre Choose… Fiction Science History Children"
+          ],
+          "dom_path": "form#book-form > button",
+          "center": [
+            281,
+            455
+          ]
+        }
+      },
+      {
+        "key": "e7",
+        "tag": "a",
+        "role": "link",
+        "name": "Cancel",
+        "text": "Cancel",
+        "label": "",
+        "attributes": {
+          "href": "books.html",
+          "class": "secondary"
+        },
+        "dom_path": "form#book-form > a",
+        "bbox": {
+          "x": 320,
+          "y": 444,
+          "width": 52,
+          "height": 20
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Save",
+          "Genre Choose… Fiction Science History Children"
+        ],
+        "form": "book-form",
+        "index_in_form": 0,
+        "source_line": 40,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "link",
+              "name": "Cancel",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"link\", name=\"Cancel\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 5,
+            "spec": {
+              "strategy": "text",
+              "value": "Cancel",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_text(\"Cancel\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "form#book-form > a",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"form#book-form > a\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "a",
+          "role": "link",
+          "name": "Cancel",
+          "text": "Cancel",
+          "label": "",
+          "type": "",
+          "id": "",
+          "name_attr": "",
+          "test_id": "",
+          "placeholder": "",
+          "href": "books.html",
+          "form": "book-form",
+          "index_in_form": 0,
+          "nearby_text": [
+            "Save",
+            "Genre Choose… Fiction Science History Children"
+          ],
+          "dom_path": "form#book-form > a",
+          "center": [
+            346,
+            454
+          ]
+        }
+      }
+    ],
+    "scope": {
+      "include": [],
+      "exclude": []
+    },
+    "html_sha256": "1f06bf749fe3f46c117d9fa94e9cfef9f7f7b5bd33904510c4ada27f512520dd"
+  }
+}

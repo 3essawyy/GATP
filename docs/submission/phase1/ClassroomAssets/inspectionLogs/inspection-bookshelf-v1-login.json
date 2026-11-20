@@ -1,0 +1,375 @@
+{
+  "job": {
+    "type": "inspect",
+    "url": "http://127.0.0.1:8090/index.html",
+    "allowlist": [
+      "http://127.0.0.1:8090"
+    ],
+    "setup": []
+  },
+  "duration_ms": 1327,
+  "blocked_requests": [],
+  "files": {
+    "screenshot": "jobs/8c78db5bb476/page.png",
+    "html": "jobs/8c78db5bb476/page.html"
+  },
+  "inspection": {
+    "url": "http://127.0.0.1:8090/index.html",
+    "final_url": "http://127.0.0.1:8090/index.html",
+    "title": "BookShelf · Sign in",
+    "elements": [
+      {
+        "key": "e1",
+        "tag": "input",
+        "role": "textbox",
+        "name": "Username",
+        "text": "",
+        "label": "Username",
+        "attributes": {
+          "id": "username",
+          "name": "username",
+          "autocomplete": "username"
+        },
+        "dom_path": "input#username",
+        "bbox": {
+          "x": 247,
+          "y": 173,
+          "width": 786,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Username"
+        ],
+        "form": "login-form",
+        "index_in_form": 0,
+        "source_line": 16,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "textbox",
+              "name": "Username",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"textbox\", name=\"Username\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 2,
+            "spec": {
+              "strategy": "label",
+              "value": "Username",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_label(\"Username\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "#username",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"#username\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input[name=\"username\"]",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input[name=\\\"username\\\"]\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input#username",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input#username\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "input",
+          "role": "textbox",
+          "name": "Username",
+          "text": "",
+          "label": "Username",
+          "type": "",
+          "id": "username",
+          "name_attr": "username",
+          "test_id": "",
+          "placeholder": "",
+          "href": "",
+          "form": "login-form",
+          "index_in_form": 0,
+          "nearby_text": [
+            "Username"
+          ],
+          "dom_path": "input#username",
+          "center": [
+            640,
+            191
+          ]
+        }
+      },
+      {
+        "key": "e2",
+        "tag": "input",
+        "role": "",
+        "name": "Password",
+        "text": "",
+        "label": "Password",
+        "attributes": {
+          "id": "password",
+          "name": "password",
+          "type": "password",
+          "autocomplete": "current-password"
+        },
+        "dom_path": "input#password",
+        "bbox": {
+          "x": 247,
+          "y": 247,
+          "width": 786,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Password"
+        ],
+        "form": "login-form",
+        "index_in_form": 0,
+        "source_line": 20,
+        "locators": [
+          {
+            "rank": 2,
+            "spec": {
+              "strategy": "label",
+              "value": "Password",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_label(\"Password\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "#password",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"#password\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input[name=\"password\"]",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input[name=\\\"password\\\"]\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "input#password",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"input#password\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "input",
+          "role": "",
+          "name": "Password",
+          "text": "",
+          "label": "Password",
+          "type": "password",
+          "id": "password",
+          "name_attr": "password",
+          "test_id": "",
+          "placeholder": "",
+          "href": "",
+          "form": "login-form",
+          "index_in_form": 0,
+          "nearby_text": [
+            "Password"
+          ],
+          "dom_path": "input#password",
+          "center": [
+            640,
+            265
+          ]
+        }
+      },
+      {
+        "key": "e3",
+        "tag": "button",
+        "role": "button",
+        "name": "Sign in",
+        "text": "Sign in",
+        "label": "",
+        "attributes": {
+          "type": "submit",
+          "data-testid": "login-submit"
+        },
+        "dom_path": "form#login-form > button",
+        "bbox": {
+          "x": 247,
+          "y": 298,
+          "width": 81,
+          "height": 34
+        },
+        "visible": true,
+        "enabled": true,
+        "nearby_text": [
+          "Password"
+        ],
+        "form": "login-form",
+        "index_in_form": 0,
+        "source_line": 23,
+        "locators": [
+          {
+            "rank": 1,
+            "spec": {
+              "strategy": "role",
+              "value": "button",
+              "name": "Sign in",
+              "exact": true
+            },
+            "expression": "page.get_by_role(\"button\", name=\"Sign in\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 3,
+            "spec": {
+              "strategy": "test_id",
+              "value": "login-submit",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_test_id(\"login-submit\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 5,
+            "spec": {
+              "strategy": "text",
+              "value": "Sign in",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.get_by_text(\"Sign in\", exact=True)",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": false
+          },
+          {
+            "rank": 6,
+            "spec": {
+              "strategy": "css",
+              "value": "form#login-form > button",
+              "name": null,
+              "exact": true
+            },
+            "expression": "page.locator(\"form#login-form > button\")",
+            "count": 1,
+            "targets_element": true,
+            "usable": true,
+            "positional": true
+          }
+        ],
+        "default_locator": 0,
+        "flags": [],
+        "fingerprint": {
+          "tag": "button",
+          "role": "button",
+          "name": "Sign in",
+          "text": "Sign in",
+          "label": "",
+          "type": "submit",
+          "id": "",
+          "name_attr": "",
+          "test_id": "login-submit",
+          "placeholder": "",
+          "href": "",
+          "form": "login-form",
+          "index_in_form": 0,
+          "nearby_text": [
+            "Password"
+          ],
+          "dom_path": "form#login-form > button",
+          "center": [
+            287,
+            315
+          ]
+        }
+      }
+    ],
+    "scope": {
+      "include": [],
+      "exclude": []
+    },
+    "html_sha256": "c0b5fab383b5f51f172712f595d2d6c469d70a8cf9d9fe135b77913a553c858d"
+  }
+}

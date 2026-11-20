@@ -1,6 +1,6 @@
 # T-011: Phase 1 submission pack
 
-- **Status:** Done. Tag `phase1` set 2026-11-20 on `ef03bd6`; the real Gemini run is done (2026-11-20); the narrated demo video is the only item left. (`phase1-rc` was never pushed: see S004.)
+- **Status:** Done. Tag `phase1` set 2026-11-20 on `ef03bd6`; the real Gemini run is done (2026-11-20); the narrated demo video was recorded 2026-11-20 (S006). What goes to Classroom is the curated pack in `docs/submission/phase1/ClassroomAssets/`. (`phase1-rc` was never pushed: see S004.)
 - **Phase:** P1
 - **Target:** before W9
 - **Modules:** docs (+ small UI fix, `.env.example`)
@@ -29,9 +29,9 @@ Everything the Phase 1 submission requires, verified.
 
 ## Remaining before the real submission (team)
 1. ~~Add a Gemini key, run `llm-check`, re-export usage evidence with the real model.~~ **Done 2026-11-20.** Command: `GATP_LLM_PRIMARY=gemini uv run poe ui-walkthrough --phase1-only --out walkthrough` (the harness used to force `fake`; it now honors `GATP_LLM_PRIMARY`, default `fake`). Evidence in `docs/submission/phase1/`.
-2. Record the narrated live demo following [SG-004](../SystemGuides/SG-004-demo-script.md).
+2. ~~Record the narrated live demo following [SG-004](../SystemGuides/SG-004-demo-script.md).~~ **Done 2026-11-20** (`Phase1-Demo.mp4`, 151 MB, in `ClassroomAssets/`, not committed; upload to Drive and share the link).
 3. Fill in the component owners' names and rehearse [DEFENSE.md](../submission/phase1/DEFENSE.md).
-4. Tag `phase1` on the submitted commit.
+4. ~~Tag `phase1` on the submitted commit.~~ Done (tag `phase1`). The hand-in source zip is **code only** (no `docs/`, `scripts/`, `CLAUDE.md`, `.github/`, no task/ADR/test-case identifiers in comments, one self-contained `README.md`), built from the working tree after the 422 fix, so it is newer than the tag. Verified on the cleaned copy: 142 tests, mypy strict, ruff, eslint, prettier and the production build.
 
 ## Explain it (code-defense prep)
 **What.** The submission is the repository plus `docs/submission/phase1/`:
