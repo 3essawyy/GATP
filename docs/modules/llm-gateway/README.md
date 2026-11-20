@@ -44,10 +44,10 @@ Page-derived text is passed only inside delimited data fields (JSON), with a sys
 | `GATP_LLM_PRIMARY` | `gemini` | Primary provider (`gemini`/`ollama`/`fake`) |
 | `GATP_LLM_FALLBACK` | `ollama` | Fallback provider (empty = none) |
 | `GATP_GEMINI_API_KEY` | — | From `.env` |
-| `GATP_GEMINI_MODEL` | `gemini-2.5-flash` | Model ID (verify with `poe llm-check`) |
+| `GATP_GEMINI_MODEL` | `gemini-3.5-flash` | Model ID (verify with `poe llm-check`) |
 | `GATP_OLLAMA_HOST` / `GATP_OLLAMA_MODEL` | `http://127.0.0.1:11434` / `qwen2.5-coder:3b` | Local model |
 | `GATP_LLM_CACHE` | `true` | Reuse identical calls (marked `reused`) |
-| `GATP_LLM_TIMEOUT_S`, `GATP_LLM_MAX_RETRIES`, `GATP_LLM_BACKOFF_S` | 60, 2, 2 | Timeouts and backoff |
+| `GATP_LLM_TIMEOUT_S`, `GATP_LLM_MAX_RETRIES`, `GATP_LLM_BACKOFF_S` | 120, 2, 2 | Timeouts and backoff |
 
 Full guide: [SG-003](../../SystemGuides/SG-003-models.md).
 
