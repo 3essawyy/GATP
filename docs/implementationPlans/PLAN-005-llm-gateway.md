@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Implement ADR-003 as described in [ADR-016](../decisions/ADR-016-llm-gateway-design.md): httpx providers (Gemini, Ollama, fake) and one `complete_structured` call that handles templates, the cache, backoff, fallback, validation with one repair retry, and logging of every attempt through a new `LlmCallRepository` in the store. A migration (`0002`) adds `template_version` to `llm_calls`.
+Implement ADR-003 as described in [ADR-016](../architectureDecisionRecords/ADR-016-llm-gateway-design.md): httpx providers (Gemini, Ollama, fake) and one `complete_structured` call that handles templates, the cache, backoff, fallback, validation with one repair retry, and logging of every attempt through a new `LlmCallRepository` in the store. A migration (`0002`) adds `template_version` to `llm_calls`.
 
 ## Steps
 1. Settings `GATP_LLM_*`, `GATP_GEMINI_*`, `GATP_OLLAMA_*`; `.env.example`.

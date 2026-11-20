@@ -7,7 +7,7 @@
 - **Requirements:** REQ-G8, REQ-P2-5
 - **Depends on:** T-002
 - **Plan:** [PLAN-004](../implementationPlans/PLAN-004-store-core.md)
-- **ADRs:** [ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md)
+- **ADRs:** [ADR-015](../architectureDecisionRecords/ADR-015-db-access-sqlalchemy-alembic.md)
 - **TCs:** TC-104 (Pass), TC-211 (store part)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 - **Branch / PR:** `claude/serene-johnson-xtbl4s` → squash-merged to `main`

@@ -10,7 +10,7 @@ GATP helps a human tester inspect a webpage, design test cases, generate Playwri
 | Phase 2 — Complete supervised workflow | Week 13 | 20 | In progress (T-012 to T-016 done; repairs, history UI, usage panel remain) |
 | Bonus — Creative work | Week 13 | +1 | Deferred (decide after P1 feedback) |
 
-## Stack (see [ADRs](docs/decisions/README.md))
+## Stack (see [ADRs](docs/architectureDecisionRecords/README.md))
 
 - **Backend:** Python 3.12 (uv), FastAPI (JSON API), SQLite + artifacts folder; ruff + mypy strict + pytest
 - **Frontend:** React + Vite + TypeScript, Mantine, TanStack Query (thin UI, client generated from OpenAPI)
@@ -29,7 +29,7 @@ All project knowledge lives in [`docs/`](docs/README.md). Start there.
 
 ## Quick start
 
-Runs on **Linux** (Windows users: WSL2, [ADR-014](docs/decisions/ADR-014-linux-only-platform.md)). Needs **uv** and **Node.js 22+**. Full guide: [SG-001](docs/SystemGuides/SG-001-setup-and-run.md).
+Runs on **Linux** (Windows users: WSL2, [ADR-014](docs/architectureDecisionRecords/ADR-014-linux-only-platform.md)). Needs **uv** and **Node.js 22+**. Full guide: [SG-001](docs/SystemGuides/SG-001-setup-and-run.md).
 
 ```bash
 uv sync

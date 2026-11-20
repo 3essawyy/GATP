@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Implement [ADR-022](../decisions/ADR-022-approved-execution-sandbox.md): G3 approves an exact subject, the runner's `run_tests` job runs pytest in a bubblewrap sandbox with an allowlist plugin, results come from junit and screenshots, and a Run page shows them. Verify on the real runner first with probe tests (secrets hidden, repo read-only, external blocked, a deliberate failure).
+Implement [ADR-022](../architectureDecisionRecords/ADR-022-approved-execution-sandbox.md): G3 approves an exact subject, the runner's `run_tests` job runs pytest in a bubblewrap sandbox with an allowlist plugin, results come from junit and screenshots, and a Run page shows them. Verify on the real runner first with probe tests (secrets hidden, repo read-only, external blocked, a deliberate failure).
 
 ## Steps
 1. Runner: `RunTestsJob`, `gatp_run_plugin.py`, `execute.py` (bwrap prefix, pytest argv, junit + screenshot parsing), executor wiring, `GATP_RUNNER_ISOLATION`.

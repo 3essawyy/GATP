@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-[ADR-024](../decisions/ADR-024-rescan-matching-rules.md): rescan all approved pages, match deterministically (`maintainer/match.py`), store a rescan with per-page change sets, and show the flags with per-field evidence on a Maintain page. No repairs (T-017).
+[ADR-024](../architectureDecisionRecords/ADR-024-rescan-matching-rules.md): rescan all approved pages, match deterministically (`maintainer/match.py`), store a rescan with per-page change sets, and show the flags with per-field evidence on a Maintain page. No repairs (T-017).
 
 ## Steps
 1. `maintainer/match.py` (`El`, `score`, `match_page`, `classify`). Tuned against real v1/v2 inspections (scratch experiment: FXC-1 0.85 clear; FXC-2 0.81/0.69 split → ambiguous).

@@ -44,16 +44,16 @@ Abdo approved a "grill now, then run" mode: Claude builds T-003…T-021 in order
 
 ## Decisions (with ADR links)
 - T-003: none beyond PLAN-003.
-- T-004: [ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md) SQLAlchemy 2 + Alembic; immutability enforced twice.
-- T-005: [ADR-016](../decisions/ADR-016-llm-gateway-design.md) gateway design; default `gemini-2.5-flash` (limits unverified: Google docs host blocked in the sandbox).
-- T-006: [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md) runner transport on a private Unix socket.
-- T-007: [ADR-018](../decisions/ADR-018-inspection-setup-and-usability.md) setup steps; usable = unique and targets the element; positional CSS never default.
-- T-008: [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md) approvals bound to immutable versions; workflow computed.
-- T-012: [ADR-020](../decisions/ADR-020-test-plan-contract.md) plan contract, observable regions, offline examples.
-- T-013: [ADR-021](../decisions/ADR-021-deterministic-codegen.md) deterministic codegen, version-bound reports, setup steps in page objects, Monaco dropped.
-- T-014: [ADR-022](../decisions/ADR-022-approved-execution-sandbox.md) G3 subject, one run per approval, bubblewrap, allowlist plugin.
-- T-015: [ADR-023](../decisions/ADR-023-feedback-and-weakening-guard.md) run feedback → revision; weakening guard against the approved version.
-- T-016: [ADR-024](../decisions/ADR-024-rescan-matching-rules.md) matching rules incl. the "split" rule; read-only setup retry; rescans/change sets write-once.
+- T-004: [ADR-015](../architectureDecisionRecords/ADR-015-db-access-sqlalchemy-alembic.md) SQLAlchemy 2 + Alembic; immutability enforced twice.
+- T-005: [ADR-016](../architectureDecisionRecords/ADR-016-llm-gateway-design.md) gateway design; default `gemini-2.5-flash` (limits unverified: Google docs host blocked in the sandbox).
+- T-006: [ADR-017](../architectureDecisionRecords/ADR-017-runner-unix-socket-jobs.md) runner transport on a private Unix socket.
+- T-007: [ADR-018](../architectureDecisionRecords/ADR-018-inspection-setup-and-usability.md) setup steps; usable = unique and targets the element; positional CSS never default.
+- T-008: [ADR-019](../architectureDecisionRecords/ADR-019-gates-on-versions-computed-workflow.md) approvals bound to immutable versions; workflow computed.
+- T-012: [ADR-020](../architectureDecisionRecords/ADR-020-test-plan-contract.md) plan contract, observable regions, offline examples.
+- T-013: [ADR-021](../architectureDecisionRecords/ADR-021-deterministic-codegen.md) deterministic codegen, version-bound reports, setup steps in page objects, Monaco dropped.
+- T-014: [ADR-022](../architectureDecisionRecords/ADR-022-approved-execution-sandbox.md) G3 subject, one run per approval, bubblewrap, allowlist plugin.
+- T-015: [ADR-023](../architectureDecisionRecords/ADR-023-feedback-and-weakening-guard.md) run feedback → revision; weakening guard against the approved version.
+- T-016: [ADR-024](../architectureDecisionRecords/ADR-024-rescan-matching-rules.md) matching rules incl. the "split" rule; read-only setup retry; rescans/change sets write-once.
 
 ## Open items / blockers
 - Waiting on Abdo to add `GATP_GEMINI_API_KEY` to the cloud environment; it is only visible to a **new** session. Then run `uv run poe llm-check` and fill SG-003 §6 (TC-105 live part, TC-111).

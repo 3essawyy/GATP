@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-[ADR-023](../decisions/ADR-023-feedback-and-weakening-guard.md): run failures (with failing expectation ids) feed a model revision as untrusted data. A guard compares every new plan / edited test file with its last approved version and raises `weakening` clarifications (Accept / Restore) that block the gate. The rerun reuses G1 → generate → validate → G2 → new G3.
+[ADR-023](../architectureDecisionRecords/ADR-023-feedback-and-weakening-guard.md): run failures (with failing expectation ids) feed a model revision as untrusted data. A guard compares every new plan / edited test file with its last approved version and raises `weakening` clarifications (Accept / Restore) that block the gate. The rerun reuses G1 → generate → validate → G2 → new G3.
 
 ## Steps
 1. `test_designer/guard.py` (plan findings + restore), `codegen/guard.py` (AST per test function).

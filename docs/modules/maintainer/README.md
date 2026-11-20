@@ -18,7 +18,7 @@ On a user-requested rescan, compares the stored snapshot with the new one, flags
 6. LLM writes a plain-language explanation only.
 7. On G4 approval: new page-object version (`author=repair`), list affected tests for G3 rerun.
 
-## Implemented (T-016, [ADR-024](../../decisions/ADR-024-rescan-matching-rules.md))
+## Implemented (T-016, [ADR-024](../../architectureDecisionRecords/ADR-024-rescan-matching-rules.md))
 | File | Contents |
 |---|---|
 | `maintainer/match.py` | `El`, `WEIGHTS`, `field_similarity`, `score` (with breakdown), `match_page` (unchanged by locator, then scoring against appeared elements), `classify` (clear: ≥ 0.70, margin ≥ 0.15, no split; ambiguous ≥ 0.45; else missing) |

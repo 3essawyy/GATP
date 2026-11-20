@@ -30,7 +30,7 @@ The orchestrator. Exposes the JSON/SSE API, owns the workflow state machine, enf
 | Gates | `POST/GET /projects/{id}/approvals`, `GET /projects/{id}/clarifications`, `POST /clarifications/{id}/answer`, `GET /projects/{id}/workflow` | See rules below |
 | Events | `GET /projects/{id}/events` (SSE) | `inspection_started/finished/failed`, `scope_saved`, `artifact_changed`, `approved`, `clarification_answered`, … |
 
-## Gate rules ([ADR-019](../../decisions/ADR-019-gates-on-versions-computed-workflow.md))
+## Gate rules ([ADR-019](../../architectureDecisionRecords/ADR-019-gates-on-versions-computed-workflow.md))
 - **What gets approved:** content behind a gate is a versioned artifact. G0 → `scope`, G1 → `test_plan`, G2 → `page_object`/`test_file`, G5 → any version being restored. G3 (run) and G4 (repair) approvals carry a `subject` (which tests/versions, which repair) and arrive in T-014/T-017.
 - **An approval names an exact `artifact_version_id`.** It's accepted only if:
   - The gate fits the artifact kind.
@@ -41,7 +41,7 @@ The orchestrator. Exposes the JSON/SSE API, owns the workflow state machine, enf
 - **Gated actions check:** they call `require_approval(services, gate, version)`, so actions downstream of a gate check the exact version they are about to use.
 - **Clarifications** (raised by feature modules) block their step (`inspect`, `scope`, `plan`, `code`, `run`, `maintain`). An answer records the tester's name and time.
 
-## Weakening clarifications (T-015, [ADR-023](../../decisions/ADR-023-feedback-and-weakening-guard.md))
+## Weakening clarifications (T-015, [ADR-023](../../architectureDecisionRecords/ADR-023-feedback-and-weakening-guard.md))
 - **Where they come from:** `guard_sync.py` keeps one open `weakening` clarification per guard finding. The baseline is the last approved version (plan: G1; `tests/` files: G2).
 - **When they are synced:**
   - after a plan store or answer (`plan_service`);

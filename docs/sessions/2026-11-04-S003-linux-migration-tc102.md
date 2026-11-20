@@ -4,7 +4,7 @@
 - **Branches / PRs:** `claude/serene-johnson-xtbl4s` → PR to `main` (squash)
 
 ## Done
-- Abdo decided the team **migrates to Linux** (Windows users → WSL2), recorded as [ADR-014](../decisions/ADR-014-linux-only-platform.md). ADR-012 is marked as partially superseded (platform assumption only).
+- Abdo decided the team **migrates to Linux** (Windows users → WSL2), recorded as [ADR-014](../architectureDecisionRecords/ADR-014-linux-only-platform.md). ADR-012 is marked as partially superseded (platform assumption only).
 - Rewrote [SG-001](../SystemGuides/SG-001-setup-and-run.md) for Linux:
   - apt base packages.
   - uv via the official script *or* pipx.

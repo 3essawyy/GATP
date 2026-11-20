@@ -13,7 +13,7 @@ Team of 4. Maintainability of project assets and continuity between chat session
 - Git: one branch per task (`<type>/T-NNN-slug`) → PR → **squash merge** to protected `main`; tags `phase1`, `phase2`.
 - Work is owned **by component** (9 modules, see [modules/README](../modules/README.md)). Owners prepare for the defense using the task docs' **Explain it** sections.
 - Docs live **in the repo under `/docs`**, versioned with code.
-- Folders: `architecture/`, `modules/<name>/`, `decisions/`, `implementationPlans/`, `tasks/`, `TCs/`, `SystemGuides/`, `RefrenceDocs/`, `sessions/`. The old project's `HOs/`, `PRs/`, `ReviewLearnings/` were deliberately dropped; HLD + module + decision folders added.
+- Folders: `architecture/`, `modules/<name>/`, `architectureDecisionRecords/`, `implementationPlans/`, `tasks/`, `TCs/`, `SystemGuides/`, `RefrenceDocs/`, `sessions/`. The old project's `HOs/`, `PRs/`, `ReviewLearnings/` were deliberately dropped; HLD + module + decision folders added.
 - `docs/tasks/` markdown is the **single source of truth** for task status.
 - Files named by ID (`T-NNN`, `PLAN-NNN`, `ADR-NNN`, `TC-NNN`, `SG-NNN`; sessions date-prefixed). Every folder has a README index.
 - Full Definition of Done applies to every task (see [CLAUDE.md](../../CLAUDE.md)).

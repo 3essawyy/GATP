@@ -7,5 +7,5 @@
 
 Rules:
 - The HLD describes the system as it **is** on `main`. Planned-but-unbuilt parts are marked *(planned)*.
-- Any change to components, flows or gates needs a matching ADR in [../decisions/](../decisions/README.md).
+- Any change to components, flows or gates needs a matching ADR in [../architectureDecisionRecords/](../architectureDecisionRecords/README.md).
 - The Phase 1 design-document deliverable is produced from this HLD (task T-011).

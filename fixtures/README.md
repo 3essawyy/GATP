@@ -1,6 +1,6 @@
 # Fixtures: BookShelf test website (v1 / v2)
 
-Our own small website to develop and demo GATP against until the instructor's site is available ([ADR-009](../docs/decisions/ADR-009-testing-strategy-and-fixture-site.md), [T-003](../docs/tasks/T-003-fixture-site.md)). Static HTML + vanilla JS; data lives in the browser's `localStorage` (5 seed books), so every reload of a fresh browser context starts clean.
+Our own small website to develop and demo GATP against until the instructor's site is available ([ADR-009](../docs/architectureDecisionRecords/ADR-009-testing-strategy-and-fixture-site.md), [T-003](../docs/tasks/T-003-fixture-site.md)). Static HTML + vanilla JS; data lives in the browser's `localStorage` (5 seed books), so every reload of a fresh browser context starts clean.
 
 ```bash
 uv run poe fixtures v1

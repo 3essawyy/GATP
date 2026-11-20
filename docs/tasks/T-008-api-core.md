@@ -7,7 +7,7 @@
 - **Requirements:** REQ-G2, REQ-G5, REQ-P1-3
 - **Depends on:** T-004, T-007
 - **Plan:** [PLAN-008](../implementationPlans/PLAN-008-api-core.md)
-- **ADRs:** [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md)
+- **ADRs:** [ADR-019](../architectureDecisionRecords/ADR-019-gates-on-versions-computed-workflow.md)
 - **TCs:** TC-109 (Pass), TC-110 (stored part)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 - **Branch / PR:** `claude/serene-johnson-xtbl4s` → squash-merged to `main`

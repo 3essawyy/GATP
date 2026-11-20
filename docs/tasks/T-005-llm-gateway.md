@@ -7,7 +7,7 @@
 - **Requirements:** REQ-G3, REQ-P1-4, REQ-Q7, REQ-Q8–Q10
 - **Depends on:** T-004
 - **Plan:** [PLAN-005](../implementationPlans/PLAN-005-llm-gateway.md)
-- **ADRs:** [ADR-016](../decisions/ADR-016-llm-gateway-design.md)
+- **ADRs:** [ADR-016](../architectureDecisionRecords/ADR-016-llm-gateway-design.md)
 - **Guides:** [SG-003](../SystemGuides/SG-003-models.md)
 - **TCs:** TC-105 (automated Pass; live part pending)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)

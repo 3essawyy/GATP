@@ -1,6 +1,6 @@
 # TC-102 run log: clean setup from SG-001
 
-Definition: [phase1.md § TC-102](phase1.md#tc-102--clean-setup-from-docs). Guide under test: [SG-001](../SystemGuides/SG-001-setup-and-run.md). Platform: [ADR-014](../decisions/ADR-014-linux-only-platform.md).
+Definition: [phase1.md § TC-102](phase1.md#tc-102--clean-setup-from-docs). Guide under test: [SG-001](../SystemGuides/SG-001-setup-and-run.md). Platform: [ADR-014](../architectureDecisionRecords/ADR-014-linux-only-platform.md).
 
 ## Run 1: 2026-11-04 (S003, after T-002)
 

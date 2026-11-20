@@ -7,7 +7,7 @@
 - **Requirements:** REQ-P2-3, REQ-P2-D1, REQ-Q3
 - **Depends on:** T-014
 - **Plan:** [PLAN-015](../implementationPlans/PLAN-015-feedback-rerun.md)
-- **ADRs:** [ADR-023](../decisions/ADR-023-feedback-and-weakening-guard.md)
+- **ADRs:** [ADR-023](../architectureDecisionRecords/ADR-023-feedback-and-weakening-guard.md)
 - **TCs:** TC-207 Pass
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 

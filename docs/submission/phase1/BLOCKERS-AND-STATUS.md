@@ -24,7 +24,7 @@ Critical path: B3, the narrated demo (B1, B2 and B6 are done). B4 → B5 can run
 
 | Rubric item | Pts | Status | Evidence |
 |---|---|---|---|
-| Architecture and system design | 4 | Done | [HLD](../../architecture/HLD.md), [system diagram](../../architecture/GATP-system-design.drawio), [design PDF](GATP-phase1-design.pdf), [ADRs](../../decisions/README.md), TC-101 Pass |
+| Architecture and system design | 4 | Done | [HLD](../../architecture/HLD.md), [system diagram](../../architecture/GATP-system-design.drawio), [design PDF](GATP-phase1-design.pdf), [ADRs](../../architectureDecisionRecords/README.md), TC-101 Pass |
 | Working page inspection | 3 | Done | Visible Chromium in a separate runner; elements, attributes, ranked and live-verified locators; TC-106 to TC-108 Pass; [samples](../../samples/) |
 | Basic human interaction | 2 | Done | Goal, element selection, region include/exclude, G0 scope approval; TC-109, TC-110 Pass |
 | Feasibility evidence | 1 | Done | Real Gemini call logged with model/version, provider-reported tokens and latency; TC-111 Pass ([usage-evidence.json](usage-evidence.json)) |
@@ -45,4 +45,4 @@ T-001 docs scaffold, T-002 repo skeleton and CI, T-003 fixture site, T-004 store
 SG-001 health badge missing on the start page (fixed, walkthrough asserts it); 4 undocumented settings in `.env.example` (fixed, test enforces it); PDF diagram split across three pages (fixed); secret scan clean.
 
 ### Beyond Phase 1 scope
-Per [ADR-010](../../decisions/ADR-010-phase1-scope-frontload.md), Phase 2 work was front-loaded: T-012 to T-015 are Done, T-016 is in review, T-017 to T-021 are Todo, and T-022 (bonus) is blocked ([ADR-011](../../decisions/ADR-011-bonus-deferred.md)). None of it is graded in Phase 1.
+Per [ADR-010](../../architectureDecisionRecords/ADR-010-phase1-scope-frontload.md), Phase 2 work was front-loaded: T-012 to T-015 are Done, T-016 is in review, T-017 to T-021 are Todo, and T-022 (bonus) is blocked ([ADR-011](../../architectureDecisionRecords/ADR-011-bonus-deferred.md)). None of it is graded in Phase 1.

@@ -30,5 +30,5 @@ Turn the S001 design interview into a maintained documentation system so any fut
 ## Explain it (code-defense prep)
 - **What changed:** Created `/docs` with 9 folders, CLAUDE.md operating manual, and moved the brief to `docs/RefrenceDocs/`.
 - **Why this design:** Docs in-repo stay versioned with code; ID-based cross-links give traceability from brief → requirement → task → test case.
-- **How it works:** Start at `docs/README.md`; status lives in `docs/tasks/README.md`; decisions in `docs/decisions/`.
+- **How it works:** Start at `docs/README.md`; status lives in `docs/tasks/README.md`; decisions in `docs/architectureDecisionRecords/`.
 - **Likely examiner questions:** "How do you know every requirement is covered?" → `docs/TCs/README.md` traceability matrix.

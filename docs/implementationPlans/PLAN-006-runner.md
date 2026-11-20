@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Replace the T-002 stub with the real runner described in [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md): typed jobs → `JobExecutor` (one worker thread, sandbox per job, allowlist routing, headed Chromium) → `JobResult`, served on a private Unix socket. Add `LocatorSpec` in the inspector, since the runner, inspector and codegen all share it.
+Replace the T-002 stub with the real runner described in [ADR-017](../architectureDecisionRecords/ADR-017-runner-unix-socket-jobs.md): typed jobs → `JobExecutor` (one worker thread, sandbox per job, allowlist routing, headed Chromium) → `JobResult`, served on a private Unix socket. Add `LocatorSpec` in the inspector, since the runner, inspector and codegen all share it.
 
 ## Steps
 1. Settings `GATP_RUNNER_*`.

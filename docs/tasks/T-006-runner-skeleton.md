@@ -7,7 +7,7 @@
 - **Requirements:** REQ-P1-2, REQ-Q5, REQ-Q6
 - **Depends on:** T-002
 - **Plan:** [PLAN-006](../implementationPlans/PLAN-006-runner.md)
-- **ADRs:** [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md)
+- **ADRs:** [ADR-017](../architectureDecisionRecords/ADR-017-runner-unix-socket-jobs.md)
 - **TCs:** TC-106 (Pass)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 - **Branch / PR:** `claude/serene-johnson-xtbl4s` → squash-merged to `main`
