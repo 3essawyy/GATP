@@ -60,7 +60,9 @@ def bwrap_prefix(sandbox: Path, hide: tuple[Path, ...]) -> list[str]:
         args += ["--ro-bind", str(x11), str(x11)]
     home = Path.home()
     for name in SECRET_HOME_DIRS:
-        target = home / name
+        # Resolve symlinks (e.g. WSL's ~/.aws -> /mnt/c/Users/<you>/.aws): bwrap cannot mount over
+        # a symlink, and the real directory is what has to be hidden.
+        target = (home / name).resolve()
         if target.is_dir():
             args += ["--tmpfs", str(target)]
         elif target.exists():
