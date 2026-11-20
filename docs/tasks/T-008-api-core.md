@@ -38,6 +38,9 @@ The orchestrator backbone: endpoints, state machine, approval and clarification 
 
 The smoke run is now part of CI.
 
+### Follow-up (2026-11-20, S006)
+`PUT /pages/{id}/setup` raised a plain `ValueError` (an HTTP 500) when a `goto` step had a relative URL such as `index.html`, because the origin check parsed it before validating it. It now returns **422** with `setup url 'index.html' must be a full http(s) URL, e.g. http://127.0.0.1:8090/index.html`. Regression test: `test_setup_goto_not_a_full_http_url_is_422` (`index.html`, `/index.html`, `ftp://…`, `javascript:…`). Found while recording the Phase 1 demo; SG-004 step 6 had also used the relative form.
+
 ## Explain it (code-defense prep)
 
 **What.** The API is GATP's orchestrator. It covers:

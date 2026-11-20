@@ -2,6 +2,7 @@
 
 from typing import Any
 
+import pytest
 from fastapi.testclient import TestClient
 
 from .conftest import InProcessRunner
@@ -94,6 +95,18 @@ def test_inspect_uses_page_setup_steps(client: TestClient, site_v1: str) -> None
     assert snap["title"] == "BookShelf · Add book"
     off = [{"action": "goto", "url": "http://evil.test/"}]
     assert client.put(f"/api/pages/{page['id']}/setup", json={"steps": off}).status_code == 422
+
+
+@pytest.mark.parametrize(
+    "bad", ["index.html", "/index.html", "ftp://host/x", "javascript:alert(1)"]
+)
+def test_setup_goto_not_a_full_http_url_is_422(client: TestClient, site_v1: str, bad: str) -> None:
+    pid = make_project(client, site_v1)["id"]
+    page = client.post(f"/api/projects/{pid}/pages", json={"url": f"{site_v1}/add.html"}).json()
+    steps = [{"action": "goto", "url": bad}]
+    res = client.put(f"/api/pages/{page['id']}/setup", json={"steps": steps})
+    assert res.status_code == 422, res.text
+    assert "full http(s) URL" in res.text
 
 
 def test_runner_down_is_503(client: TestClient, site_v1: str, runner: InProcessRunner) -> None:
