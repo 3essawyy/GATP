@@ -299,6 +299,7 @@ def make_provider(name: str, settings: Settings) -> Provider:
             settings.gemini_model,
             settings.gemini_base_url,
             settings.llm_timeout_s,
+            thinking_level=settings.gemini_thinking_level,
         )
     if name == "ollama":
         return OllamaProvider(settings.ollama_host, settings.ollama_model, settings.llm_timeout_s)
