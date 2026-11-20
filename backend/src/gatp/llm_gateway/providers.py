@@ -89,16 +89,18 @@ class GeminiProvider:
         base_url: str = "https://generativelanguage.googleapis.com/v1beta",
         timeout_s: float = 60.0,
         client: httpx.Client | None = None,
+        thinking_level: str = "",
     ) -> None:
         self.api_key = api_key
         self.model = model
+        self.thinking_level = thinking_level
         self.base_url = base_url.rstrip("/")
         self.client = client or httpx.Client(timeout=timeout_s)
 
     def generate(self, request: ProviderRequest) -> ProviderResponse:
         if not self.api_key:
             raise ProviderUnavailableError("gemini: GATP_GEMINI_API_KEY is not set")
-        body = {
+        body: dict[str, Any] = {
             "systemInstruction": {"parts": [{"text": request.system}]},
             "contents": [{"role": "user", "parts": [{"text": request.user}]}],
             "generationConfig": {
@@ -107,6 +109,8 @@ class GeminiProvider:
                 "responseJsonSchema": request.json_schema,
             },
         }
+        if self.thinking_level:  # fewer hidden reasoning tokens = cheaper, faster
+            body["generationConfig"]["thinkingConfig"] = {"thinkingLevel": self.thinking_level}
         try:
             resp = self.client.post(
                 f"{self.base_url}/models/{self.model}:generateContent",
