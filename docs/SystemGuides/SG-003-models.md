@@ -1,7 +1,7 @@
 # SG-003: Model configuration, resources and rate limits
 
 - **Audience:** tester | developer | examiner
-- **Last verified:** 2026-11-04 (configuration, fake provider, Ollama/Gemini wire format via mocked tests). **Real Gemini/Ollama calls: pending.** The first run of `uv run poe llm-check` with a key fills the table at the end.
+- **Last verified:** 2026-11-20 (real Gemini call via `llm-check`, see §6). Real Ollama call: pending (team Linux machine).
 - **Design:** [ADR-003](../decisions/ADR-003-llm-providers.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md), [llm-gateway LLD](../modules/llm-gateway/README.md)
 
 GATP uses only free or local models. Gemini (free tier) is the primary, and a local Ollama model is the fallback. Nothing paid is required.
@@ -16,7 +16,7 @@ GATP uses only free or local models. Gemini (free tier) is the primary, and a lo
    ```bash
    uv run poe llm-check
    ```
-   Expected: `OK via gemini model=gemini-2.5-flash …` with token counts and latency. The command also lists which Flash models your key can call. If `gemini-2.5-flash` is missing, set `GATP_GEMINI_MODEL` to one that's listed.
+   Expected: `OK via gemini model=gemini-3.5-flash …` with token counts and latency. The command also lists which Flash models your key can call. If `gemini-3.5-flash` is missing, set `GATP_GEMINI_MODEL` to one that's listed.
 
 Free-tier limits are per Google Cloud project and change over time. Check https://ai.google.dev/gemini-api/docs/rate-limits. When a limit is hit, GATP backs off (2 s, 4 s), then falls back to Ollama, and the usage log shows `rate_limited` rows.
 
@@ -44,11 +44,11 @@ The fallback answers are lower quality than Gemini. GATP still validates them ag
 | `GATP_LLM_PRIMARY` | `gemini` | `gemini` \| `ollama` \| `fake` |
 | `GATP_LLM_FALLBACK` | `ollama` | Second provider; empty = none |
 | `GATP_GEMINI_API_KEY` | — | Free-tier key (secret, `.env` only) |
-| `GATP_GEMINI_MODEL` | `gemini-2.5-flash` | Model ID |
+| `GATP_GEMINI_MODEL` | `gemini-3.5-flash` | Model ID |
 | `GATP_OLLAMA_HOST` | `http://127.0.0.1:11434` | Ollama server |
 | `GATP_OLLAMA_MODEL` | `qwen2.5-coder:3b` | Local model |
 | `GATP_LLM_CACHE` | `true` | Reuse identical successful calls (logged as `reused`) |
-| `GATP_LLM_TIMEOUT_S` | `60` | HTTP timeout per call |
+| `GATP_LLM_TIMEOUT_S` | `120` | HTTP timeout per call |
 | `GATP_LLM_MAX_RETRIES` | `2` | Retries per provider on 429/5xx/network errors |
 | `GATP_LLM_BACKOFF_S` | `2` | First backoff, doubling each retry |
 
@@ -59,7 +59,7 @@ Each attempt is one row in `llm_calls`: provider, model, model version reported 
 | Date | Provider / model | Result | By |
 |---|---|---|---|
 | 2026-11-04 | fake | `poe llm-check` path and 20 gateway/provider tests pass | Claude (S004) |
-| _pending_ | gemini / gemini-2.5-flash | Run `uv run poe llm-check` with the key and record the model version, tokens and latency here | next session |
+| 2026-11-20 | gemini / gemini-3.5-flash (provider reports version `gemini-3.6-flash`) | `llm-check` OK: 136 in / 12 out tokens, 40.3 s latency (free tier under load). The old default `gemini-2.5-flash` returned HTTP 404 ("no longer available to new users"); `gemini-3.8-flash` and `gemini-flash-latest` returned 503/timeouts. Default changed to `gemini-3.5-flash`, timeout to 120 s | Claude (user's key) |
 | _pending_ | ollama / qwen2.5-coder:3b | Run on the team's Linux machine and record here | team |
 
 ## Troubleshooting

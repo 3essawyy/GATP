@@ -1,19 +1,19 @@
 # Phase 1 submission: blockers and what is already done
 
-Snapshot of 2026-11-20. Sources: [T-011](../../tasks/T-011-phase1-submission.md), [tasks README](../../tasks/README.md), [HLD §12](../../architecture/HLD.md), [REQ-P1](../../RefrenceDocs/REQ-requirements.md). This file is a status summary; the linked docs stay the source of truth.
+Snapshot of 2026-11-20 (updated after B1). Sources: [T-011](../../tasks/T-011-phase1-submission.md), [tasks README](../../tasks/README.md), [HLD §12](../../architecture/HLD.md), [REQ-P1](../../RefrenceDocs/REQ-requirements.md). This file is a status summary; the linked docs stay the source of truth.
 
 ## Blockers (what is left before submitting)
 
 | # | Blocker | Rubric / item | Needs | Done when |
 |---|---|---|---|---|
-| B1 | **Real-model run.** Add a Gemini key (or Ollama) to `.env` and run `uv run poe llm-check`. | REQ-P1-4 (1 pt) | A free Gemini key from a team member | `llm-check` passes |
+| B1 | ~~Real-model run.~~ **Done 2026-11-20:** `uv run poe llm-check` passes with `gemini-3.5-flash` (provider version `gemini-3.6-flash`, 136 in / 10 out tokens, ~30 to 40 s latency). Default model changed from the retired `gemini-2.5-flash`. | REQ-P1-4 (1 pt) | none | Done: see [SG-003](../../SystemGuides/SG-003-models.md) §6 |
 | B2 | **Re-export evidence with the real model.** `GATP_LLM_PRIMARY=gemini uv run poe ui-walkthrough --out walkthrough`, fill [SG-003](../../SystemGuides/SG-003-models.md) §6, refresh `usage-evidence.json`. | REQ-P1-4, REQ-P1-S | B1 | Evidence shows real model, version, tokens, latency; TC-111 moves from partial to Pass |
 | B3 | **Narrated live demo.** Record it following [SG-004](../../SystemGuides/SG-004-demo-script.md). The committed `.webm` is an automated backup, and its frames show the runner's own Chromium window. | REQ-P1-D | B2 (so the demo uses the real model) | Video exists and matches the demo sequence |
 | B4 | **Component owners.** Replace `TBD` in [modules/README](../../modules/README.md) with names. | Code defense | Team decision | All 9 modules have an owner |
 | B5 | **Defense rehearsal.** Each owner rehearses their component using [DEFENSE.md](DEFENSE.md). | Code defense | B4 | Checklist in DEFENSE.md ticked |
 | B6 | **Final tag.** Tag `phase1` on the submitted commit. | REQ-P1-S | B1 to B5 | Tag exists on the submitted commit |
 
-Critical path: B1 → B2 → B3. B4 → B5 can run in parallel.
+Critical path: B2 → B3 (B1 is done). B4 → B5 can run in parallel.
 
 ### Things to verify (not confirmed by me)
 - T-011 says `phase1-rc` was tagged, but `git tag -l "phase1*"` in this clone returns nothing. The tag may be unpushed, fetched elsewhere, or missing. Check before tagging `phase1`.

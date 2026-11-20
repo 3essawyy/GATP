@@ -44,11 +44,11 @@ class Settings(BaseSettings):
     llm_primary: str = "gemini"
     llm_fallback: str = "ollama"
     llm_cache: bool = True
-    llm_timeout_s: float = 60.0
+    llm_timeout_s: float = 120.0
     llm_max_retries: int = 2  # retries on rate limit / transient errors, per provider
     llm_backoff_s: float = 2.0  # first backoff; doubles each retry
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.5-flash"
     gemini_base_url: str = "https://generativelanguage.googleapis.com/v1beta"
     ollama_host: str = "http://127.0.0.1:11434"
     ollama_model: str = "qwen2.5-coder:3b"
