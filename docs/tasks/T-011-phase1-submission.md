@@ -1,6 +1,6 @@
 # T-011: Phase 1 submission pack
 
-- **Status:** Done. Release candidate tagged `phase1-rc`. The real Gemini run is done (2026-11-20). The final tag `phase1` is set at submission, after the narrated demo.
+- **Status:** Done. Tag `phase1` set 2026-11-20 on `ef03bd6`; the real Gemini run is done (2026-11-20); the narrated demo video is the only item left. (`phase1-rc` was never pushed: see S004.)
 - **Phase:** P1
 - **Target:** before W9
 - **Modules:** docs (+ small UI fix, `.env.example`)
