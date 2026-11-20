@@ -104,5 +104,8 @@ uv run poe fixtures v2
 | Test run fails: `bwrap: setting up uid map: Permission denied` | Ubuntu 24.04 restricts user namespaces | `sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0` (or set `GATP_RUNNER_ISOLATION=process`, weaker) |
 | Fixture: `Address already in use` on 8090 | Other version still running | Stop it first (Ctrl+C), or `python fixtures/serve.py v2 --port 8091` |
 | WSL2: browser window doesn't appear | WSLg missing | Use Windows 11 / recent WSL (`wsl --update`) |
+| `poe web` prints `CMD.EXE ... UNC paths are not supported` / `'vite' is not recognized` | A non-interactive WSL shell (`wsl -e bash -lc ...`) doesn't load nvm, so WSL runs the *Windows* `npm` | Use a normal WSL terminal, or start everything with `scripts/demo-up.ps1`, which loads nvm and drops `/mnt/*` from `PATH` ([SG-004](SG-004-demo-script.md#one-command-start-windows--wsl)) |
+| Pasting all four start commands into one terminal: only the first runs | Each task stays in the foreground | One task per terminal, or `scripts/demo-up.ps1` |
+| Setup step `goto` is rejected with `must be a full http(s) URL` | Relative URL such as `index.html` | Use the full URL, e.g. `http://127.0.0.1:8090/index.html` |
 | Runner fails with `Missing X server or $DISPLAY` | No desktop session (SSH/server) | Run it under a virtual display: `xvfb-run -a uv run poe runner` (`sudo apt-get install -y xvfb`) |
 | UI says the runner is unavailable | Runner not started, or started with another `GATP_RUNNER_SOCKET` | Start `uv run poe runner` with the same `.env` as the API |
