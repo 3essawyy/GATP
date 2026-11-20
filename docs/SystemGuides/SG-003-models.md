@@ -60,6 +60,7 @@ Each attempt is one row in `llm_calls`: provider, model, model version reported 
 |---|---|---|---|
 | 2026-11-04 | fake | `poe llm-check` path and 20 gateway/provider tests pass | Claude (S004) |
 | 2026-11-20 | gemini / gemini-3.5-flash (provider reports version `gemini-3.6-flash`) | `llm-check` OK: 136 in / 12 out tokens, 40.3 s latency (free tier under load). The old default `gemini-2.5-flash` returned HTTP 404 ("no longer available to new users"); `gemini-3.8-flash` and `gemini-flash-latest` returned 503/timeouts. Default changed to `gemini-3.5-flash`, timeout to 120 s | Claude (user's key) |
+| 2026-11-20 | gemini / gemini-3.5-flash (version `gemini-3.6-flash`), full Phase 1 UI walkthrough (`--phase1-only`) | Grounded insight call on 12 in-scope elements: 2,433 in / 1,437 out tokens (provider-reported), **69.3 s** model time, then the identical request `reused` (0 ms). Evidence: [usage-evidence.json](../submission/phase1/usage-evidence.json), [UI card](../samples/phase1-walkthrough/08-model-insight.png) | Claude (user's key) |
 | _pending_ | ollama / qwen2.5-coder:3b | Run on the team's Linux machine and record here | team |
 
 ## Troubleshooting
