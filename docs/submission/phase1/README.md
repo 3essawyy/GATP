@@ -2,13 +2,13 @@
 
 **Course:** Generative AI for Software Testing (Fall 2026) · **Phase 1:** Architecture and guided inspection · **Release:** tag `phase1` · **Repository:** https://github.com/3essawyy/GATP
 
-GATP is a human-in-the-loop web testing assistant. It inspects a page in a visible, isolated browser and turns what it observes into grounded, reviewable inputs for testing. A human approves every consequential step. This document is the short design document requested by REQ-P1-S. The full high-level design follows it (component diagram, data flow, approval gates, validation, resource assumptions, and how later phases use inspection results).
+GATP is a human-in-the-loop web testing assistant. It inspects a page in a visible, isolated browser and turns what it observes into grounded, reviewable inputs for testing. A human approves every consequential step. The short design document requested by REQ-P1-S is the LaTeX-built [GATP-phase1-design.pdf](GATP-phase1-design.pdf) (source: [design/GATP-phase1-design.tex](design/GATP-phase1-design.tex); the system diagram is `design/GATP-system-design.png`, exported from the draw.io file). This README is a map of the submission. To rebuild the PDF (needs TeX Live with XeTeX): `cd docs/submission/phase1/design && xelatex GATP-phase1-design.tex` twice, then copy the PDF up one level and into `ClassroomAssets/`.
 
 ## What to look at
 
 | Brief item (REQ-P1-S) | Where |
 |---|---|
-| Short design doc: component diagram, data flow, approval gates, resource assumptions, path inspection → generation → execution → maintenance | This PDF: the HLD that follows (§2 components, §3 data flow, §4 gates, §5 validation, §6 later phases, §9 resources, §12 status) |
+| Short design doc: component diagram, data flow, approval gates, resource assumptions, path inspection → generation → execution → maintenance | [GATP-phase1-design.pdf](GATP-phase1-design.pdf): §2 architecture and component diagram, §3 data flow, §4 gates, §5 validation, §6 later phases, §9 resources and model evidence, §10 status |
 | Runnable code + dependencies + setup | Repository; [SG-001 Setup and run](../../SystemGuides/SG-001-setup-and-run.md) (verified on a clean Ubuntu 24.04 machine, [TC-102 log](../../TCs/TC-102-runs.md)) |
 | Model configuration (no secrets) | [SG-003 Models](../../SystemGuides/SG-003-models.md), [`.env.example`](../../../.env.example) |
 | Short demo | [SG-004 Demo script](../../SystemGuides/SG-004-demo-script.md); recorded walkthrough [phase1-walkthrough.webm](phase1-walkthrough.webm) (backup; the team records the narrated live demo) |
