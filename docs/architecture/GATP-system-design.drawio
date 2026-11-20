@@ -101,7 +101,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="e8" value="reads / writes" style="startArrow=classic;endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.75;entryX=0.5;entryY=0;labelBackgroundColor=#ffffff;fontSize=10;" edge="1" parent="1" source="api" target="store">
-          <mxGeometry relative="1" as="geometry">
+          <mxGeometry x="0.39" relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="795" y="171" />
               <mxPoint x="795" y="345" />
