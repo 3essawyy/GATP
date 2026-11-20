@@ -1,5 +1,6 @@
 """bwrap secret-dir hiding must target the real directory when ~/.aws etc. are symlinks."""
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -15,8 +16,8 @@ def test_symlinked_secret_dir_is_hidden_via_its_real_path(
     home = tmp_path / "home"
     home.mkdir()
     (home / ".aws").symlink_to(real)
-    monkeypatch.setattr(execute.Path, "home", lambda: home)
-    monkeypatch.setattr(execute.shutil, "which", lambda _name: "/usr/bin/bwrap")
+    monkeypatch.setattr(Path, "home", lambda: home)
+    monkeypatch.setattr(shutil, "which", lambda _name: "/usr/bin/bwrap")
     sandbox = tmp_path / "sandbox"
     sandbox.mkdir()
 
