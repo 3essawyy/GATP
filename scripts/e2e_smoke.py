@@ -51,8 +51,10 @@ class Smoke:
             "GATP_RUNNER_SANDBOX_DIR": str(self.tmp / "sandbox"),
             "GATP_RUNNER_SOCKET": str(self.tmp / "run" / "runner.sock"),
             "GATP_RUNNER_HEADLESS": "false" if headed else "true",
-            "GATP_LLM_PRIMARY": "fake",
-            "GATP_LLM_FALLBACK": "",
+            # Default to the offline provider so CI/smoke never need a key; export
+            # GATP_LLM_PRIMARY=gemini (and optionally GATP_LLM_FALLBACK) for a real-model run.
+            "GATP_LLM_PRIMARY": os.environ.get("GATP_LLM_PRIMARY", "fake"),
+            "GATP_LLM_FALLBACK": os.environ.get("GATP_LLM_FALLBACK", ""),
         }
         self.procs: list[subprocess.Popen[bytes]] = []
         self.failures = 0

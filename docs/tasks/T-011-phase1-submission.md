@@ -28,7 +28,7 @@ Everything the Phase 1 submission requires, verified.
 - **PDF:** first build had a diagram split over three pages. **Fixed** (diagrams capped to one page).
 
 ## Remaining before the real submission (team)
-1. Add a Gemini key and run `uv run poe llm-check`. Then run the demo with the real model, fill SG-003 §6, and re-export usage evidence (`uv run poe ui-walkthrough --out walkthrough` with `GATP_LLM_PRIMARY=gemini`).
+1. ~~Add a Gemini key, run `llm-check`, re-export usage evidence with the real model.~~ **Done 2026-11-20.** Command: `GATP_LLM_PRIMARY=gemini uv run poe ui-walkthrough --phase1-only --out walkthrough` (the harness used to force `fake`; it now honors `GATP_LLM_PRIMARY`, default `fake`). Evidence in `docs/submission/phase1/`.
 2. Record the narrated live demo following [SG-004](../SystemGuides/SG-004-demo-script.md).
 3. Fill in the component owners' names and rehearse [DEFENSE.md](../submission/phase1/DEFENSE.md).
 4. Tag `phase1` on the submitted commit.

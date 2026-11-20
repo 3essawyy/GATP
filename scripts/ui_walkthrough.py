@@ -27,9 +27,12 @@ from playwright.sync_api import Locator, Page, expect, sync_playwright
 
 
 class Walkthrough(Smoke):
-    def __init__(self, headed: bool, out: Path, record: Path | None) -> None:
+    def __init__(
+        self, headed: bool, out: Path, record: Path | None, phase1_only: bool = False
+    ) -> None:
         super().__init__(headed=headed or record is not None, keep=False)
         self.out = out
+        self.phase1_only = phase1_only
         self.record = record
         self.web_port = free_port()
         self.web = f"http://127.0.0.1:{self.web_port}"
@@ -156,7 +159,8 @@ class Walkthrough(Smoke):
         expect(page.get_by_test_id("insight-panel")).to_contain_text("untrusted_page_data")
         self.shot(page, "model-insight", page.get_by_test_id("insight-panel"))
 
-        self.plan_steps(page)
+        if not self.phase1_only:
+            self.plan_steps(page)
 
         page.get_by_test_id("step-scope").click()
         page.get_by_test_id("ask-model").click()  # identical request -> served from the cache
@@ -440,8 +444,18 @@ def main() -> int:
     parser.add_argument("--headed", action="store_true")
     parser.add_argument("--record", type=Path, help="screen-record to this .webm (needs a display)")
     parser.add_argument("--out", type=Path, default=Path("walkthrough"))
+    parser.add_argument(
+        "--phase1-only",
+        action="store_true",
+        help="stop after the grounded model call + cache check and export usage evidence",
+    )
     args = parser.parse_args()
-    w = Walkthrough(args.headed, args.out.resolve(), args.record.resolve() if args.record else None)
+    w = Walkthrough(
+        args.headed,
+        args.out.resolve(),
+        args.record.resolve() if args.record else None,
+        args.phase1_only,
+    )
     try:
         w.up()
         return w.run_ui()

@@ -7,7 +7,7 @@ Known limits of GATP, stated plainly. Each links to where it is decided or docum
 
 | Area | Limitation | Why / mitigation | Reference |
 |---|---|---|---|
-| Models | Committed evidence uses the offline `fake` provider; the real Gemini run happens on the team machine with a free key | No key in the build environment; `poe llm-check` verifies the setup; the UI labels fake answers | [SG-003 §6](SG-003-models.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md) |
+| Models | Free-tier Gemini is slow (about 70 s for a 2.4k-token insight call) and the Ollama fallback is unverified from the walkthrough | Timeout raised to 120 s; the usage card shows model time separately; calls are cached (`reused`) | [SG-003 §6](SG-003-models.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md) |
 | Models | Free-tier rate limits; the Ollama fallback (3B model on CPU) gives weaker answers | Backoff, fallback and cache (`reused`); invalid answers are rejected, never used | [ADR-003](../decisions/ADR-003-llm-providers.md) |
 | Tokens | Ollama/fake token counts may be estimates (~4 chars/token) | Labelled "estimated" everywhere | [ADR-016](../decisions/ADR-016-llm-gateway-design.md) |
 | Isolation | The runner is a separate OS process (private socket, sandbox dir, origin allowlist). Approved tests run inside bubblewrap (read-only system, secrets hidden), but as the same OS user and without a network namespace | bwrap + allowlist routing + static bans; Docker was not chosen, to keep the visible browser simple | [ADR-004](../decisions/ADR-004-runner-isolation.md), [ADR-022](../decisions/ADR-022-approved-execution-sandbox.md) |

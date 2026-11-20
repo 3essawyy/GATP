@@ -27,7 +27,7 @@ GATP is a human-in-the-loop web testing assistant. It inspects a page in a visib
 Following [ADR-010](../../decisions/ADR-010-phase1-scope-frontload.md), some Phase 2 foundations are already built: versioned artifacts with diff and restore (API), gates G1–G5 in the data model, and the typed runner job protocol. They aren't part of the Phase 1 grade. The Phase 2 screens (test design, code generation, execution, maintenance, history, usage panel) are not in this submission.
 
 ## Known limitations
-See [SG-006 Limitations](../../SystemGuides/SG-006-limitations.md). The most important one: this release's committed model evidence uses the clearly labelled offline `fake` provider; the real **Gemini** run is done with a free key on the team machine (`uv run poe llm-check`, then the demo).
+See [SG-006 Limitations](../../SystemGuides/SG-006-limitations.md). The model evidence ([usage-evidence.json](usage-evidence.json)) comes from a **real Gemini run** (`gemini-3.5-flash`, 2026-11-20): about 70 s per call on the free tier, so expect slow answers in the demo. The Ollama fallback has not been exercised from the walkthrough yet.
 
 ## Status and blockers
 What is done and what is still open before submitting: [BLOCKERS-AND-STATUS.md](BLOCKERS-AND-STATUS.md).
