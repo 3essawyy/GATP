@@ -1,12 +1,14 @@
 # SG-004: Demo script
 
 - **Audience:** presenter (team), examiner
-- **Last verified:** 2026-11-04 by `uv run poe ui-walkthrough` (the same steps, automated) at the T-011 commit
+- **Last verified:** 2026-11-20 by `GATP_LLM_PRIMARY=gemini uv run poe ui-walkthrough --phase1-only` (steps 1 to 8 and 10 to 13, automated, real Gemini, WSL Ubuntu under Xvfb). Step 9 and the headed WSLg window were not part of that run.
 - **Phase 2 sequence:** added in T-021
 
 Setup first: [SG-001](SG-001-setup-and-run.md). For a real model, put your Gemini key in `.env` and run `uv run poe llm-check` **before** the demo ([SG-003](SG-003-models.md)).
 
-## Phase 1 demo (≈ 6 minutes)
+## Phase 1 demo (≈ 6 minutes, plus the model wait)
+
+**Model wait:** with the free-tier Gemini model, step 11 takes about 70 s (measured 69 s on 2026-11-20, `gemini-3.5-flash`). Narrate the grounded-call design while it runs (what is sent, what is checked), or run step 11 once before the demo with the same scope and let step 13 show the reuse. The gateway's HTTP timeout is 120 s (`GATP_LLM_TIMEOUT_S`).
 
 **Before you start**, open four terminals at the repo root:
 ```bash
@@ -47,4 +49,8 @@ Then open http://localhost:5173. Both header badges should be green: "Runner rea
 | Browser window doesn't show (WSL) | `wsl --update`, or show the screenshots from `docs/samples/phase1-walkthrough/` |
 
 ### Backup recording
-`uv run poe ui-walkthrough --video --out walkthrough` records the same flow (no narration) to a `.webm` file. A copy is in `docs/submission/phase1/`.
+Records the same flow (no narration) to a `.webm` file. It needs a display, so run it under Xvfb:
+```bash
+xvfb-run -a -s "-screen 0 1440x900x24" uv run poe ui-walkthrough --record demo.webm
+```
+Add `GATP_LLM_PRIMARY=gemini` for a real-model recording (default is the offline `fake` provider), and `--phase1-only` to stop after step 13. A copy of the existing backup (offline provider) is in `docs/submission/phase1/`.

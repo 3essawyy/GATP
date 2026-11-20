@@ -83,7 +83,7 @@ help = "End-to-end smoke test: real fixture site + runner + API processes (add -
 cmd = "python scripts/e2e_smoke.py"
 
 [tool.poe.tasks.ui-walkthrough]
-help = "Drive the real UI through the Phase 1 flow with screenshots (--out DIR, --video, --headed)"
+help = "Drive the real UI through the Phase 1 flow with screenshots (--out DIR, --record FILE.webm, --phase1-only, --headed)"
 cmd = "python scripts/ui_walkthrough.py"
 
 [tool.poe.tasks.pdf]
