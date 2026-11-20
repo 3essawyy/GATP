@@ -1,6 +1,6 @@
 # GATP: Phase 1 submission
 
-**Course:** Generative AI for Software Testing (Fall 2026) · **Phase 1:** Architecture and guided inspection · **Release:** tag `phase1-rc` (final tag `phase1` at submission) · **Repository:** https://github.com/3essawyy/GATP
+**Course:** Generative AI for Software Testing (Fall 2026) · **Phase 1:** Architecture and guided inspection · **Release:** tag `phase1` · **Repository:** https://github.com/3essawyy/GATP
 
 GATP is a human-in-the-loop web testing assistant. It inspects a page in a visible, isolated browser and turns what it observes into grounded, reviewable inputs for testing. A human approves every consequential step. This document is the short design document requested by REQ-P1-S. The full high-level design follows it (component diagram, data flow, approval gates, validation, resource assumptions, and how later phases use inspection results).
 

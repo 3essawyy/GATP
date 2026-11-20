@@ -1,6 +1,6 @@
 # Phase 1 submission: blockers and what is already done
 
-Snapshot of 2026-11-20 (updated after B2). Sources: [T-011](../../tasks/T-011-phase1-submission.md), [tasks README](../../tasks/README.md), [HLD §12](../../architecture/HLD.md), [REQ-P1](../../RefrenceDocs/REQ-requirements.md). This file is a status summary; the linked docs stay the source of truth.
+Snapshot of 2026-11-20 (updated after the tag). Sources: [T-011](../../tasks/T-011-phase1-submission.md), [tasks README](../../tasks/README.md), [HLD §12](../../architecture/HLD.md), [REQ-P1](../../RefrenceDocs/REQ-requirements.md). This file is a status summary; the linked docs stay the source of truth.
 
 ## Blockers (what is left before submitting)
 
@@ -11,12 +11,12 @@ Snapshot of 2026-11-20 (updated after B2). Sources: [T-011](../../tasks/T-011-ph
 | B3 | **Narrated live demo.** Record it following [SG-004](../../SystemGuides/SG-004-demo-script.md). The committed `.webm` is an automated backup (offline provider), and its frames show the runner's own Chromium window. Expect ~70 s for the model call on the free tier. | REQ-P1-D | none (B2 done) | Video exists and matches the demo sequence |
 | B4 | **Component owners.** Replace `TBD` in [modules/README](../../modules/README.md) with names. | Code defense | Team decision | All 9 modules have an owner |
 | B5 | **Defense rehearsal.** Each owner rehearses their component using [DEFENSE.md](DEFENSE.md). | Code defense | B4 | Checklist in DEFENSE.md ticked |
-| B6 | **Final tag.** Tag `phase1` on the submitted commit. | REQ-P1-S | B1 to B5 | Tag exists on the submitted commit |
+| B6 | ~~Final tag.~~ **Done 2026-11-20:** annotated tag `phase1` on `ef03bd6`, pushed to origin. | REQ-P1-S (team convention) | none | Done |
 
-Critical path: B3 (B1 and B2 are done). B4 → B5 can run in parallel.
+Critical path: B3, the narrated demo (B1, B2 and B6 are done). B4 → B5 can run in parallel.
 
 ### Things to verify (not confirmed by me)
-- T-011 says `phase1-rc` was tagged, but `git tag -l "phase1*"` in this clone returns nothing. The tag may be unpushed, fetched elsewhere, or missing. Check before tagging `phase1`.
+- `phase1-rc` was never created (S004 notes the tag push was rejected). The final tag `phase1` exists on `ef03bd6` (set 2026-11-20).
 - The exact Week 9 deadline date is not in the repo (the tasks README only gives relative weeks). Confirm it with the instructor or TA.
 - The recorded `.webm` demo backup still shows the offline provider; B3 (the narrated demo) should use the real model.
 
