@@ -29,6 +29,9 @@ Following [ADR-010](../../decisions/ADR-010-phase1-scope-frontload.md), some Pha
 ## Known limitations
 See [SG-006 Limitations](../../SystemGuides/SG-006-limitations.md). The model evidence ([usage-evidence.json](usage-evidence.json)) comes from a **real Gemini run** (`gemini-3.5-flash`, 2026-11-20): about 70 s per call on the free tier, so expect slow answers in the demo. The Ollama fallback has not been exercised from the walkthrough yet.
 
+## Classroom assets
+Files staged for the hand-in (design PNG, source zip, usage evidence): [ClassroomAssets/](ClassroomAssets/README.md).
+
 ## Status and blockers
 What is done and what is still open before submitting: [BLOCKERS-AND-STATUS.md](BLOCKERS-AND-STATUS.md).
 
