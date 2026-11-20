@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Implement ADR-005 with SQLAlchemy 2 + Alembic ([ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md)). Create every HLD §7 table now: later tasks extend them through migrations instead of inventing tables, and the ER diagram stays true. Repositories expose a small API that returns DTOs.
+Implement ADR-005 with SQLAlchemy 2 + Alembic ([ADR-015](../architectureDecisionRecords/ADR-015-db-access-sqlalchemy-alembic.md)). Create every HLD §7 table now: later tasks extend them through migrations instead of inventing tables, and the ER diagram stays true. Repositories expose a small API that returns DTOs.
 
 ## Steps
 1. Settings: `data_dir`, `artifacts_dir`, `database_url`.

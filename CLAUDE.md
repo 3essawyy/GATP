@@ -16,7 +16,7 @@ Read this first in every session. It is the operating manual for whoever (Claude
 **During**
 - One branch per task: `<type>/T-NNN-short-slug` (type = feat | fix | docs | chore | test).
 - Write or update `docs/implementationPlans/PLAN-NNN-*.md` before coding non-trivial tasks.
-- Record any new decision as an ADR in `docs/decisions/`.
+- Record any new decision as an ADR in `docs/architectureDecisionRecords/`.
 
 **End of session**
 1. Update task status in `docs/tasks/README.md` and the task file.

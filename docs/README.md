@@ -8,7 +8,7 @@ The single home for everything needed to understand, continue, defend and mainta
 |---|---|---|
 | `architecture/` | High-level design: components, data flow, approval gates, resources, security | [HLD.md](architecture/HLD.md) |
 | `modules/<name>/` | Low-level design per module (how it's built) | [modules/README.md](modules/README.md) |
-| `decisions/` | Architecture Decision Records (`ADR-NNN`) — what we decided and why | [decisions/README.md](decisions/README.md) |
+| `architectureDecisionRecords/` | Architecture Decision Records (`ADR-NNN`) — what we decided and why | [architectureDecisionRecords/README.md](architectureDecisionRecords/README.md) |
 | `tasks/` | Task specs + status (`T-NNN`). **Source of truth for status.** Includes "Explain it" for the code defense | [tasks/README.md](tasks/README.md) |
 | `implementationPlans/` | Step-by-step plan per task (`PLAN-NNN`, same number as task) | [implementationPlans/README.md](implementationPlans/README.md) |
 | `TCs/` | Acceptance test cases for GATP itself (`TC-NNN`), traced to rubric and demo steps | [TCs/README.md](TCs/README.md) |
@@ -40,7 +40,7 @@ See [../CLAUDE.md](../CLAUDE.md) for the session protocol, Definition of Done, a
 ## Templates
 - Task: [tasks/_TEMPLATE.md](tasks/_TEMPLATE.md)
 - Plan: [implementationPlans/_TEMPLATE.md](implementationPlans/_TEMPLATE.md)
-- ADR: [decisions/_TEMPLATE.md](decisions/_TEMPLATE.md)
+- ADR: [architectureDecisionRecords/_TEMPLATE.md](architectureDecisionRecords/_TEMPLATE.md)
 - Module LLD: [modules/_TEMPLATE.md](modules/_TEMPLATE.md)
 - Session: [sessions/_TEMPLATE.md](sessions/_TEMPLATE.md)
 - Acceptance TC: [TCs/_TEMPLATE.md](TCs/_TEMPLATE.md)

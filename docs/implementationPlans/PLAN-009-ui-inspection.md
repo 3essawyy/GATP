@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-A thin React UI ([ADR-013](../decisions/ADR-013-frontend-libraries.md)) with React Router: a project list, then a project workspace with step navigation whose statuses come from `GET /workflow`. Inspect and Scope are the Phase 1 screens. Data access goes through typed TanStack Query hooks over the generated client, and SSE events refresh queries. A Playwright script (`poe ui-walkthrough`) verifies the real stack.
+A thin React UI ([ADR-013](../architectureDecisionRecords/ADR-013-frontend-libraries.md)) with React Router: a project list, then a project workspace with step navigation whose statuses come from `GET /workflow`. Inspect and Scope are the Phase 1 screens. Data access goes through typed TanStack Query hooks over the generated client, and SSE events refresh queries. A Playwright script (`poe ui-walkthrough`) verifies the real stack.
 
 ## Steps
 1. `react-router` 8; client type aliases + `unwrap()` error helper; hooks for every endpoint; `useProjectEvents` (SSE).

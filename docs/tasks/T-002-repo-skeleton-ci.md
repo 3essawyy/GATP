@@ -7,7 +7,7 @@
 - **Requirements:** REQ-P1-S, REQ-P2-6
 - **Depends on:** T-001
 - **Plan:** [PLAN-002](../implementationPlans/PLAN-002-repo-skeleton-ci.md)
-- **ADRs:** [ADR-012](../decisions/ADR-012-backend-and-dev-tooling.md), [ADR-013](../decisions/ADR-013-frontend-libraries.md)
+- **ADRs:** [ADR-012](../architectureDecisionRecords/ADR-012-backend-and-dev-tooling.md), [ADR-013](../architectureDecisionRecords/ADR-013-frontend-libraries.md)
 - **Guides:** [SG-001](../SystemGuides/SG-001-setup-and-run.md), [SG-002](../SystemGuides/SG-002-developer-workflow.md)
 - **TCs:** TC-102 (api/runner/frontend pass in a clean Ubuntu container, [run log](../TCs/TC-102-runs.md); fixture site comes in T-003)
 - **Sessions:** [S002](../sessions/2026-11-04-S002-t002-repo-skeleton.md), [S003](../sessions/2026-11-04-S003-linux-migration-tc102.md) (Linux migration, TC-102)

@@ -18,13 +18,13 @@ GATP is a human-in-the-loop web testing assistant. It inspects a page in a visib
 ## Phase 1 rubric map
 | Rubric (pts) | How GATP meets it | Evidence |
 |---|---|---|
-| Architecture & design (4) | Separate runner process on a private Unix socket; thin UI over a FastAPI orchestrator; store with immutable versions; LLM gateway; 19 Phase 1 ADRs (ADR-001 to 019; ADR-020 to 024 cover early Phase 2 work) | HLD (this PDF), [ADRs](../../decisions/README.md), TC-101 |
+| Architecture & design (4) | Separate runner process on a private Unix socket; thin UI over a FastAPI orchestrator; store with immutable versions; LLM gateway; 19 Phase 1 ADRs (ADR-001 to 019; ADR-020 to 024 cover early Phase 2 work) | HLD (this PDF), [ADRs](../../architectureDecisionRecords/README.md), TC-101 |
 | Page inspection (3) | Visible Chromium in the runner; interactive elements with role, name, label, attributes, nearby text; ranked locators **verified live** (unique **and** targets the element); flags for weak elements; screenshot highlight + source line | TC-106, TC-107, TC-108; [screenshots](../../samples/phase1-walkthrough/) |
 | Human interaction (2) | Pages + sign-in setup steps, region include/exclude, element selection, testing goal, notes; scope approved at G0; edits create new versions and reopen the gate; clarifications block their step | TC-109, TC-110 |
 | Feasibility evidence (1) | Grounded model call on the **approved** in-scope elements only; element ids validated; observations vs assumptions + questions; usage logged | TC-111 |
 
 ## Early Phase 2 work vs graded Phase 1 scope
-Following [ADR-010](../../decisions/ADR-010-phase1-scope-frontload.md), some Phase 2 foundations are already built: versioned artifacts with diff and restore (API), gates G1–G5 in the data model, and the typed runner job protocol. They aren't part of the Phase 1 grade. The Phase 2 screens (test design, code generation, execution, maintenance, history, usage panel) are not in this submission.
+Following [ADR-010](../../architectureDecisionRecords/ADR-010-phase1-scope-frontload.md), some Phase 2 foundations are already built: versioned artifacts with diff and restore (API), gates G1–G5 in the data model, and the typed runner job protocol. They aren't part of the Phase 1 grade. The Phase 2 screens (test design, code generation, execution, maintenance, history, usage panel) are not in this submission.
 
 ## Known limitations
 See [SG-006 Limitations](../../SystemGuides/SG-006-limitations.md). The model evidence ([usage-evidence.json](usage-evidence.json)) comes from a **real Gemini run** (`gemini-3.5-flash`, 2026-11-20): about 70 s per call on the free tier, so expect slow answers in the demo. The Ollama fallback has not been exercised from the walkthrough yet.

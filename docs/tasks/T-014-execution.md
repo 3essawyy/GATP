@@ -7,7 +7,7 @@
 - **Requirements:** REQ-G5, REQ-P2-3, REQ-Q3, REQ-Q5, REQ-Q6, REQ-Q8
 - **Depends on:** T-013
 - **Plan:** [PLAN-014](../implementationPlans/PLAN-014-execution.md)
-- **ADRs:** [ADR-022](../decisions/ADR-022-approved-execution-sandbox.md)
+- **ADRs:** [ADR-022](../architectureDecisionRecords/ADR-022-approved-execution-sandbox.md)
 - **TCs:** TC-205 Pass, TC-206 Pass
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 

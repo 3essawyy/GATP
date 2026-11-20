@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Render code deterministically from the G1-approved plan and verified locators ([ADR-021](../decisions/ADR-021-deterministic-codegen.md)). Validate statically, then live in the runner (recount + a new `collect` job). Bind reports to exact versions so G2 can require a passing one. Provide a code review page and extend smoke and walkthrough.
+Render code deterministically from the G1-approved plan and verified locators ([ADR-021](../architectureDecisionRecords/ADR-021-deterministic-codegen.md)). Validate statically, then live in the runner (recount + a new `collect` job). Bind reports to exact versions so G2 can require a passing one. Provide a code review page and extend smoke and walkthrough.
 
 ## Steps
 1. `pytest-playwright` as a runtime dependency (disabled for GATP's own suite).

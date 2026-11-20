@@ -7,7 +7,7 @@
 - **Requirements:** REQ-P1-2, REQ-Q1
 - **Depends on:** T-006
 - **Plan:** [PLAN-007](../implementationPlans/PLAN-007-inspector.md)
-- **ADRs:** [ADR-018](../decisions/ADR-018-inspection-setup-and-usability.md)
+- **ADRs:** [ADR-018](../architectureDecisionRecords/ADR-018-inspection-setup-and-usability.md)
 - **TCs:** TC-108 (Pass), TC-107 (automated part)
 - **Evidence:** [docs/samples/](../samples/README.md)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)

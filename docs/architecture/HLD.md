@@ -1,6 +1,6 @@
 # High-Level Design — GATP
 
-Status: **v0.2** (2026-11-04, session S004): diagrams validated against the Phase 1 implementation (`main` after T-010). Decisions: [ADR index](../decisions/README.md). Implementation status: §12.
+Status: **v0.2** (2026-11-04, session S004): diagrams validated against the Phase 1 implementation (`main` after T-010). Decisions: [ADR index](../architectureDecisionRecords/README.md). Implementation status: §12.
 
 ## 1. Purpose and scope
 GATP is a supervised assistant. It never acts on its own judgment where the brief requires a human: test plans, code execution, and maintenance repairs all pass through explicit approval gates. Everything it says about a page is traceable to a stored inspection snapshot.
@@ -118,11 +118,11 @@ sequenceDiagram
 All approvals and clarifications are stored with timestamp, actor, and the version they apply to (audit trail, REQ-G2).
 
 ## 5. Validation layers
-1. **Inspection:** locators ranked by Playwright priority (role+name → label → test-id → placeholder/text → CSS); each counted on the live page; usable only if count == 1 for single-element actions ([ADR-006](../decisions/ADR-006-locator-strategy.md)).
+1. **Inspection:** locators ranked by Playwright priority (role+name → label → test-id → placeholder/text → CSS); each counted on the live page; usable only if count == 1 for single-element actions ([ADR-006](../architectureDecisionRecords/ADR-006-locator-strategy.md)).
 2. **LLM output:** structured JSON validated against schemas; any element reference must resolve to an element ID in the snapshot, otherwise rejected.
 3. **Code:** Python `ast` parse; static check that every locator used by page objects exists in the snapshot and is unique; pytest collection dry-run in runner.
 4. **Execution:** assertions are never rewritten to pass; failures stay visible (REQ-Q3).
-5. **Maintenance:** deterministic match score with threshold + margin; below → clarification ([ADR-007](../decisions/ADR-007-maintenance-matching.md)).
+5. **Maintenance:** deterministic match score with threshold + margin; below → clarification ([ADR-007](../architectureDecisionRecords/ADR-007-maintenance-matching.md)).
 
 ## 6. How later phases use inspection results
 - **Test design** gets only snapshot elements + user requirements; every step cites an element ID.
@@ -150,7 +150,7 @@ erDiagram
   PROJECT ||--o{ LLM_CALL : logs
 ```
 
-`ARTIFACT` kinds: `test_plan`, `test_case`, `page_object`, `test_file`. Versions are immutable ([ADR-005](../decisions/ADR-005-storage-and-versioning.md)).
+`ARTIFACT` kinds: `test_plan`, `test_case`, `page_object`, `test_file`. Versions are immutable ([ADR-005](../architectureDecisionRecords/ADR-005-storage-and-versioning.md)).
 
 ## 8. Security and isolation
 - Runner is a separate OS process with its own entrypoint; the core app never launches browsers itself (REQ-Q5).
@@ -159,7 +159,7 @@ erDiagram
 - Network: Playwright request routing aborts any request whose origin is not in the approved target allowlist (REQ-Q6).
 - Page text is passed to the LLM only inside clearly delimited data fields with an instruction that it is untrusted data; LLM outputs are schema-validated, never executed directly (REQ-Q7).
 - Secrets via `.env` only; `.env.example` committed.
-- Details: [ADR-004](../decisions/ADR-004-runner-isolation.md), [runner LLD](../modules/runner/README.md).
+- Details: [ADR-004](../architectureDecisionRecords/ADR-004-runner-isolation.md), [runner LLD](../modules/runner/README.md).
 
 ## 9. Resource assumptions
 | Resource | Assumption | Impact |
@@ -178,11 +178,11 @@ Tracked in the [latest session log](../sessions/README.md) and resolved via ADRs
 ## 12. Implementation status (Phase 1 submission)
 | Area | Status | Where |
 |---|---|---|
-| Inspection in a separate runner process (visible browser, allowlist, sandbox per job, setup steps) | Done (T-006, T-007) | [runner](../modules/runner/README.md), [inspector](../modules/inspector/README.md), [ADR-017](../decisions/ADR-017-runner-unix-socket-jobs.md), [ADR-018](../decisions/ADR-018-inspection-setup-and-usability.md) |
+| Inspection in a separate runner process (visible browser, allowlist, sandbox per job, setup steps) | Done (T-006, T-007) | [runner](../modules/runner/README.md), [inspector](../modules/inspector/README.md), [ADR-017](../architectureDecisionRecords/ADR-017-runner-unix-socket-jobs.md), [ADR-018](../architectureDecisionRecords/ADR-018-inspection-setup-and-usability.md) |
 | Findings UI linked to screenshot + source; goal; scope selection; G0 | Done (T-009) | [web-ui](../modules/web-ui/README.md) |
-| Store: snapshots + immutable versioned artifacts, diff, restore (G5 API) | Done (T-004, T-008) | [store](../modules/store/README.md), [ADR-015](../decisions/ADR-015-db-access-sqlalchemy-alembic.md) |
-| Approval gates bound to exact versions; clarifications; computed workflow | Done (T-008) | [api](../modules/api/README.md), [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md) |
-| LLM gateway (Gemini/Ollama/fake), validation, cache, usage log | Done (T-005); real Gemini run 2026-11-20 (gemini-3.5-flash) | [llm-gateway](../modules/llm-gateway/README.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md) |
+| Store: snapshots + immutable versioned artifacts, diff, restore (G5 API) | Done (T-004, T-008) | [store](../modules/store/README.md), [ADR-015](../architectureDecisionRecords/ADR-015-db-access-sqlalchemy-alembic.md) |
+| Approval gates bound to exact versions; clarifications; computed workflow | Done (T-008) | [api](../modules/api/README.md), [ADR-019](../architectureDecisionRecords/ADR-019-gates-on-versions-computed-workflow.md) |
+| LLM gateway (Gemini/Ollama/fake), validation, cache, usage log | Done (T-005); real Gemini run 2026-11-20 (gemini-3.5-flash) | [llm-gateway](../modules/llm-gateway/README.md), [ADR-016](../architectureDecisionRecords/ADR-016-llm-gateway-design.md) |
 | Grounded Phase 1 model call + usage display | Done (T-010) | [test-designer](../modules/test-designer/README.md) |
 | Test design (G1), codegen (G2), execution (G3), maintenance (G4), history UI (G5), usage panel | Phase 2 (T-012 … T-019) | [tasks](../tasks/README.md) |
 

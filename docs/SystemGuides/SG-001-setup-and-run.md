@@ -1,7 +1,7 @@
 # SG-001: Setup and run (api, runner, frontend, fixture site)
 
 - **Audience:** tester | developer | examiner
-- **Platform:** **Linux** (Ubuntu 24.04 reference; Windows users run it inside **WSL2 Ubuntu**). See [ADR-014](../decisions/ADR-014-linux-only-platform.md).
+- **Platform:** **Linux** (Ubuntu 24.04 reference; Windows users run it inside **WSL2 Ubuntu**). See [ADR-014](../architectureDecisionRecords/ADR-014-linux-only-platform.md).
 - **Last verified:** 2026-11-04, clean `ubuntu:24.04` container, non-root user with sudo, at the T-002 follow-up commit. See the [TC-102 run log](../TCs/TC-102-runs.md).
 
 Run every command from the **repository root** unless the step says otherwise.

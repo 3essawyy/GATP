@@ -3,7 +3,7 @@
 - **Audience:** developer
 - **Last verified:** 2026-11-04 on Linux at the T-002 merge commit
 
-Read [CLAUDE.md](../../CLAUDE.md) for the process rules (branch per task, PLAN before code, Definition of Done). This guide covers the commands. Tooling rationale: [ADR-012](../decisions/ADR-012-backend-and-dev-tooling.md), [ADR-013](../decisions/ADR-013-frontend-libraries.md).
+Read [CLAUDE.md](../../CLAUDE.md) for the process rules (branch per task, PLAN before code, Definition of Done). This guide covers the commands. Tooling rationale: [ADR-012](../architectureDecisionRecords/ADR-012-backend-and-dev-tooling.md), [ADR-013](../architectureDecisionRecords/ADR-013-frontend-libraries.md).
 
 ## Repository layout
 ```

@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Build a runnable, empty system that every later task plugs into. The tooling choices came from the S002 interview and are recorded in [ADR-012](../decisions/ADR-012-backend-and-dev-tooling.md) (backend and dev tooling) and [ADR-013](../decisions/ADR-013-frontend-libraries.md) (frontend libraries).
+Build a runnable, empty system that every later task plugs into. The tooling choices came from the S002 interview and are recorded in [ADR-012](../architectureDecisionRecords/ADR-012-backend-and-dev-tooling.md) (backend and dev tooling) and [ADR-013](../architectureDecisionRecords/ADR-013-frontend-libraries.md) (frontend libraries).
 
 - **Python:** one `pyproject.toml` at the repo root, so every command runs from the root. It defines a single package `gatp` in `backend/src/gatp/` with one sub-package per module. Python 3.12 is managed by uv and locked in `uv.lock`.
 - **Two entrypoints:** `gatp-api` (uvicorn + FastAPI) and `gatp-runner` (a stub that idles; T-006 chooses the job protocol).
@@ -33,7 +33,7 @@ Build a runnable, empty system that every later task plugs into. The tooling cho
 | `frontend/**` | New: Vite app, generated client, health badge |
 | `.github/workflows/ci.yml` | New: CI |
 | `.env.example`, `.gitignore` | New / update |
-| `docs/decisions/ADR-012*`, `ADR-013*`, `README.md` | New ADRs, index, close open decisions |
+| `docs/architectureDecisionRecords/ADR-012*`, `ADR-013*`, `README.md` | New ADRs, index, close open decisions |
 | `docs/SystemGuides/SG-001*`, `SG-002*`, `README.md` | New guides |
 | `docs/modules/*/README.md` | Code paths; api/runner/web-ui skeleton notes |
 | `docs/tasks/*`, `docs/TCs/*`, `docs/sessions/*`, `README.md` | Status + logs |

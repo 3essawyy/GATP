@@ -7,7 +7,7 @@
 - **Requirements:** REQ-P2-4, REQ-G8
 - **Depends on:** T-007, T-014
 - **Plan:** [PLAN-016](../implementationPlans/PLAN-016-rescan-diff.md)
-- **ADRs:** [ADR-024](../decisions/ADR-024-rescan-matching-rules.md) (refines ADR-007)
+- **ADRs:** [ADR-024](../architectureDecisionRecords/ADR-024-rescan-matching-rules.md) (refines ADR-007)
 - **TCs:** TC-208 Pass
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 

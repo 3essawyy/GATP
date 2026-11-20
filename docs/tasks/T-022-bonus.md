@@ -11,7 +11,7 @@
 - **Branch / PR:** TBD
 
 ## Goal
-One useful, original, well-implemented addition that we can explain and demo. Shortlist in [ADR-011](../decisions/ADR-011-bonus-deferred.md).
+One useful, original, well-implemented addition that we can explain and demo. Shortlist in [ADR-011](../architectureDecisionRecords/ADR-011-bonus-deferred.md).
 
 ## Definition of Done
 Standard (see [CLAUDE.md](../../CLAUDE.md)) + new ADR recording the choice.

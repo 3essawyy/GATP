@@ -16,7 +16,7 @@
 - **Tag `phase1`** (annotated, pushed) on `ef03bd6`. `phase1-rc` never existed, despite what T-011's original text claimed.
 
 ## Decisions (with ADR links)
-- Default Gemini model is `gemini-3.5-flash`. Recorded as an update note in [ADR-016](../decisions/ADR-016-llm-gateway-design.md); no new ADR.
+- Default Gemini model is `gemini-3.5-flash`. Recorded as an update note in [ADR-016](../architectureDecisionRecords/ADR-016-llm-gateway-design.md); no new ADR.
 - The tag marks the whole repository. What goes to Classroom is a curated pack, not the repo (see `docs/submission/phase1/ClassroomAssets/`). The demo video is a Drive link and is not committed.
 - Containerizing the runner was considered and not pursued: the brief allows "a restricted runner process or container", and the process-plus-bubblewrap design already meets it.
 - "19 Phase 1 ADRs" (ADR-001 to 019) is kept as a Phase 1 snapshot; ADR-020 to 024 are early Phase 2.

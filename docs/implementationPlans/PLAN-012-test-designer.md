@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Define the plan as structured, validated data that T-013 can render ([ADR-020](../decisions/ADR-020-test-plan-contract.md)). Give expectations something real to check by recording observable regions in the inspector. Wire assumptions and questions into clarifications that block G1 and update the plan when answered. Build a plan editor screen, and extend the walkthrough.
+Define the plan as structured, validated data that T-013 can render ([ADR-020](../architectureDecisionRecords/ADR-020-test-plan-contract.md)). Give expectations something real to check by recording observable regions in the inspector. Wire assumptions and questions into clarifications that block G1 and update the plan when answered. Build a plan editor screen, and extend the walkthrough.
 
 ## Steps
 1. Inspector: observable regions (`o<n>`, `interactive=false`).

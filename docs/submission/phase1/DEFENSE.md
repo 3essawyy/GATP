@@ -17,5 +17,5 @@ Each component owner rehearses their row: explain the claim in their own words, 
 ## Rehearsal checklist
 - [ ] Every member can run the Phase 1 demo from [SG-004](../../SystemGuides/SG-004-demo-script.md) on their Linux/WSL machine.
 - [ ] Every owner answers their row's questions without notes.
-- [ ] Someone can explain any decision in the [ADR index](../../decisions/README.md) (why, alternatives, consequences).
+- [ ] Someone can explain any decision in the [ADR index](../../architectureDecisionRecords/README.md) (why, alternatives, consequences).
 - [ ] Real Gemini: `uv run poe llm-check` passes on the demo machine and SG-003 §6 is filled in.

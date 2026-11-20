@@ -9,7 +9,7 @@
 ## Responsibility
 Proposes test cases grounded in the selected snapshot elements and the tester's goal/requirements. Separates **observations** (from the page) from **assumptions** (business rules), and raises clarification requests where expected behavior can't be established. Produces a versioned `test_plan` artifact for G1 approval.
 
-## Test plan (T-012, [ADR-020](../../decisions/ADR-020-test-plan-contract.md))
+## Test plan (T-012, [ADR-020](../../architectureDecisionRecords/ADR-020-test-plan-contract.md))
 `plan.py`: the `TestPlan` / `TestCase` / `PlanStep` / `Expectation` schema, template `test_plan` v1, `validate_plan()`, `normalise()` (stable expectation ids, confirmation rules), `propose_plan()` (proposal, or revision with feedback), and the offline example used by the `fake` provider.
 
 ```json
@@ -31,7 +31,7 @@ Proposes test cases grounded in the selected snapshot elements and the tester's 
 5. Revise with feedback: `POST /plan/propose {feedback}`.
 6. G1 approval requires no open clarifications and no unconfirmed assumptions.
 
-## Revisions from run feedback and the weakening guard (T-015, [ADR-023](../../decisions/ADR-023-feedback-and-weakening-guard.md))
+## Revisions from run feedback and the weakening guard (T-015, [ADR-023](../../architectureDecisionRecords/ADR-023-feedback-and-weakening-guard.md))
 - `propose_plan(..., run_results=…)`: a run's failures (test id, message, failing expectation ids) go to the model as **untrusted page data**. The template tells it to correct checks, not drop them.
 - `guard.py`: `plan_weakenings(approved, revised)` → removed / loosened / changed expectations and removed cases, compared with the last **G1-approved** version. `restore()` puts the approved check or case back.
 - Offline (fake provider) revision drops the failing checks and says so in `notes`. It exists to demonstrate the guard.

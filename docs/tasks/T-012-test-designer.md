@@ -7,7 +7,7 @@
 - **Requirements:** REQ-P2-1, REQ-Q1, REQ-Q2, REQ-Q3
 - **Depends on:** T-010
 - **Plan:** [PLAN-012](../implementationPlans/PLAN-012-test-designer.md)
-- **ADRs:** [ADR-020](../decisions/ADR-020-test-plan-contract.md)
+- **ADRs:** [ADR-020](../architectureDecisionRecords/ADR-020-test-plan-contract.md)
 - **TCs:** TC-201 Pass, TC-202 Pass (offline provider; real-model run still to do)
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 

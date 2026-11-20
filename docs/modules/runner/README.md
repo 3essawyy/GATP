@@ -37,7 +37,7 @@ Every `JobResult` has `job_id`, `type`, `status` (`ok`/`failed`), `duration_ms` 
 | `main.py` | `gatp-runner`: binds the 0600 socket in a 0700 dir, runs uvicorn on it |
 | `client.py` | `RunnerClient`, `RunnerUnavailableError`, `RunnerRejectedError` |
 
-## Approved test runs (T-014, [ADR-022](../../decisions/ADR-022-approved-execution-sandbox.md))
+## Approved test runs (T-014, [ADR-022](../../architectureDecisionRecords/ADR-022-approved-execution-sandbox.md))
 `execute.py` writes the files, `gatp_run_plugin.py` and its own `pytest.ini` into the job sandbox, then runs `python -m pytest -p gatp_run_plugin --junitxml=… --screenshot=on` inside **bubblewrap**: read-only `/`; GATP data/artifacts/.env and ~/.ssh, ~/.config, … hidden; only the sandbox writable; new PID/IPC/UTS namespaces; cleared environment. The plugin adds origin-allowlist routing to every test browser context and records blocked requests. Results come from junit XML; screenshots are matched per test and copied to `artifacts/jobs/<id>/`. `GATP_RUNNER_ISOLATION=process` is a weaker fallback.
 
 ## Restrictions (enforced)

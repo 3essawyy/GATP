@@ -5,7 +5,7 @@
 - **Date:** 2026-11-04
 
 ## Approach
-Turn the T-002 skeleton into the orchestrator: a `Services` container built at startup (DB migrated, runner client, gateway), routers per area, domain errors mapped to HTTP in one place, gates per [ADR-019](../decisions/ADR-019-gates-on-versions-computed-workflow.md), and an SSE event bus. Store additions: a `GateRepository` (approvals, clarifications, requirements), page setup steps (migration `0004`), and the `scope` artifact kind.
+Turn the T-002 skeleton into the orchestrator: a `Services` container built at startup (DB migrated, runner client, gateway), routers per area, domain errors mapped to HTTP in one place, gates per [ADR-019](../architectureDecisionRecords/ADR-019-gates-on-versions-computed-workflow.md), and an SSE event bus. Store additions: a `GateRepository` (approvals, clarifications, requirements), page setup steps (migration `0004`), and the `scope` artifact kind.
 
 ## Steps
 1. Store: `gates.py`, `pages.setup`, `scope` kind.

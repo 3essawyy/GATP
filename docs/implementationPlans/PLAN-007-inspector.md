@@ -7,7 +7,7 @@
 ## Approach
 - **In-page extraction:** a single read-only script `extract.js` collects interactive elements and their context.
 - **Python side:** builds ADR-006 candidates, verifies each live (count + identity), picks a non-positional default, flags weak elements, maps source lines and fingerprints.
-- **Runner:** the `inspect` job gains scope + setup steps ([ADR-018](../decisions/ADR-018-inspection-setup-and-usability.md)).
+- **Runner:** the `inspect` job gains scope + setup steps ([ADR-018](../architectureDecisionRecords/ADR-018-inspection-setup-and-usability.md)).
 - **Store:** keeps all evidence (migration `0003`); the api converts results into snapshots.
 
 ## Steps

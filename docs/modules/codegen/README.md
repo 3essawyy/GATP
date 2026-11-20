@@ -9,7 +9,7 @@
 ## Responsibility
 Turns an **approved** test plan version into pytest-playwright code using the Page Object Model, then validates it before it can be approved for execution (G2).
 
-## Output layout ([ADR-021](../../decisions/ADR-021-deterministic-codegen.md))
+## Output layout ([ADR-021](../../architectureDecisionRecords/ADR-021-deterministic-codegen.md))
 ```
 pages/<page>_page.py   # class: PATH, verified locators of cited elements, open() = setup steps + goto
 tests/test_plan.py     # one test_tc_NN_* per approved case; docstring/comments cite expectation ids + basis
@@ -33,7 +33,7 @@ Example (from the fixture site): `self.title_error_alert = page.locator("#title-
 
 The report is stored with the exact code version ids (`validation_reports`, migration `0006`). G2 needs a passing report for the version being approved.
 
-## Weakening guard for test edits (T-015, [ADR-023](../../decisions/ADR-023-feedback-and-weakening-guard.md))
+## Weakening guard for test edits (T-015, [ADR-023](../../architectureDecisionRecords/ADR-023-feedback-and-weakening-guard.md))
 `guard.py`: `code_weakenings(path, approved, edited)` compares each test function with the last G2-approved version of the file: function removed, `expect(...)`/`assert` gone or changed, newly skipped/xfail. The API turns findings into `weakening` clarifications on step `code` (Accept / Restore the approved file), which block G2.
 
 ## Tests

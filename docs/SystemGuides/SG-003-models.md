@@ -2,7 +2,7 @@
 
 - **Audience:** tester | developer | examiner
 - **Last verified:** 2026-11-20 (real Gemini call via `llm-check`, see §6). Real Ollama call: pending (team Linux machine).
-- **Design:** [ADR-003](../decisions/ADR-003-llm-providers.md), [ADR-016](../decisions/ADR-016-llm-gateway-design.md), [llm-gateway LLD](../modules/llm-gateway/README.md)
+- **Design:** [ADR-003](../architectureDecisionRecords/ADR-003-llm-providers.md), [ADR-016](../architectureDecisionRecords/ADR-016-llm-gateway-design.md), [llm-gateway LLD](../modules/llm-gateway/README.md)
 
 GATP uses only free or local models. Gemini (free tier) is the primary, and a local Ollama model is the fallback. Nothing paid is required.
 

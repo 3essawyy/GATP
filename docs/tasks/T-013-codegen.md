@@ -7,7 +7,7 @@
 - **Requirements:** REQ-P2-2, REQ-Q1, REQ-Q3
 - **Depends on:** T-012
 - **Plan:** [PLAN-013](../implementationPlans/PLAN-013-codegen.md)
-- **ADRs:** [ADR-021](../decisions/ADR-021-deterministic-codegen.md)
+- **ADRs:** [ADR-021](../architectureDecisionRecords/ADR-021-deterministic-codegen.md)
 - **TCs:** TC-203 Pass, TC-204 Pass
 - **Session:** [S004](../sessions/2026-11-04-S004-full-build-run.md)
 

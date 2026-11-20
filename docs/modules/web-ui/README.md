@@ -29,7 +29,7 @@ Presents every workflow step and collects human input and approvals. Contains **
 | Usage panel | Per-call tokens/latency, fresh vs reused, averages; test time shown separately | REQ-P2-5, Q8–Q10 |
 
 ## Internal design
-Libraries ([ADR-013](../../decisions/ADR-013-frontend-libraries.md)): Vite + React 19 + TS 5.9, Mantine (components), TanStack Query (server state), openapi-fetch + openapi-typescript (generated client), React Router. Code is edited in a plain monospace editor (Monaco dropped, [ADR-021](../../decisions/ADR-021-deterministic-codegen.md)).
+Libraries ([ADR-013](../../architectureDecisionRecords/ADR-013-frontend-libraries.md)): Vite + React 19 + TS 5.9, Mantine (components), TanStack Query (server state), openapi-fetch + openapi-typescript (generated client), React Router. Code is edited in a plain monospace editor (Monaco dropped, [ADR-021](../../architectureDecisionRecords/ADR-021-deterministic-codegen.md)).
 
 Layering inside `frontend/src/`. Each layer only calls the one below it:
 

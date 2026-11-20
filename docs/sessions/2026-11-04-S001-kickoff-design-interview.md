@@ -6,7 +6,7 @@
 ## Done
 - Read the brief (`docs/RefrenceDocs/GenAI_Fall26_project.pdf`) and extracted it into [REQ IDs](../RefrenceDocs/REQ-requirements.md).
 - Ran a full design interview with Abdo covering team, stack, models, runner, storage, locators, maintenance, versioning, testing, DoD, docs structure and scope.
-- Created the docs system: [CLAUDE.md](../../CLAUDE.md), [HLD](../architecture/HLD.md), 9 [module LLD stubs](../modules/README.md), [ADR-001…011](../decisions/README.md), [tasks T-001…T-022](../tasks/README.md), [acceptance TCs](../TCs/README.md), [SystemGuides index](../SystemGuides/README.md), templates for every folder.
+- Created the docs system: [CLAUDE.md](../../CLAUDE.md), [HLD](../architecture/HLD.md), 9 [module LLD stubs](../modules/README.md), [ADR-001…011](../architectureDecisionRecords/README.md), [tasks T-001…T-022](../tasks/README.md), [acceptance TCs](../TCs/README.md), [SystemGuides index](../SystemGuides/README.md), templates for every folder.
 
 ## Decisions
 | Topic | Decision | ADR |
@@ -30,7 +30,7 @@
 - **Demo machine GPU** unconfirmed (16 GB RAM known) — confirm before T-005 pins the Ollama model.
 - **Old project templates:** user's previous project folders (sessions/tasks/plans) couldn't be read (computer not reachable). Templates here are new; mirror the old ones later if wanted.
 - **GitHub CLI token** was invalid in this session, so no PR could be opened via `gh`; the branch was merged to `main` with git directly. Branch protection on `main` is not configured yet (do it in GitHub settings).
-- Open technical decisions listed in [decisions/README](../decisions/README.md#open-decisions-to-become-adrs).
+- Open technical decisions listed in [architectureDecisionRecords/README](../architectureDecisionRecords/README.md#open-decisions-to-become-adrs).
 
 ## Next steps (in order)
 1. **T-002** Repo skeleton + CI (write PLAN-002 first; record tooling ADRs).
